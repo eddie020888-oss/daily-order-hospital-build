@@ -45,6 +45,9 @@ func _editing_room_lifecycle() -> void:
 	root.size=Vector2i(1280,720)
 	var host:Node3D=load("res://main.gd").new()
 	host.session=GameSession.new(catalog,"E:/CODEX/2026-10-20/医院整体画面修正/temp/build-lifecycle-%d/save"%Time.get_ticks_usec())
+	var legacy_start:Dictionary=host.session.start_level("level_01")
+	check(legacy_start.get("ok",false),"legacy edit-lifecycle fixture explicitly selects teaching level01")
+	if not legacy_start.get("ok",false):host.free();return
 	root.add_child(host)
 	host.set_process(false)
 	host.feedback.set_application_active(false)

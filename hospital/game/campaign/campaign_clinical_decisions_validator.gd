@@ -11,7 +11,7 @@ static func policy_timeline(d: Dictionary) -> Array:
 	for row: Dictionary in d.command_receipts.values():
 		if row.data.command.type=="set_clinical_policy":result.append({"sequence":int(row.data.sequence),"policy":str(row.data.command.payload.get("policy",""))})
 	result.sort_custom(func(a: Dictionary,b: Dictionary)->bool:return int(a.sequence)<int(b.sequence))
-	result.push_front({"sequence":0,"policy":"balanced"})
+	result.push_front({"sequence":0,"policy":"manual" if CampaignOpeningLoop.enabled(d) else "balanced"})
 	return result
 
 static func _policy_at(timeline: Array,sequence: int) -> String:

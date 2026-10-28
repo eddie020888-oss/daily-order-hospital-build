@@ -70,6 +70,14 @@ var _operations_footer: PanelContainer
 var _preview_signature:=""
 var _editing_preview_room:=""
 var campaign_panel:CampaignHospitalPanel
+var campaign_build:CampaignBuildEditor
+var opening_card:CampaignOpeningCard
+var patient_card:CampaignPatientCard
+var _campaign_overlay:CampaignBuildOverlay
+var _opening_signature:=""
+var _opening_current:Dictionary={}
+var _campaign_preview_signature:=""
+var _campaign_build_step:=-1
 var _next_career_confirmation:=false
 var _long_goals_signature:=""
 var _long_goals_cache:Dictionary={}
@@ -103,6 +111,7 @@ func set_experience_tutorial(tracker:HospitalExperienceTutorial) -> void:
 func _sync_experience_display() -> void:
 	if session==null or campaign_panel==null:return
 	_present_experience(session.presentation_snapshot())
+	_present_opening_guide(session.presentation_snapshot())
 
 func _experience_focus(focus:Dictionary) -> void:
 	if campaign_panel==null:return
@@ -128,6 +137,9 @@ func _experience_scroll(id:String) -> void:
 
 func _present_experience(snapshot:Dictionary) -> void:
 	if _experience_button==null or _experience_tutorial==null:return
+	if int(snapshot.get("campaign",{}).get("opening_loop_version",0))==1:
+		_experience_button.hide()
+		return
 	var current:Dictionary=_experience_tutorial.current()
 	_experience_button.visible=snapshot.get("ruleset","")=="full-hospital-v2" and current.get("visible",false) and not campaign_panel.visible and not (flow!=null and flow.visible) and session.notice==""
 	if not _experience_button.visible:return
@@ -456,6 +468,30 @@ func initialize(owner_session: GameSession, controller: TouchController, view: H
 	campaign_panel.layout_changed.connect(_sync_drawer_layout)
 	campaign_panel.visibility_changed.connect(_sync_experience_display)
 	flow.opening.connect(func()->void:campaign_panel.close())
+	campaign_build=CampaignBuildEditor.new()
+	add_child(campaign_build)
+	campaign_build.initialize(session,world,_hits_campaign_external)
+	campaign_build.active_changed.connect(_campaign_build_active_changed)
+	campaign_build.preview_changed.connect(_campaign_build_preview)
+	campaign_build.committed.connect(_campaign_build_committed)
+	campaign_build.controller.changed.connect(_campaign_build_view_changed)
+	campaign_panel.scene_build_requested.connect(begin_campaign_build)
+	flow.opening.connect(_cancel_campaign_build)
+	opening_card=CampaignOpeningCard.new()
+	add_child(opening_card)
+	opening_card.action_requested.connect(_campaign_opening_action)
+	controls.opening_action=opening_card.action_button
+	patient_card=CampaignPatientCard.new()
+	add_child(patient_card)
+	patient_card.initialize(session)
+	patient_card.closed.connect(func()->void:_opening_signature="";_sync_world_framing.call_deferred())
+	patient_card.all_patients_requested.connect(func()->void:_show_campaign("patients"))
+	patient_card.preparation_requested.connect(_patient_preparation_requested)
+	patient_card.decision_submitted.connect(func(_result:Dictionary)->void:_opening_signature="";present())
+	flow.opening.connect(func()->void:patient_card.close())
+	if world!=null:
+		_campaign_overlay=CampaignBuildOverlay.new()
+		world.add_child(_campaign_overlay)
 	_layout()
 	_placement_changed()
 	present()
@@ -546,6 +582,8 @@ func _footer_style(short_landscape: bool) -> StyleBoxFlat:
 	return style
 
 func _close_drawers() -> void:
+	_cancel_campaign_build()
+	if patient_card!=null:patient_card.close()
 	if campaign_panel!=null:
 		campaign_panel.hide()
 		campaign_panel.picking_origin=false
@@ -685,6 +723,9 @@ func _sync_world_framing() -> void:
 		if touch.free_build!=null:left=maxf(left,_preview_panel.position.x+_preview_panel.size.x+18)
 		else:right=minf(right,_preview_panel.position.x-18)
 	if campaign_panel!=null and campaign_panel.visible and not campaign_panel.is_full_page():right=minf(right,campaign_panel.panel.position.x-18)
+	if campaign_build!=null and campaign_build.active:
+		left=maxf(left,campaign_build.card.position.x+campaign_build.card.size.x+12)
+	if patient_card!=null and patient_card.visible:right=minf(right,patient_card.position.x-12)
 	right=maxf(left+48,right)
 	bottom=maxf(top+48,bottom)
 	var center:=Vector2((left+right)*.5,(top+bottom)*.5)
@@ -774,6 +815,20 @@ func _request_restart() -> void:
 
 func _flow_action(action: String) -> void:
 	match action:
+		"new_formal":
+			if session.storage_blocked:flow.show_storage()
+			elif session.sim.snapshot().tick>0 or not session.sim.snapshot().rooms.is_empty() or not session.sim.snapshot().staff.is_empty():
+				_restart_return="launch"
+				_restart_level_id=session.default_new_level_id()
+				flow.show_restart(_restart_level_id)
+			else:
+				var started:Dictionary=session.start_new_hospital()
+				feedback_result.emit(started)
+				if started.get("ok",false):
+					flow.close()
+					session.dismiss_notice()
+				elif session.storage_blocked:flow.show_storage()
+				else:flow.show_launch()
 		"choose_level": flow.show_levels()
 		"next_level":
 			var next:Dictionary=session.next_level_info()
@@ -785,6 +840,7 @@ func _flow_action(action: String) -> void:
 		"continue", "hospital":
 			flow.close()
 			if session.storage_blocked: flow.show_storage()
+			elif session.notice in ["已保存。","已载入存档；营业保持暂停。"]:session.dismiss_notice()
 		"new":
 			if session.storage_blocked: flow.show_storage()
 			elif session.sim.snapshot().tick>0 or not session.sim.snapshot().rooms.is_empty() or not session.sim.snapshot().staff.is_empty():
@@ -795,7 +851,9 @@ func _flow_action(action: String) -> void:
 		"guide_build":
 			if session.is_campaign():
 				flow.close()
-				_show_campaign("cases")
+				if int(session.presentation_snapshot().get("campaign",{}).get("opening_loop_version",0))==1:
+					_campaign_opening_action(CampaignOpeningGuide.current(session.presentation_snapshot(),session.catalog).get("focus",{}))
+				else:_show_campaign("cases")
 				return
 			flow.close()
 			if session.notice!="": session.dismiss_notice()
@@ -858,6 +916,10 @@ func _start_fresh_guide() -> void:
 	if _restart_level_id=="": session.restart()
 	_restart_level_id=""
 	_seen_unlock=""
+	if int(session.presentation_snapshot().get("campaign",{}).get("opening_loop_version",0))==1:
+		flow.close()
+		session.dismiss_notice()
+		return
 	flow.show_guide()
 
 func _show_recruitment() -> void:
@@ -964,6 +1026,8 @@ func configure_display(output_pixels: Vector2, viewport_size: Vector2, dpi: floa
 	if campaign_panel!=null:
 		campaign_panel.configure(_safe)
 		_sync_drawer_layout()
+	if campaign_build!=null:campaign_build.configure(_campaign_build_bounds())
+	if patient_card!=null:patient_card.configure(_campaign_build_bounds())
 	_format_status(session.sim.snapshot())
 	_sync_actions(session.sim.snapshot())
 	_update_preview_visibility.call_deferred()
@@ -1168,6 +1232,12 @@ func _apply_targets(node: Node) -> void:
 	for child in node.get_children(): _apply_targets(child)
 
 func hits_gui(point: Vector2) -> bool:
+	if campaign_build!=null and campaign_build.active and campaign_build.hits_gui(point):return true
+	return _hits_campaign_external(point)
+
+func _hits_campaign_external(point: Vector2) -> bool:
+	if patient_card!=null and patient_card.is_visible_in_tree() and patient_card.get_global_rect().has_point(point):return true
+	if opening_card!=null and opening_card.is_visible_in_tree() and opening_card.get_global_rect().has_point(point):return true
 	if _experience_button!=null and _experience_button.is_visible_in_tree() and _experience_button.get_global_rect().has_point(point):return true
 	if campaign_panel!=null and campaign_panel.visible:
 		if campaign_panel.picking_origin:return true
@@ -1596,8 +1666,20 @@ func _command_result(result: Dictionary) -> void:
 
 func select_entity(id: String, group: String) -> void:
 	if session.is_campaign():
+		if group=="patients":
+			show_campaign_patient(id)
+			return
 		_show_campaign({"rooms":"rooms","staff":"staff","patients":"patients"}.get(group,"cases"))
+		# A newly opened hospital resets panel drafts on its first render; apply
+		# scene identity after that reset, then render the requested actual actor.
+		if group=="patients":campaign_panel._focus_patient=id
+		elif group=="staff":campaign_panel._selected_staff=id
+		elif group=="rooms":campaign_panel._selected_room=id
+		campaign_panel._signature=""
+		campaign_panel._render()
 		_campaign_focus(id,group)
+		if group=="staff":_experience_scroll.call_deferred("assign_staff")
+		elif group=="rooms":_experience_scroll.call_deferred("edit_"+id)
 		return
 	selection.select(id,group)
 	_show_selection()
@@ -1621,7 +1703,9 @@ func present(snapshot:Dictionary={}) -> void:
 	if session.is_campaign():
 		_present_campaign(snapshot)
 		_present_experience(snapshot)
+		_present_opening_guide(snapshot)
 		return
+	if opening_card!=null:opening_card.hide()
 	if _experience_button!=null:_experience_button.hide()
 	# Main presents the world first; any recreated room node needs the current
 	# editor visibility reapplied even when the layout signature is unchanged.
@@ -1688,6 +1772,197 @@ func _show_campaign(section:String) -> void:
 	campaign_panel.show_section(section)
 	_update_nav({"facilities":"build","rooms":"build","staff":"staff","cases":"patients","patients":"patients","finance":"finance"}.get(section,"finance"))
 
+func show_campaign_patient(id:String) -> bool:
+	if session==null or session.storage_blocked or not session.is_campaign() or patient_card==null:return false
+	if not session.presentation_snapshot().get("patients",{}).has(id):return false
+	touch.reset_input()
+	_close_drawers()
+	if flow!=null:flow.close()
+	patient_card.configure(_campaign_build_bounds())
+	if not patient_card.show_patient(id):return false
+	_campaign_focus(id,"patients")
+	_update_nav("patients")
+	_sync_world_framing.call_deferred()
+	return true
+
+func _patient_preparation_requested(focus:Dictionary) -> void:
+	# Copy before closing the inspector, whose selection owns and clears its focus.
+	var destination:Dictionary=focus.duplicate(true)
+	if patient_card!=null:patient_card.close()
+	_campaign_opening_action(destination)
+
+func begin_campaign_build(mode:String,kind:String,room_id:String="") -> bool:
+	if session==null or session.storage_blocked or not session.is_campaign() or campaign_build==null:return false
+	touch.cancel()
+	_close_drawers()
+	if flow!=null:flow.close()
+	if session.notice!="":session.dismiss_notice()
+	if not session.presentation_snapshot().paused:session.issue("set_paused",{"paused":true})
+	if mode=="build" and world!=null:
+		world.focus_cell(179)
+		world.camera_rig.set_zoom(18)
+	var opened:=false
+	match mode:
+		"build":opened=campaign_build.begin_build(kind)
+		"install":opened=campaign_build.begin_install(kind,room_id)
+		"edit":opened=campaign_build.begin_edit(room_id)
+	if opened:
+		_update_nav("build")
+		_sync_world_framing.call_deferred()
+	else:
+		session.notice="无法开始这次建设，请检查设备是否开放、科室是否可改造。"
+		present()
+	return opened
+
+func _cancel_campaign_build() -> void:
+	if campaign_build!=null and campaign_build.active:campaign_build.cancel()
+	if _campaign_overlay!=null:_campaign_overlay.clear()
+	if world!=null:
+		world.clear_campaign_preview()
+		world.set_wall_preview({})
+		for room:Node3D in world.room_views.values():room.show()
+	_campaign_preview_signature=""
+	_campaign_build_step=-1
+
+func _campaign_build_bounds() -> Rect2:
+	var top:float=_top_frame.position.y+_top_frame.size.y+8 if _top_frame.visible else _safe.position.y+8
+	var bottom:float=_dock.position.y-8 if _dock.visible else _safe.end.y-8
+	return Rect2(Vector2(_safe.position.x,top),Vector2(_safe.size.x,maxf(48,bottom-top)))
+
+func _campaign_build_active_changed(active:bool) -> void:
+	if campaign_build!=null:campaign_build.configure(_campaign_build_bounds())
+	if world!=null:world.set_build_grid_visible(active)
+	if not active:_cancel_campaign_build()
+	_sync_experience_display()
+	_sync_world_framing.call_deferred()
+
+func _campaign_build_view_changed(view:Dictionary) -> void:
+	var step:int=int(view.get("step",-1)) if view.get("active",false) else -1
+	var changed:bool=step!=_campaign_build_step
+	_campaign_build_step=step
+	if not changed or step<1 or world==null:return
+	var proposal:Dictionary=view.get("proposal",{})
+	var layout:Dictionary=proposal.get("layout",{})
+	var origin:int=int(proposal.get("origin_cell",-1))
+	if origin<0:return
+	var cells:Array=[]
+	for y:int in range(int(layout.get("height",0))):
+		for x:int in range(int(layout.get("width",0))):cells.append(origin+y*24+x)
+	if not cells.is_empty():world.focus_room.call_deferred({"cells":cells})
+
+func _campaign_build_preview(proposal:Dictionary,result:Dictionary) -> void:
+	if world==null or _campaign_overlay==null:return
+	if proposal.is_empty():
+		_cancel_campaign_build()
+		return
+	var signature:String=JSON.stringify([proposal,result.get("ok",false),result.get("code","")])
+	if signature==_campaign_preview_signature:return
+	_campaign_preview_signature=signature
+	var record:Dictionary=proposal.duplicate(true)
+	record["id"]=str(proposal.get("room_id","__campaign_preview__"))
+	record["kind"]="campaign_department"
+	record["ruleset"]=FacilityLayout.RULESET
+	record["rotation"]=0
+	var room:Dictionary=result.get("data",{}).get("room",{})
+	if room.is_empty():room=FacilityLayout.geometry(record)
+	if not room.is_empty():world.show_campaign_preview(room)
+	else:world.clear_campaign_preview()
+	world.set_wall_preview(record)
+	for id:String in world.room_views:
+		world.room_views[id].visible=id!=str(proposal.get("room_id",""))
+	_campaign_overlay.present(record,result,room)
+
+func _campaign_build_committed(result:Dictionary) -> void:
+	feedback_result.emit(result)
+	if result.get("ok",false):
+		_cancel_campaign_build()
+		_opening_signature=""
+		_sync_experience_display()
+		present()
+
+func _present_opening_guide(snapshot:Dictionary) -> void:
+	if opening_card==null or session==null:return
+	if int(snapshot.get("campaign",{}).get("opening_loop_version",0))!=1:
+		opening_card.hide()
+		return
+	# A stable half-second glance update avoids re-running every readiness graph
+	# in the render path; actual commands and pause changes refresh immediately.
+	var signature:String=JSON.stringify([session.sim.get_instance_id(),int(snapshot.tick)/5,snapshot.command_sequence,snapshot.paused])
+	if signature!=_opening_signature:
+		_opening_signature=signature
+		_opening_current=CampaignOpeningGuide.current(snapshot,session.catalog)
+	var available:bool=not session.storage_blocked and not (flow!=null and flow.visible) and not campaign_panel.visible and not campaign_build.active and not (patient_card!=null and patient_card.visible) and session.notice==""
+	var top:float=_top_frame.position.y+_top_frame.size.y+8 if _top_frame.visible else _safe.position.y+8
+	var bottom:float=_dock.position.y-8 if _dock.visible else _safe.end.y-8
+	opening_card.present(_opening_current,available,Rect2(Vector2(_safe.position.x+8,top),Vector2(_safe.size.x-16,maxf(48,bottom-top))))
+
+func _campaign_opening_action(focus:Dictionary) -> void:
+	if session.storage_blocked:return
+	var kind:String=str(focus.get("facility_kind",""))
+	match str(focus.get("action","")):
+		"build":begin_campaign_build("build",kind)
+		"staff":
+			_show_campaign("staff")
+			campaign_panel._hire_role=str(focus.get("role","doctor"))
+			var snapshot:Dictionary=session.presentation_snapshot()
+			var requested_staff:String=str(focus.get("staff_id",""))
+			if snapshot.staff.has(requested_staff):campaign_panel._selected_staff=requested_staff
+			else:
+				for employee:Dictionary in snapshot.staff.values():
+					if employee.role==campaign_panel._hire_role and str(employee.get("facility_id",""))=="":
+						campaign_panel._selected_staff=employee.id
+						break
+			campaign_panel._signature=""
+			campaign_panel._render()
+			_opening_staff_focus.call_deferred(kind,str(focus.get("control","hire")),str(focus.get("facility_id","")))
+		"operation":
+			if str(focus.get("control",""))=="run_operation":
+				var result:Dictionary=session.issue("run_operation",{"facility_kind":kind})
+				feedback_result.emit(result)
+				if result.get("ok",false) and session.presentation_snapshot().paused:session.issue("set_paused",{"paused":false})
+			else:
+				campaign_panel._selected_operation=kind
+				_show_campaign("operations")
+				_experience_scroll.call_deferred(str(focus.get("scroll_control","")))
+		"resume":
+			_close_drawers()
+			flow.close()
+			session.issue("set_paused",{"paused":false})
+		"open_intake":
+			var result:Dictionary=session.issue("set_intake",{"enabled":true})
+			feedback_result.emit(result)
+			if result.get("ok",false) and session.presentation_snapshot().paused:session.issue("set_paused",{"paused":false})
+		"clinical","patients":
+			var selected_patient:String=str(focus.get("patient_id",""))
+			if selected_patient=="" or not show_campaign_patient(selected_patient):_show_campaign("patients")
+		"goals":
+			_show_campaign(str(focus.get("section","cases")))
+			if str(focus.get("resource",""))!="":
+				campaign_panel._resource_focus=str(focus.resource)
+				campaign_panel._signature=""
+				campaign_panel._render()
+			if str(focus.get("section",""))=="staff" and session.presentation_snapshot().staff.has(str(focus.get("staff_id",""))):
+				campaign_panel._selected_staff=str(focus.staff_id)
+				campaign_panel._signature=""
+				campaign_panel._render()
+			_experience_scroll.call_deferred(str(focus.get("control","")))
+	_opening_signature=""
+	present()
+
+func _opening_staff_focus(kind:String,control_id:String,facility_id:String="") -> void:
+	var owner= session.sim
+	await get_tree().process_frame
+	if session.sim!=owner or not campaign_panel.visible or campaign_panel.section!="staff":return
+	var target:String=facility_id
+	if target=="":
+		for facility:Dictionary in session.presentation_snapshot().facilities.values():
+			if str(facility.kind)==kind:target=str(facility.id);break
+	var choice:OptionButton=campaign_panel.controls.get("assign_facility")
+	if choice!=null and target!="":
+		for index:int in range(choice.item_count):
+			if str(choice.get_item_metadata(index))==target:choice.select(index);break
+	_experience_scroll(control_id)
+
 func _campaign_focus(id:String,group:String) -> void:
 	var snapshot:Dictionary=session.sim.snapshot()
 	var record:Dictionary=snapshot.get(group,{}).get(id,{})
@@ -1709,7 +1984,11 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if not event.is_action_pressed("ui_cancel") or event.is_echo():return
 	# Back always dismisses or cancels the foremost interface; it never confirms
 	# replacing a hospital or bypasses protected storage.
-	if flow!=null and flow.visible:
+	if campaign_build!=null and campaign_build.active:
+		campaign_build.cancel()
+	elif patient_card!=null and patient_card.visible:
+		patient_card.close()
+	elif flow!=null and flow.visible:
 		match flow.page:
 			"launch": pass
 			"levels": _flow_action("menu")
@@ -1754,6 +2033,8 @@ func _present_campaign(snapshot:Dictionary) -> void:
 	_last_status=snapshot.challenge.status
 	_sync_actions(snapshot)
 	campaign_panel.present(snapshot)
+	if campaign_build!=null:campaign_build.present(snapshot)
+	if patient_card!=null:patient_card.present(snapshot)
 	if session.storage_blocked:_close_drawers()
 	_sync_drawer_layout()
 

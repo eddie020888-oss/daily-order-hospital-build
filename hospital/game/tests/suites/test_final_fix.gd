@@ -21,7 +21,10 @@ func run(t: TestContext) -> void:
 	_density(t)
 
 func _session() -> GameSession:
-	return GameSession.new(catalog,ProjectSettings.globalize_path("res://../temp/tests/final-%d-%d" % [Time.get_ticks_usec(),randi()]))
+	var session:GameSession=GameSession.new(catalog,ProjectSettings.globalize_path("res://../temp/tests/final-%d-%d" % [Time.get_ticks_usec(),randi()]))
+	var legacy_start:Dictionary=session.start_level("level_01")
+	assert(legacy_start.get("ok",false),"isolated legacy teaching fixture must initialize")
+	return session
 
 func _hud(s: GameSession) -> HospitalHud:
 	var h:=HospitalHud.new()

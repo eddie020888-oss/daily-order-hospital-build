@@ -13,6 +13,7 @@ signal closed
 signal layout_changed
 signal focus_requested(id:String,group:String)
 signal tutorial_focus_requested(focus:Dictionary)
+signal scene_build_requested(mode:String,kind:String,room_id:String)
 var experience_tutorial:HospitalExperienceTutorial
 var session:GameSession
 var world:HospitalWorld
@@ -515,13 +516,8 @@ func _facility_page() -> void:
     if not rooms.is_empty():
         if _selected_room=="":_selected_room=rooms[0].id
         _choice("install_room","安装到已有同科室房间",rooms,_selected_room,func(value:String)->void:_selected_room=value;_update_install_preview())
-        _spin("install_x","设备左上角横格",0,0,23,func(_value:int)->void:_update_install_preview())
-        _spin("install_y","设备左上角纵格",0,0,17,func(_value:int)->void:_update_install_preview())
-        _spin("install_q","设备朝向（0/1/2/3）",0,0,3,func(_value:int)->void:_update_install_preview())
-        _button(body,"pick_facility_cell","点房间地面选择设备位置",func()->void:picking_origin=true;focus_requested.emit(_selected("install_room"),"rooms"))
-        _button(body,"place_facility","安装到所选房间",func()->void:_issue("place_facility",{"room_id":_selected("install_room"),"kind":_facility_id,"x":int(controls.install_x.value),"y":int(controls.install_y.value),"rotation":int(controls.install_q.value)}),true)
-        _preview_label=_text(body,"")
-        _update_install_preview()
+        _button(body,"place_facility","在场景中安装",func()->void:scene_build_requested.emit("install",_facility_id,_selected("install_room")),true)
+        _copy("先选择房间，再点场景摆放。设备本体、操作位和检修格按真实格线检查。")
     _button(footer,"new_department","新建科室",func()->void:_begin_layout(_facility_id),true)
     _button(footer,"facility_back","返回设施",func()->void:show_section("facilities"))
 
@@ -545,21 +541,13 @@ func _begin_layout(kind:String) -> void:
         show_section("facility")
         return
     _facility_id=kind
-    _draft_unit=str(_content().facilities[kind].unit_id)
-    _draft=FacilityLayout.default_layout(_draft_unit,kind,0).duplicate(true)
-    _edit_room=""
-    _draft_origin=49
-    show_section("layout")
+    scene_build_requested.emit("build",kind,"")
 
 func edit_room(room_id:String) -> void:
     var room:Dictionary=session.sim.snapshot().rooms.get(room_id,{})
     if room.is_empty():return
-    _edit_room=room_id
     _selected_room=room_id
-    _draft_unit=room.unit_id
-    _draft=room.layout.duplicate(true)
-    _draft_origin=int(room.origin_cell)
-    show_section("layout")
+    scene_build_requested.emit("edit","",room_id)
 
 func _layout_page() -> void:
     _heading("调整科室" if _edit_room!="" else "建设科室")
@@ -1363,7 +1351,7 @@ func _long_cases_page() -> void:
     _long_stage_summary(view)
     _text(body,"接诊与医院负荷",19)
     _copy(_intake_copy(view),HospitalUiStyle.TEAL)
-    _copy("常规客流只来自已真实完成的签名病例，按真实岗位、供给和接诊容量到院。关闭常规接诊后，已在院患者继续就诊。综合考核前须关闭常规接诊并清空在院患者。")
+    _copy(("开业门诊可接收少量首次就诊者，接待与首诊就绪后还须有可用的治疗或转诊出口。后续常规病例由实际完成的签名任务开放。" if CampaignOpeningLoop.enabled(_snapshot) else "常规客流来自已真实完成的签名病例，按真实岗位、供给和接诊容量到院。")+"关闭常规接诊后，已在院患者继续就诊。综合考核前须关闭常规接诊并清空在院患者。")
     var intake_enabled:bool=bool(view.get("intake_enabled",false))
     var intake:=_button(footer,"set_intake","关闭常规接诊" if intake_enabled else "开启常规接诊",func()->void:_issue("set_intake",{"enabled":not intake_enabled}))
     intake.disabled=_snapshot.challenge.status!="running"
@@ -1394,16 +1382,21 @@ func _long_cases_page() -> void:
         if active_signature.is_empty():_case_stock(task)
     else:_copy("本阶段签名病例已完成。继续接诊并改善经营指标，满足目标后提交阶段考核。")
     var routine_rows:Array=[]
-    for case_id:String in view.get("unlocked_case_ids",[]):
-        if case_id in campaign.get("completed_cases",[]):routine_rows.append({"id":case_id,"name":str(content.cases.get(case_id,{}).get("title",case_id))})
+    var routine_ids:Array=LongCampaign.routine_case_ids(_snapshot,session.catalog)
+    for case_id:String in routine_ids:
+        var opening:bool=CampaignOpeningLoop.is_template(_snapshot,case_id) and case_id not in campaign.get("completed_cases",[])
+        routine_rows.append({"id":case_id,"name":"开业门诊 · 检查与雾化治疗" if opening else str(content.cases.get(case_id,{}).get("title",case_id))})
     if not routine_rows.is_empty():
-        if _routine_case=="" or _routine_case not in campaign.get("completed_cases",[]):_routine_case=routine_rows[0].id
+        if _routine_case=="" or _routine_case not in routine_ids:_routine_case=routine_rows[0].id
         _choice("routine_case","手动补充常规病例",routine_rows,_routine_case,func(value:String)->void:_routine_case=value;_render())
-        var routine_missing:Array=_case_reasons(_routine_case)
+        var readiness_state:=ClinicState.new()
+        readiness_state.data=_snapshot
+        var routine_missing:Array=LongCampaignClinical.instance_readiness(readiness_state,session.catalog,_routine_case,"routine")
         var routine:=_button(body,"admit_routine","手动接收所选常规病例",func()->void:_issue("admit_routine",{"case_id":_selected("routine_case")}))
         routine.disabled=not routine_missing.is_empty() or _snapshot.challenge.status!="running"
         if not routine_missing.is_empty():_copy("常规接诊准备："+reason_text(routine_missing,content,_snapshot))
-        _clinic_drive_controls(routine_missing)
+        if _routine_case in campaign.get("completed_cases",[]):_clinic_drive_controls(routine_missing)
+        else:_copy("开业门诊同时最多2人在院。人数、岗位、物资与后续出口仍按实际状态检查，不会提前获得签名任务进度。")
     _text(body,"本关签名任务与阶段开放",19)
     var unlocked:Array=view.get("unlocked_case_ids",[])
     var ids:Array=session.level_data().get("case_ids",[])

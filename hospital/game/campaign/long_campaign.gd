@@ -26,10 +26,24 @@ static func phase(d:Dictionary,catalog:ContentCatalog)->Dictionary:
 static func unlocked_case_ids(d:Dictionary,catalog:ContentCatalog)->Array:
 	return catalog.levels[d.level_id].case_ids.slice(0,int(phase(d,catalog).signature_cases))
 
+static func routine_case_ids(d:Dictionary,catalog:ContentCatalog)->Array:
+	return routine_case_ids_at(d,catalog,d.campaign.completed_cases,int(d.campaign.phase_index))
+
+static func routine_case_ids_at(d:Dictionary,catalog:ContentCatalog,completed_cases:Array,phase_index:int)->Array:
+	# Historical validation supplies the signatures earned before that event,
+	# never today's completed list, so later progress cannot legalize admission.
+	var result:Array=[]
+	if CampaignOpeningLoop.enabled(d):result.append(CampaignOpeningLoop.TEMPLATE_CASE_ID)
+	var unlocked:int=int(catalog.levels[d.level_id].phases[clampi(phase_index,0,3)].signature_cases)
+	for id:String in catalog.levels[d.level_id].case_ids.slice(0,unlocked):
+		if id in completed_cases and not result.has(id):result.append(id)
+	return result
+
 static func facility_unlocked(d:Dictionary,catalog:ContentCatalog,kind:String)->bool:
 	if not catalog.campaign.facilities.has(kind):return false
 	var definition:Dictionary=catalog.campaign.facilities[kind]
 	if not is_long(d) or int(d.campaign.phase_index)>=4:return true
+	if CampaignOpeningLoop.enabled(d) and kind in ["U04-E1","U04-E2"]:return true
 	if definition.unit_id in ["OPS","operations",""] or definition.get("category","")=="运营设施" or not str(definition.unit_id).begins_with("U"):return true
 	if int(str(definition.unit_id).trim_prefix("U"))>=25:return true
 	for id:String in unlocked_case_ids(d,catalog):
@@ -160,11 +174,11 @@ static func apply(state:ClinicState,catalog:ContentCatalog,type:String,p:Diction
 		"accept_case","admit_routine":
 			if not p.get("case_id") is String:return _no("invalid_payload")
 			var id:String=p.case_id
-			if not id in unlocked_case_ids(d,catalog):return _no("case_stage_locked")
 			if type=="accept_case":
+				if not id in unlocked_case_ids(d,catalog):return _no("case_stage_locked")
 				if id!=goals(d,catalog).signature_case_id:return _no("not_next_case")
 			else:
-				if id not in cp.completed_cases:return _no("routine_case_not_established")
+				if id not in routine_case_ids(d,catalog):return _no("routine_case_not_established" if id in unlocked_case_ids(d,catalog) else "case_stage_locked")
 			return LongCampaignClinical.admit_instance(state,catalog,id,"signature" if type=="accept_case" else "routine","manual",d.command_sequence+1)
 		"advance_stage":return _advance(state,catalog)
 		"set_operation_auto":
@@ -245,9 +259,7 @@ static func _record_day(d:Dictionary,catalog:ContentCatalog)->void:
 static func _auto_intake(state:ClinicState,catalog:ContentCatalog)->void:
 	var d:Dictionary=state.data
 	var cp:Dictionary=d.campaign
-	var choices:Array=[]
-	for id:String in unlocked_case_ids(d,catalog):
-		if id in cp.completed_cases:choices.append(id)
+	var choices:Array=routine_case_ids(d,catalog)
 	var drive:Dictionary=CLINIC_DRIVE.view(d,catalog)
 	if drive.enabled:choices=[drive.case_id]
 	if choices.is_empty():cp.intake_reason="routine_case_not_established";cp.next_arrival_tick=d.tick+100;return
@@ -255,7 +267,7 @@ static func _auto_intake(state:ClinicState,catalog:ContentCatalog)->void:
 	var reasons:Array=[]
 	for n in range(choices.size()):
 		var id:String=choices[(start+n)%choices.size()]
-		reasons=LongCampaignClinical.instance_readiness(state,catalog,id)
+		reasons=LongCampaignClinical.instance_readiness(state,catalog,id,"routine")
 		if not reasons.is_empty():continue
 		var result:Dictionary=LongCampaignClinical.admit_instance(state,catalog,id,"routine","auto",d.command_sequence,cp.intake_cursor)
 		if not result.ok:reasons=[result.code];continue

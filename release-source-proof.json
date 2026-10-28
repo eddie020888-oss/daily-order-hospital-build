@@ -108,5 +108,36 @@
     "rootCause": "Fresh Mac test harness did not create reports/implementation parent; preserve all test assertions and prepare isolated output parent."
   },
   "nextMode": "testflight",
-  "nextBuild": "1"
+  "nextBuild": "5",
+  "openingLoopCandidate20261028": {
+    "version": "0.3.0",
+    "build": "5",
+    "status": "local-verification-complete-native-run-pending",
+    "priorReleasedCommit": "a6b2ff3122fe29daea0f6e0eb4eaf55eb5d08f2a",
+    "all": {
+      "result": "TEST RESULT: failed=0 passed=2456",
+      "logSha256": "808d7b9afdde90b027f94ee27033c35755b845c4cbaa5b4bdca1b426b9f1e839"
+    },
+    "formalEntryAndRestGuide": {
+      "result": "FORMAL OPENING RESULT: passed=111 failed=0",
+      "logSha256": "fcbeb17f47682c702cc566ab3915e332966ce67c1226efc08a670517cfdfd13d"
+    },
+    "hud": {
+      "result": "FORMAL HUD RESULT: passed=25 failed=0",
+      "logSha256": "a36a9c13c767808095ce03d89cd9340de77ed75967eec3ce050ad7429f67c5d2"
+    },
+    "patientCard": {
+      "result": "PATIENT CARD RESULT passed=74 failed=0",
+      "logSha256": "8eab9dedfd1d45c8ffbba1d0a0c1469265c1e3309756adad2bb5738e8fe058aa"
+    },
+    "sourceFileCount": 41,
+    "normalizedSourceManifestSha256": "129e401599800cddc53786f36a586b77468c8f032c8ddd38c8699fbc786d5ea8",
+    "ciStandaloneGates": 10,
+    "native20MinutesComplete": false,
+    "physicalIphoneVerified": false,
+    "fullCampaignContentAccepted": false,
+    "olderSavesPreserved": true,
+    "newBillingRouteAdded": false,
+    "notes": "Opening slice acceptance is distinct from full campaign content, entertainment and device performance acceptance."
+  }
 }

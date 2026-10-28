@@ -120,7 +120,10 @@ func test_patient_information_hides_tolerance_until_diagnosis(t: TestContext) ->
 	t.expect_true(after.contains("12秒") and after.contains("25币") and after.contains("无需恢复"),"actual fast prediction exposed before treatment")
 
 func _session() -> RefCounted:
-	return session_script.new(ContentCatalog.load_checked("res://content").catalog,ProjectSettings.globalize_path("res://../temp/tests/input-%d-%d" % [Time.get_ticks_usec(),randi()]))
+	var session:GameSession=session_script.new(ContentCatalog.load_checked("res://content").catalog,ProjectSettings.globalize_path("res://../temp/tests/input-%d-%d" % [Time.get_ticks_usec(),randi()]))
+	var legacy_start:Dictionary=session.start_level("level_01")
+	assert(legacy_start.get("ok",false),"isolated legacy teaching fixture must initialize")
+	return session
 
 func _touch(index: int, pressed: bool, point: Vector2) -> InputEventScreenTouch:
 	var event := InputEventScreenTouch.new()

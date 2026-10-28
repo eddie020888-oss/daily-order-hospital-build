@@ -30,6 +30,8 @@ static func validate(d: Dictionary, catalog: ContentCatalog) -> String:
 	if error != "": return error
 	error = CampaignExperience.validate(d)
 	if error != "": return error
+	error = CampaignOpeningLoop.validate_version(d)
+	if error != "": return error
 	error = RELIEF_VALIDATOR.shape_error(d)
 	if error != "":return error
 	error = _entities(d,catalog)
@@ -247,7 +249,8 @@ static func _instances(d: Dictionary, catalog: ContentCatalog) -> String:
 		var instance: Dictionary = instances[id]
 		var event: Dictionary = cp.admission_events[event_id]
 		if not _fields(instance,{"id":TYPE_STRING,"case_id":TYPE_STRING,"kind":TYPE_STRING,"phase_index":TYPE_INT,"admitted_tick":TYPE_INT,"patient_ids":TYPE_ARRAY,"status":TYPE_STRING,"completed_tick":TYPE_INT,"admission_event_id":TYPE_STRING}): return "invalid_long_instance"
-		if instance.id != id or instance.admission_event_id != event_id or not catalog.campaign.cases.has(instance.case_id) or instance.case_id not in catalog.levels[d.level_id].case_ids or instance.kind not in ["signature","routine"] or instance.status not in ["active","completed","failed"] or instance.phase_index < 0 or instance.phase_index > cp.phase_index or instance.admitted_tick < 0 or instance.admitted_tick > d.tick or not _strings(instance.patient_ids): return "invalid_long_instance"
+		var opening_routine:bool=instance.kind=="routine" and CampaignOpeningLoop.is_template(d,instance.case_id)
+		if instance.id != id or instance.admission_event_id != event_id or not catalog.campaign.cases.has(instance.case_id) or (instance.case_id not in catalog.levels[d.level_id].case_ids and not opening_routine) or instance.kind not in ["signature","routine"] or instance.status not in ["active","completed","failed"] or instance.phase_index < 0 or instance.phase_index > cp.phase_index or instance.admitted_tick < 0 or instance.admitted_tick > d.tick or not _strings(instance.patient_ids): return "invalid_long_instance"
 		var definition: Dictionary = catalog.campaign.cases[instance.case_id]
 		if instance.patient_ids.size() != definition.patient_count: return "invalid_long_instance_patients"
 		var all_terminal: bool = true
@@ -294,12 +297,19 @@ static func _instances(d: Dictionary, catalog: ContentCatalog) -> String:
 			if signature.completed_tick <= instance.admitted_tick and signature.id != instance.id: completed_before.append(signature.case_id)
 		var case_index: int = catalog.levels[d.level_id].case_ids.find(instance.case_id)
 		var unlocked: int = int(catalog.levels[d.level_id].phases[mini(3,instance.phase_index)].signature_cases)
-		if case_index < 0 or case_index >= unlocked: return "invalid_long_instance_unlock"
+		var opening_routine:bool=instance.kind=="routine" and CampaignOpeningLoop.is_template(d,instance.case_id)
+		if not opening_routine and (case_index < 0 or case_index >= unlocked): return "invalid_long_instance_unlock"
 		if instance.kind == "signature":
 			if instance.phase_index == 4 or completed_before.size() >= catalog.levels[d.level_id].case_ids.size() or instance.case_id != catalog.levels[d.level_id].case_ids[completed_before.size()]: return "invalid_long_signature_admission"
 			for previous: Dictionary in all_signatures:
 				if previous.id < instance.id and (previous.status == "active" or previous.completed_tick > instance.admitted_tick): return "overlapping_long_signatures"
-		elif instance.case_id not in completed_before: return "unearned_long_routine_template"
+		elif instance.case_id not in LongCampaign.routine_case_ids_at(d,catalog,completed_before,instance.phase_index): return "unearned_long_routine_template"
+		if opening_routine:
+			var concurrent:int=instance.patient_ids.size()
+			for previous:Dictionary in instances.values():
+				if previous.id>=instance.id or previous.kind!="routine" or previous.case_id!=CampaignOpeningLoop.TEMPLATE_CASE_ID:continue
+				if previous.status=="active" or previous.completed_tick>instance.admitted_tick:concurrent+=previous.patient_ids.size()
+			if concurrent>CampaignOpeningLoop.LIVE_LIMIT:return "invalid_opening_admission_capacity"
 	if cp.wave_active != (active_count > 0) or cp.current_case_id != active_signature: return "invalid_long_wave_state"
 	return ""
 
@@ -755,7 +765,7 @@ static func _patients(d: Dictionary, catalog: ContentCatalog) -> String:
 		for price: int in range(75,151):
 			if p.income == CampaignExperience.clinical_income(d,int(definition.income),price): valid_income = true; break
 		if not valid_income: return "invalid_campaign_patient_income"
-		if not p.case_id in catalog.levels[d.level_id].case_ids: return "invalid_campaign_patient_case"
+		if p.case_id not in catalog.levels[d.level_id].case_ids and not CampaignOpeningLoop.is_template(d,p.case_id): return "invalid_campaign_patient_case"
 		if p.phase in ["left","abandoned"]:
 			if p.cell != GridService.EXIT_CELL or p.completed_tick < p.arrived_tick or p.completed_tick > d.tick or not p.path.is_empty() or p.move_progress != 0: return "invalid_campaign_patient_departure"
 			if p.phase == "left":

@@ -39,13 +39,14 @@ static func case_readiness(state: ClinicState,catalog: ContentCatalog,case_id: S
 	if state.data.get("schema_version",0)==3 and state.data.get("ruleset","")=="full-hospital-v2": return LongCampaignClinical.instance_readiness(state,catalog,case_id)
 	return _case_preparation_reasons(state,catalog,case_id,true)
 
-static func _case_preparation_reasons(state: ClinicState,catalog: ContentCatalog,case_id: String,enforce_wave: bool) -> Array:
+static func _case_preparation_reasons(state: ClinicState,catalog: ContentCatalog,case_id: String,enforce_wave: bool,required_steps:Array=[]) -> Array:
 	var reasons: Array=[]
 	var d: Dictionary=state.data
 	if not catalog.campaign.cases.has(case_id): return ["unknown_case"]
 	if enforce_wave and d.campaign.wave_active: reasons.append("wave_active")
 	var c: Dictionary=catalog.campaign.cases[case_id]
-	for step: Dictionary in c.steps:
+	var steps:Array=c.steps if required_steps.is_empty() else required_steps
+	for step: Dictionary in steps:
 		var found := false
 		var staffed := false
 		var reachable := false
@@ -74,7 +75,7 @@ static func _case_preparation_reasons(state: ClinicState,catalog: ContentCatalog
 	var count: int=int(c.get("patient_count",1))
 	var required: Dictionary={}
 	var cost := 0
-	for step: Dictionary in c.steps:
+	for step: Dictionary in steps:
 		cost+=int(step.cost)*count
 		var resource: String=str(step.get("resource",""))
 		if resource!="": required[resource]=int(required.get(resource,0))+int(step.get("quantity",0))*count

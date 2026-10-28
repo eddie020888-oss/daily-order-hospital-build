@@ -9,7 +9,11 @@ func run(t: TestContext) -> void:
 	test_held_flow_uses_latest_paused_patient_projection(t)
 
 func _session() -> GameSession:
-	return GameSession.new(ContentCatalog.load_checked("res://content").catalog,ProjectSettings.globalize_path("res://../temp/tests/input-review-%d-%d" % [Time.get_ticks_usec(),randi()]))
+	var session:GameSession=GameSession.new(ContentCatalog.load_checked("res://content").catalog,ProjectSettings.globalize_path("res://../temp/tests/input-review-%d-%d" % [Time.get_ticks_usec(),randi()]))
+	var legacy_start:Dictionary=session.start_level("level_01")
+	assert(legacy_start.get("ok",false),"isolated legacy teaching fixture must initialize")
+	session.dismiss_notice()
+	return session
 
 func _host(session: GameSession) -> Node3D:
 	var host: Node3D=load("res://main.gd").new()

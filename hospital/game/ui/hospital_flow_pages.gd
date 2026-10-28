@@ -27,6 +27,7 @@ var _a2_launch_tools: GridContainer
 
 const MENU_FACE := HospitalUiStyle.PAPER
 const MENU_INSET := HospitalUiStyle.IVORY
+const OpeningGuide = preload("res://ui/campaign_opening_guide.gd")
 
 func initialize(owner_session: GameSession) -> void:
 	session = owner_session
@@ -299,6 +300,7 @@ func _clock(tick: int) -> String:
 func show_launch() -> void:
 	_open("launch")
 	var snapshot: Dictionary = session.sim.snapshot()
+	var clean_formal:bool=session.is_long_campaign() and not session.has_saved_hospital() and int(snapshot.get("tick",0))==0 and snapshot.get("rooms",{}).is_empty() and snapshot.get("staff",{}).is_empty()
 	_header = VBoxContainer.new()
 	_header.add_theme_constant_override("separation",5)
 	_column.add_child(_header)
@@ -337,7 +339,7 @@ func show_launch() -> void:
 	var record_body := VBoxContainer.new()
 	record_body.add_theme_constant_override("separation",6)
 	record.add_child(record_body)
-	_text(record_body,"经营记录",12,HospitalA2Skin.MUTED)
+	_text(record_body,"开业准备" if clean_formal else "经营记录",12,HospitalA2Skin.MUTED)
 	var current := HBoxContainer.new()
 	current.add_theme_constant_override("separation",7)
 	record_body.add_child(current)
@@ -379,11 +381,11 @@ func show_launch() -> void:
 	_text(time_row,"营业时钟 "+_clock(int(snapshot.get("tick",0))),12,HospitalA2Skin.INK,600)
 	var stored := _text(time_row,"进度保存在本机",12,HospitalA2Skin.MUTED)
 	stored.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	var resume := _button(record_body,"continue_game","继续经营","continue",true)
+	var resume := _button(record_body,"continue_game","开始经营" if clean_formal else "继续经营","continue",true)
 	HospitalA2Skin.button(resume,"primary",20,"play")
 	resume.custom_minimum_size.y = 52
 	resume.set_meta("minimum_size",Vector2(48,52))
-	resume.tooltip_text = "回到当前医院，保持现有营业状态。"
+	resume.tooltip_text = "进入这座正式医院，按当前任务逐步准备接待、首诊和岗位。" if clean_formal else "回到当前医院，保持现有营业状态。"
 	_a2_launch_tools = GridContainer.new()
 	_a2_launch_tools.columns = 1
 	_a2_launch_tools.add_theme_constant_override("h_separation",8)
@@ -394,7 +396,9 @@ func show_launch() -> void:
 		HospitalA2Skin.button(_button(_a2_launch_tools,"start_long","深度经营","choose_level"),"paper",15,"chart")
 	HospitalA2Skin.button(_button(_a2_launch_tools,"choose_level","选择医院","choose_level"),"paper",15,"crest")
 	HospitalA2Skin.button(_button(_a2_launch_tools,"launch_help","设置与帮助","help"),"paper",15,"settings")
-	HospitalA2Skin.button(_button(_a2_launch_tools,"start_new","开始新局","new",false,true),"danger",15,"alert")
+	var new_hospital:=_button(_a2_launch_tools,"start_new","新建正式医院","new_formal",false,true)
+	new_hospital.tooltip_text="新建四阶段正式医院；已有医院会先显示确认，取消可继续原院。"
+	HospitalA2Skin.button(new_hospital,"danger",15,"alert")
 	footer.hide()
 	configure(_safe)
 
@@ -790,6 +794,15 @@ func show_campaign_result(snapshot:Dictionary) -> void:
 
 func show_long_campaign_guide() -> void:
 	_open("guide",level_name(session.level_data()))
+	var current:Dictionary=OpeningGuide.current(session.presentation_snapshot(),session.catalog)
+	if current.get("visible",false):
+		_text(body,str(current.get("phase_name","开业接诊")),15,HospitalUiStyle.TEAL,600)
+		_text(body,str(current.title),24,HospitalUiStyle.INK,700)
+		_copy(str(current.text))
+		_copy("接待、首诊、人员和库存都在这座医院中实际完成；可以随时暂停，当前任务会按真实状态更新。")
+		_button(footer,"guide_build",str(current.button),"guide_build",true)
+		_button(footer,"guide_later","回到医院","hospital")
+		return
 	_text(body,"让同一座医院逐步成长",25,HospitalUiStyle.INK,700)
 	_step(1,"开业","准备接待、诊疗和供给，先接收签名病例。真实完成的病例会进入常规客流，自动接诊由你开启或关闭。")
 	_step(2,"稳定经营","让已掌握的病例持续就诊，关注新增治愈、现金与连续达标经营日；每天的利润、治愈人数和当日治愈率须同时达标。近期质量按最近30分钟有效结案统计，全程记录另行保留。")

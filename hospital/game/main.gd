@@ -59,6 +59,9 @@ func _process(delta: float) -> void:
 	if session!=null: session.advance_wall_time(roundi(delta*1000000.0))
 
 func _input(event: InputEvent) -> void:
+	if hud!=null and hud.campaign_build!=null and hud.campaign_build.active:
+		hud.campaign_build.feed(event)
+		return
 	if touch!=null: touch.feed(event)
 
 func _notification(what: int) -> void:
@@ -67,6 +70,7 @@ func _notification(what: int) -> void:
 		_experience_active = false
 		if feedback!=null: feedback.set_application_active(false)
 		if hud!=null and hud.settings_page!=null: hud.settings_page.cancel_drafts()
+		if hud!=null and hud.campaign_build!=null:hud.campaign_build.reset_input()
 		touch.reset_input()
 		session.handle_focus_lost()
 	elif what in [NOTIFICATION_APPLICATION_RESUMED,NOTIFICATION_APPLICATION_FOCUS_IN]:
@@ -74,6 +78,7 @@ func _notification(what: int) -> void:
 		_experience_active = true
 		touch.reset_input()
 		session.handle_focus_gained()
+		if int(session.presentation_snapshot().get("campaign",{}).get("opening_loop_version",0))==1 and session.notice=="已保存。":session.dismiss_notice()
 		if feedback!=null: feedback.set_application_active(true)
 
 func _play_result(result: Dictionary) -> void:

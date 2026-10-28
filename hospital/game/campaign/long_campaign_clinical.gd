@@ -6,12 +6,14 @@ extends RefCounted
 const RULESET := "full-hospital-v2"
 const TERMINAL := ["left","abandoned"]
 
-static func instance_readiness(state: ClinicState,catalog: ContentCatalog,case_id: String) -> Array:
+static func instance_readiness(state: ClinicState,catalog: ContentCatalog,case_id: String,kind:String="signature") -> Array:
 	var d: Dictionary=state.data
 	if d.get("schema_version",0)!=3 or d.get("ruleset","")!=RULESET: return ["not_long_campaign"]
-	if not catalog.campaign.cases.has(case_id) or case_id not in catalog.levels[d.level_id].case_ids: return ["unknown_case"]
-	if case_id not in LongCampaign.unlocked_case_ids(d,catalog): return ["case_locked"]
-	var reasons: Array=CampaignClinicalFlow._case_preparation_reasons(state,catalog,case_id,false)
+	if kind not in ["signature","routine"]:return ["invalid_admission_kind"]
+	var opening_routine:bool=kind=="routine" and CampaignOpeningLoop.is_template(d,case_id)
+	if not catalog.campaign.cases.has(case_id) or (not opening_routine and case_id not in catalog.levels[d.level_id].case_ids): return ["unknown_case"]
+	if not opening_routine and case_id not in LongCampaign.unlocked_case_ids(d,catalog): return ["case_locked"]
+	var reasons:Array=CampaignOpeningLoop.admission_reasons(state,catalog) if opening_routine else CampaignClinicalFlow._case_preparation_reasons(state,catalog,case_id,false)
 	var count: int=int(catalog.campaign.cases[case_id].patient_count)
 	var level: Dictionary=catalog.levels[d.level_id]
 	var phase: Dictionary=level.phases[mini(3,int(d.campaign.phase_index))]
@@ -33,8 +35,8 @@ static func admit_instance(state: ClinicState,catalog: ContentCatalog,case_id: S
 		if cp.completed_cases.size()>=level.case_ids.size() or case_id!=level.case_ids[cp.completed_cases.size()]: return _no("not_next_case")
 		for id: String in _active_instances(d):
 			if cp.case_instances[id].kind=="signature": return _no("signature_active")
-	elif case_id not in cp.completed_cases: return _no("routine_case_not_completed")
-	var reasons: Array=instance_readiness(state,catalog,case_id)
+	elif case_id not in LongCampaign.routine_case_ids(d,catalog): return _no("routine_case_not_completed")
+	var reasons: Array=instance_readiness(state,catalog,case_id,kind)
 	if not reasons.is_empty(): return _no(str(reasons[0]),{"reasons":reasons})
 	var number: int=int(d.next_ids.case_instance)
 	var instance_id: String="instance_%06d"%number

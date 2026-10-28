@@ -3,6 +3,15 @@ extends RefCounted
 
 const RULESET := "full-hospital-v2"
 
+static func create_formal(level_id:String,catalog:ContentCatalog)->ClinicState:
+	var state:ClinicState=create(level_id,catalog)
+	if state==null:return null
+	# Explicit new-hospital opt-in. Loading or creating an older hospital never
+	# rewrites its admissions, inventory, completed signatures or policy history.
+	state.data.campaign.opening_loop_version=1
+	state.data.campaign.clinical_policy="manual"
+	return state
+
 static func create(level_id: String,catalog: ContentCatalog) -> ClinicState:
 	if not catalog.levels.has(level_id) or catalog.levels[level_id].get("ruleset","")!=RULESET: return null
 	var level: Dictionary=catalog.levels[level_id]

@@ -387,6 +387,48 @@ def verify_final_ipa(ipa, config, signing):
             "signatureVerified": True, "entitlementsVerified": True, "actualIpaIdentityVerified": True}
 
 
+def run_formal_gameplay_checks(godot, engine_env):
+    runtime = Path(engine_env["HOSPITAL_CI_RUNTIME_ROOT"])
+    if runtime != SCRATCH / "runtime":
+        raise RuntimeError("Formal gameplay runtime does not match isolated engine HOME")
+    formal_root = runtime / "formal-gameplay-checks"
+    cases = [
+        ("opening-loop", "test_campaign_opening_loop.gd", "OPENING LOOP RESULT", 420),
+        ("formal-opening", "test_formal_opening_guide.gd", "FORMAL OPENING RESULT:", 180),
+        ("scene-build", "test_campaign_scene_build.gd", "SCENE BUILD RESULT:", 180),
+        ("scene-edit", "test_campaign_scene_edit_regressions.gd", "SCENE EDIT RESULT:", 180),
+        ("confirm-release", "test_campaign_confirm_release.gd", "CONFIRM RELEASE RESULT:", 180),
+        ("formal-hud", "test_formal_hud_integration.gd", "FORMAL HUD RESULT:", 180),
+        ("routine-ui", "test_formal_routine_ui.gd", "ROUTINE UI RESULT:", 180),
+        ("opening-budget", "test_opening_budget_guide.gd", "BUDGET GUIDE RESULT:", 180),
+        ("touch-parity", "test_campaign_touch_parity.gd", "TOUCH PARITY RESULT:", 180),
+        ("patient-card", "test_campaign_patient_card.gd", "PATIENT CARD RESULT", 180),
+    ]
+    for tag, script, marker, timeout in cases:
+        # Do not create this parent here, including for the runner log. The
+        # Godot helper atomically reserves a fresh final directory itself.
+        report = formal_root / f"{tag}-{os.getpid()}-{secrets.token_hex(6)}" / "result.json"
+        if report.parent.exists():
+            raise RuntimeError("Formal gameplay output directory is not fresh")
+        stage = "godot-formal-" + tag
+        log = run([godot, "--headless", "--path", COPY,
+                   "--script", "res://tests/" + script, "--",
+                   "--output=" + str(report)], stage,
+                  secret=False, env=engine_env, timeout=timeout).decode(errors="replace")
+        results = re.findall(r"(?m)^" + re.escape(marker) +
+                             r" passed=([0-9]+) failed=([0-9]+)[ \t]*\r?$", log)
+        if (len(results) != 1 or int(results[0][0]) <= 0 or results[0][1] != "0" or
+                re.search(r"(?im)(SCRIPT\s+ERROR|Parse\s+Error|^\s*(?:ERROR|FATAL)\b|ObjectDB instances were leaked|resources? still in use at exit)", log)):
+            raise RuntimeError(stage + " did not complete cleanly")
+        if not report.is_file():
+            raise RuntimeError(stage + " did not write its isolated report")
+        result = json.loads(report.read_text(encoding="utf-8"))
+        if (type(result.get("passed")) is not int or type(result.get("failed")) is not int or
+                result["passed"] <= 0 or result["failed"] != 0 or
+                result["passed"] != int(results[0][0])):
+            raise RuntimeError(stage + " report does not match its completion marker")
+
+
 def export_project(config):
     bundle, team, version, build = config
     project = GAME / "project.godot"
@@ -455,6 +497,7 @@ def export_project(config):
     if (len(brand_results) != 1 or int(brand_results[0][0]) <= 0 or brand_results[0][1] != "0" or
             re.search(r"(?im)(SCRIPT\s+ERROR|Parse\s+Error|^\s*(?:ERROR|FATAL)\b)", brand_ui)):
         raise RuntimeError("Real hospital brand-identity checks failed")
+    run_formal_gameplay_checks(godot, engine_env)
     logs = run([godot, "--headless", "--path", COPY, "--export-release", "Hospital iOS", XCODE / (NAME + ".xcodeproj")], "godot-export", env=engine_env).decode(errors="replace")
     if re.search(r"(?m)(SCRIPT ERROR:|Parse Error:|^ERROR:)", logs):
         raise RuntimeError("Godot export reported an error")

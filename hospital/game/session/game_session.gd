@@ -31,9 +31,11 @@ func _init(content: ContentCatalog, root: String) -> void:
 
 func _new_state(level_id: String="") -> ClinicState:
 	var target := level_id
-	if target=="": target=sim.clock_state().level_id if sim!=null else "level_01"
+	if target=="": target=sim.clock_state().level_id if sim!=null else default_new_level_id()
 	_remember_career()
-	var fresh := ClinicState.create(target,catalog)
+	# Only an explicit new factory opts in. open_saved never calls this path
+	# for an existing hospital, including an older schema3 long-term save.
+	var fresh:ClinicState=LongCampaignState.create_formal(target,catalog) if _level_track(target)=="full-hospital-v2" else ClinicState.create(target,catalog)
 	if fresh==null: return null
 	var track:String=_level_track(target)
 	if _career_tracks.has(track):
@@ -45,6 +47,20 @@ func _new_state(level_id: String="") -> ClinicState:
 	cosmetic_rng.randomize()
 	fresh.data["appearance_seed"]=cosmetic_rng.randi_range(1,2147483647)
 	return fresh
+
+func default_new_level_id() -> String:
+	var levels:Array=long_campaign_levels()
+	return str(levels[0].id) if not levels.is_empty() else "level_01"
+
+func start_new_hospital() -> Dictionary:
+	return start_level(default_new_level_id())
+
+func has_saved_hospital() -> bool:
+	# This is a menu fact, not a new field in a clinical save. A recovery
+	# marker still represents a protected old hospital, even if unreadable.
+	for filename:String in ["main.json","previous.json","main.swap.json","recovery.pending"]:
+		if FileAccess.file_exists(save_root.path_join(filename)):return true
+	return false
 
 func level_data(level_id: String="") -> Dictionary:
 	var target := level_id if level_id!="" else str(sim.clock_state().level_id)

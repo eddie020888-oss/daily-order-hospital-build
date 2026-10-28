@@ -10,7 +10,10 @@ func _run() -> void:
 	root.size=Vector2i(1280,720)
 	var catalog:ContentCatalog=ContentCatalog.load_checked("res://content").catalog
 	var host:Node3D=load("res://main.gd").new()
-	host.session=GameSession.new(catalog,"E:/CODEX/2026-10-19/医院自由建造/temp/ui-unused-save")
+	host.session=GameSession.new(catalog,"E:/CODEX/2026-10-28/医院经营闭环优化/work/legacy-fixtures/free-build-ui-%d/save"%Time.get_ticks_usec())
+	var legacy_start:Dictionary=host.session.start_level("level_01")
+	check(legacy_start.get("ok",false),"legacy free-build fixture explicitly selects teaching level01")
+	if not legacy_start.get("ok",false):host.free();finish();return
 	root.add_child(host);host.set_process(false);host.hud.flow.close()
 	host.feedback.set_application_active(false)
 	host.feedback._music_player.stop()

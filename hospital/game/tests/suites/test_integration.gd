@@ -58,6 +58,7 @@ func _no_orphans(snapshot: Dictionary, t: TestContext) -> void:
 
 func test_complete_challenge_from_commands_with_save_mid_congestion(t: TestContext) -> void:
 	var continuous:=_session()
+	t.expect_true(continuous.start_level("level_01").get("ok",false),"legacy replay explicitly selects teaching level01")
 	var reloaded: GameSession
 	var save_tick:=-1
 	_commands_at(continuous,0,t)
@@ -143,6 +144,7 @@ func test_replay_at_30_and_60_render_calls_keeps_same_tick_snapshot(t: TestConte
 	var initial: Dictionary={}
 	for fps in [30,60]:
 		var session:=_session()
+		t.expect_true(session.start_level("level_01").get("ok",false),"legacy pacing replay explicitly selects teaching level01")
 		# Both render schedules replay one exact initial game, including its
 		# cosmetic seed; preserve the full-snapshot equality assertion below.
 		if initial.is_empty():initial=session.sim.snapshot()

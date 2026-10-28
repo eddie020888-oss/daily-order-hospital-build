@@ -32,5 +32,7 @@ func _run() -> void:
 	for name in SUITES:
 		if suite == "All" or suite == name:
 			load(SUITES[name]).new().run(t)
+	# Fixtures release their audio players synchronously; the mixer drains later.
+	await create_timer(0.24).timeout
 	print("TEST RESULT: failed=%d passed=%d" % [t.failed, t.passed])
 	quit(1 if t.failed > 0 else 0)

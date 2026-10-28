@@ -150,6 +150,10 @@ func _run() -> void:
 	root.size = Vector2i(932,430)
 	host = load("res://main.gd").new()
 	host.session = GameSession.new(catalog,save_root)
+	if not check(host.session.start_level("level_01").get("ok",false),"legacy precision fixture explicitly selects teaching level01"):
+		host.free()
+		await _finish()
+		return
 	root.add_child(host)
 	host.set_process(false)
 	host.feedback.set_application_active(false)

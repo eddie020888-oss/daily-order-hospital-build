@@ -112,32 +112,60 @@
   "openingLoopCandidate20261028": {
     "version": "0.3.0",
     "build": "5",
-    "status": "local-verification-complete-native-run-pending",
+    "status": "ready-for-standard-mac-build",
     "priorReleasedCommit": "a6b2ff3122fe29daea0f6e0eb4eaf55eb5d08f2a",
     "all": {
       "result": "TEST RESULT: failed=0 passed=2456",
       "logSha256": "808d7b9afdde90b027f94ee27033c35755b845c4cbaa5b4bdca1b426b9f1e839"
     },
     "formalEntryAndRestGuide": {
-      "result": "FORMAL OPENING RESULT: passed=111 failed=0",
-      "logSha256": "fcbeb17f47682c702cc566ab3915e332966ce67c1226efc08a670517cfdfd13d"
+      "result": "FORMAL OPENING RESULT: passed=161 failed=0",
+      "logSha256": "68de0eb1f9e6cd21051ab2b6cd800b9a45935362ec7e4e9ea46554bf00c6843f"
     },
     "hud": {
       "result": "FORMAL HUD RESULT: passed=25 failed=0",
       "logSha256": "a36a9c13c767808095ce03d89cd9340de77ed75967eec3ce050ad7429f67c5d2"
     },
     "patientCard": {
-      "result": "PATIENT CARD RESULT passed=74 failed=0",
-      "logSha256": "8eab9dedfd1d45c8ffbba1d0a0c1469265c1e3309756adad2bb5738e8fe058aa"
+      "result": "PATIENT CARD RESULT passed=123 failed=0",
+      "logSha256": "d790c3000fc8cadb5e3ef120ad29c612d1fd9dbaacd409b443aa9c92cd1918ef"
     },
-    "sourceFileCount": 41,
-    "normalizedSourceManifestSha256": "129e401599800cddc53786f36a586b77468c8f032c8ddd38c8699fbc786d5ea8",
-    "ciStandaloneGates": 10,
-    "native20MinutesComplete": false,
+    "resourceScreen": {
+      "result": "RESOURCE SCREEN RESULT: passed=13 failed=0",
+      "logSha256": "080a9539c3d6f2bdd3a9ee0dfe38d52937497248e8f6617901576e61d95f211e"
+    },
+    "sourceFileCount": 42,
+    "normalizedSourceManifestSha256": "6f1368f2b369b53dd65575a39d2c6e6a03fd3c3851110e7548f672adf35d46fa",
+    "ciStandaloneGates": 11,
+    "native20MinutesComplete": true,
     "physicalIphoneVerified": false,
     "fullCampaignContentAccepted": false,
     "olderSavesPreserved": true,
     "newBillingRouteAdded": false,
-    "notes": "Opening slice acceptance is distinct from full campaign content, entertainment and device performance acceptance."
+    "notes": "Opening slice acceptance is distinct from full campaign content, entertainment and device performance acceptance.",
+    "native": {
+      "wallSeconds": 1200.125,
+      "automaticUi": true,
+      "modelInjection": false,
+      "physicalIphone": false,
+      "funAccepted": false,
+      "summarySha256": "83d254388592bdb90053f04abfb6ed5afebd788c1a0735429569965ff4e4c152",
+      "originalFindings": [
+        {
+          "details": {
+            "rect": "[P: (464.0, 189.0), S: (375.0, 48.0)]",
+            "text": "运行此工序"
+          },
+          "elapsed_seconds": 903.777,
+          "key": "button_clipped:prepare operation O15",
+          "severe": false
+        }
+      ],
+      "findingFollowup": {
+        "result": "RESOURCE SCREEN RESULT: passed=13 failed=0",
+        "logSha256": "080a9539c3d6f2bdd3a9ee0dfe38d52937497248e8f6617901576e61d95f211e"
+      },
+      "postRunUiChanges": "Resource footer layout, preliminary disease label and unavailable unpaid-order navigation received focused tests after the native run; the simulation was unchanged."
+    }
   }
 }

@@ -68,6 +68,7 @@ func _run() -> void:
 	_test_pure_guide()
 	_test_live_requirement_navigation()
 	_test_staff_rest_guidance_boundaries()
+	_test_blocked_delivery_source_guidance()
 	await _finish()
 
 func _test_entry_and_menu() -> void:
@@ -295,6 +296,7 @@ func _test_manual_rest_and_broken_repair(session:GameSession)->void:
 	var repair:Dictionary=CampaignOpeningGuide.current(broken,catalog)
 	check(repair.get("focus",{}).get("action","")=="operation" and repair.focus.get("facility_kind","")=="O11" and repair.focus.get("control","")=="run_operation","broken repair workshop guides a real paid repair order instead of its close control")
 	check(JSON.stringify(broken)==before,"broken workshop guidance changes neither condition nor orders")
+	_test_broken_repair_staff_targets(broken,workshop)
 	if _build_rest_test_service(session,"O26",false)=="":return
 	manual=_manual_rest_fixture(session.sim.snapshot())
 	manual.snapshot.resources.water=0
@@ -303,6 +305,112 @@ func _test_manual_rest_and_broken_repair(session:GameSession)->void:
 	check(food.get("focus",{}).get("staff_id","")==manual.staff_id and food.focus.get("control","")=="rest_"+str(manual.staff_id)+"_food","manual food guidance targets the actual employee and food action when water is empty")
 	check(JSON.stringify(manual.snapshot)==before,"manual food guidance remains read-only")
 	check(SnapshotValidator.validate(session.sim.snapshot(),catalog)=="","all synthetic repair and manual-rest boundaries leave the actual hospital valid")
+
+func _test_broken_repair_staff_targets(broken:Dictionary,workshop:String)->void:
+	# Explicit reader-only staffing boundaries, based on command-built geometry.
+	# A closed copy is a selection decoy, not a claimed new in-game facility.
+	var reserve:Dictionary=broken.duplicate(true)
+	var engineer:String=""
+	for sid:String in reserve.facilities[workshop].staff_ids:
+		if reserve.staff[sid].role=="engineer":engineer=sid;break
+	if not check(engineer!="","repair staffing boundary has a real command-hired engineer"):return
+	reserve.facilities[workshop].staff_ids.erase(engineer)
+	reserve.staff[engineer].facility_id=""
+	var decoy:Dictionary=reserve.facilities[workshop].duplicate(true)
+	decoy.id="aaa_closed_repair_decoy";decoy.status="closed";decoy.condition=100;decoy.staff_ids=[]
+	reserve.facilities[decoy.id]=decoy
+	var before:String=JSON.stringify(reserve)
+	check(CampaignOperations.readiness(reserve,catalog,"O11")==["missing_staff:O11"],"unassigned-engineer boundary follows actual operation missing_staff semantics")
+	var assignment:Dictionary=CampaignOpeningGuide.current(reserve,catalog)
+	var focus:Dictionary=assignment.get("focus",{})
+	check(focus.get("action","")=="staff" and focus.get("control","")=="assign" and focus.get("role","")=="engineer" and focus.get("staff_id","")==engineer and focus.get("facility_id","")==workshop,"open broken repair workshop assigns the exact real unassigned engineer to the open workshop")
+	check(JSON.stringify(reserve)==before,"assigning guidance reads the boundary without moving or assigning anyone")
+	var absent:Dictionary=reserve.duplicate(true)
+	absent.staff.erase(engineer)
+	before=JSON.stringify(absent)
+	check(CampaignOperations.readiness(absent,catalog,"O11")==["missing_staff:O11"],"no-engineer boundary follows actual operation missing_staff semantics")
+	var hire:Dictionary=CampaignOpeningGuide.current(absent,catalog)
+	focus=hire.get("focus",{})
+	check(focus.get("action","")=="staff" and focus.get("control","")=="hire" and focus.get("role","")=="engineer" and focus.get("facility_id","")==workshop,"open broken repair workshop without an engineer requests hire instead of closing or rebuilding")
+	check(JSON.stringify(absent)==before,"hiring guidance cannot recruit or alter the boundary")
+
+func _delivery_input_boundary(source:Dictionary,order_id:String,working:bool=false)->Dictionary:
+	# Explicit detached UI boundary: no input is removed from the real test
+	# hospital and no walking/production/completion history is claimed.
+	var boundary:Dictionary=source.duplicate(true)
+	boundary.paused=false;boundary.resources.delivered=0;boundary.resources.supplies=4
+	boundary.work_orders[order_id].status="working" if working else "walking"
+	boundary.work_orders[order_id].reason="" if working else "insufficient_resources"
+	boundary.work_orders[order_id].started_tick=int(boundary.tick) if working else -1
+	return boundary
+
+func _delivery_guide(source:Dictionary,order_id:String,working:bool=false)->Dictionary:
+	var boundary:Dictionary=_delivery_input_boundary(source,order_id,working)
+	var before:String=JSON.stringify(boundary)
+	var result:Dictionary=CampaignOpeningGuide.current(boundary,catalog)
+	check(JSON.stringify(boundary)==before,"delivery input guidance preserves the explicit boundary")
+	return result
+
+func _test_blocked_delivery_source_guidance()->void:
+	var session:=GameSession.new(catalog,save_base.path_join("blocked-supply-reader"))
+	if _build_service(session,"U04-E1",25)=="" or _build_service(session,"O01",33)=="" or _build_service(session,"O15",40)=="" or _build_service(session,"O05",125)=="" or _build_service(session,"U04-E2",129)=="":return
+	var delivery:Dictionary=_public(session,"run_operation",{"facility_kind":"O15"})
+	if not delivery.get("ok",false):return
+	var order_id:String=str(delivery.data.work_order_id)
+	var source:Dictionary=session.sim.snapshot()
+	check(SnapshotValidator.validate(source,catalog)=="","blocked delivery tests start from a valid real command hospital")
+	check(source.work_orders[order_id].resource=="supplies" and int(source.work_orders[order_id].quantity)==6 and int(source.work_orders[order_id].output.get("delivered",0))==6 and int(catalog.campaign.facilities.O14.output.get("supplies",0))>0,"delivery input,quantity,output and upstream source come from actual authored commands")
+	var view:Dictionary=_delivery_guide(source,order_id)
+	check(view.get("focus",{}).get("action","")=="build" and view.focus.get("facility_kind","")=="O14","O15 walking with only4of6 supplies directs real O14 build instead of indefinite waiting")
+	var upstream:String=_build_rest_test_service(session,"O14",false)
+	if upstream=="":return
+	view=_delivery_guide(session.sim.snapshot(),order_id)
+	check(view.get("focus",{}).get("action","")=="staff" and view.focus.get("control","")=="hire" and view.focus.get("role","")=="logistics" and view.focus.get("facility_id","")==upstream,"existing empty O14 directs actual source logistics hiring")
+	var hired:Dictionary=_public(session,"hire",{"role":"logistics"})
+	if not hired.get("ok",false):return
+	view=_delivery_guide(session.sim.snapshot(),order_id)
+	check(view.get("focus",{}).get("action","")=="staff" and view.focus.get("control","")=="assign" and view.focus.get("staff_id","")==str(hired.data.staff_id) and view.focus.get("facility_id","")==upstream,"existing unassigned source worker directs exact O14 assignment")
+	if not _public(session,"assign",{"staff_id":hired.data.staff_id,"facility_id":upstream}).get("ok",false):return
+	source=session.sim.snapshot()
+	view=_delivery_guide(source,order_id)
+	check(view.get("focus",{}).get("action","")=="operation" and view.focus.get("facility_kind","")=="O14" and view.focus.get("control","")=="run_operation","ready upstream stock source directs one real O14 production order")
+	view=_delivery_guide(source,order_id,true)
+	check(view.get("focus",{}).get("action","")=="operation" and view.focus.get("facility_kind","")=="O15" and view.focus.get("control","")!="run_operation","already working O15 waits for output without requiring consumed input a second time")
+	check(session.sim.snapshot()==source and SnapshotValidator.validate(source,catalog)=="","all input-shortage boundaries leave actual stock,orders and strict source state unchanged")
+	_test_unfunded_upstream_order_boundaries(session,order_id)
+
+func _test_unfunded_upstream_order_boundaries(session:GameSession,delivery_id:String)->void:
+	var placed:Dictionary=_public(session,"run_operation",{"facility_kind":"O14"})
+	if not placed.get("ok",false):return
+	var source:Dictionary=session.sim.snapshot()
+	var upstream_id:String=str(placed.data.work_order_id)
+	if not check(SnapshotValidator.validate(source,catalog)=="" and int(source.work_orders[upstream_id].cost)>0,"upstream budget boundaries start from real valid paid-operation definitions"):return
+	# Explicit reader copies only: no actual cash or input is spent, zeroed,
+	# reserved or claimed as consumed in the real test hospital.
+	for paused:bool in [false,true]:
+		var boundary:Dictionary=_delivery_input_boundary(source,delivery_id)
+		boundary.paused=paused;boundary.cash=0
+		boundary.work_orders[upstream_id].status="walking"
+		boundary.work_orders[upstream_id].started_tick=-1
+		var before:String=JSON.stringify(boundary)
+		var view:Dictionary=CampaignOpeningGuide.current(boundary,catalog)
+		check(view.get("focus",{}).get("action","")=="goals" and view.focus.get("section","")=="finance","unpaid O14 with no available money must show finance rather than wait or resume, paused="+str(paused))
+		check(JSON.stringify(boundary)==before,"unfunded upstream guidance preserves the boundary, paused="+str(paused))
+	var short_input:Dictionary=_delivery_input_boundary(source,delivery_id)
+	short_input.work_orders.erase(upstream_id)
+	var before:String=JSON.stringify(short_input)
+	var direct:Dictionary=CampaignOpeningGuide._rest_operation_card(short_input,catalog,LongCampaign.goals(short_input,catalog),"O15","delivered","reader fixture")
+	check(direct.get("focus",{}).get("action","")=="operation" and direct.focus.get("facility_kind","")=="O14" and direct.focus.get("control","")=="run_operation","generic unpaid operation helper resolves missing input instead of waiting on an impossible O15")
+	check(JSON.stringify(short_input)==before,"generic input query leaves its explicit boundary unchanged")
+	short_input.resources.supplies=6
+	direct=CampaignOpeningGuide._rest_operation_card(short_input,catalog,LongCampaign.goals(short_input,catalog),"O15","delivered","reader fixture")
+	check(direct.get("focus",{}).get("action","")=="operation" and direct.focus.get("facility_kind","")=="O15" and direct.focus.get("control","")!="run_operation","affordable walking order with restored inputs may wait without ordering twice")
+	var paid:Dictionary=_delivery_input_boundary(source,delivery_id)
+	paid.work_orders[upstream_id].status="working";paid.work_orders[upstream_id].started_tick=int(paid.tick)
+	paid.cash=0
+	var view:Dictionary=CampaignOpeningGuide.current(paid,catalog)
+	check(view.get("focus",{}).get("action","")=="operation" and view.focus.get("facility_kind","")=="O14" and view.focus.get("control","")!="run_operation","paid working upstream production does not demand its consumed money a second time")
+	check(session.sim.snapshot()==source and SnapshotValidator.validate(source,catalog)=="","all upstream funding/input copies preserve actual source money,orders and validation")
 
 func _finish() -> void:
 	if is_instance_valid(pages):

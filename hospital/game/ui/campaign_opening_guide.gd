@@ -26,6 +26,9 @@ static func current(snapshot:Dictionary,catalog:ContentCatalog) -> Dictionary:
 	if code not in ["build","hire","assign"]:
 		var rest:Dictionary=_staff_rest_card(snapshot,catalog,stage)
 		if not rest.is_empty():return rest
+	if code in ["supply_operation","supply_in_progress"]:
+		var input_card:Dictionary=_supply_input_card(snapshot,catalog,stage)
+		if not input_card.is_empty():return input_card
 	match code:
 		"build":
 			focus.action="build"
@@ -72,6 +75,32 @@ static func current(snapshot:Dictionary,catalog:ContentCatalog) -> Dictionary:
 		if not bool(goal.get("passed",false)):
 			return _card(snapshot,stage,"stage:"+str(goal.get("id","")),"当前阶段 · "+str(goal.get("label","")),"实际进度 %d / %d。查看当前目标及尚缺条件；增加科室、接诊或改善经营都保留在这座医院中。"%[int(goal.get("current",0)),int(goal.get("target",0))],"查看阶段目标",{"action":"goals","control":"prepare_case" if goal.get("id","")=="signature_cases" else ""})
 	return {"visible":false}
+
+static func _supply_input_card(d:Dictionary,catalog:ContentCatalog,stage:Dictionary)->Dictionary:
+	var existing:bool=false
+	for order:Dictionary in d.work_orders.values():
+		if str(order.facility_kind)!=str(OpeningLoop.SUPPLY_KIND) or order.status in ["done","failed","cancelled"]:continue
+		existing=true
+		# Working has already paid and consumed its input. Walking/queued
+		# records alone cannot promise output when input or funds are missing.
+		if order.status=="working":continue
+		if not CampaignClinicalFlow._stock_ready(d,order):return _supply_resource_card(d,catalog,stage,str(order.resource),int(order.quantity))
+		if CampaignClinicalFlow._available_cash(d)<int(order.cost):return _card(d,stage,"supply:cash","准备配送费用","已有配送单尚未开工，可用资金不足；查看财务，不会重复下单或自动借款。","查看财务",{"action":"goals","section":"finance"})
+	if existing:return {}
+	var estimate:Dictionary=RestInsights.operation(d,catalog,str(OpeningLoop.SUPPLY_KIND))
+	if int(estimate.get("missing_input",0))>0:return _supply_resource_card(d,catalog,stage,str(estimate.input_resource),int(estimate.input_quantity))
+	if int(estimate.get("cash_after",0))<0:return _card(d,stage,"supply:cash","准备配送费用","安排真实配送仍需可用资金，先查看财务。","查看财务",{"action":"goals","section":"finance"})
+	return {}
+
+static func _supply_resource_card(d:Dictionary,catalog:ContentCatalog,stage:Dictionary,resource:String,required:int)->Dictionary:
+	# Same authored output-source relationship as the resource help page.
+	var held:Dictionary=RestInsights._reservations(d).resources
+	var available:int=maxi(0,int(d.resources.get(resource,0))-int(held.get(resource,0)))
+	var prefix:String="配送需%s%d份，当前可用%d份，还缺%d份。"%[str(CampaignHospitalPanel.RESOURCE_NAMES.get(resource,resource)),required,available,maxi(0,required-available)]
+	for definition:Dictionary in catalog.campaign.facilities.values():
+		if definition.get("kind","patient")=="patient" or int(definition.get("output",{}).get(resource,0))<=0:continue
+		return _rest_operation_card(d,catalog,stage,str(definition.id),resource,prefix)
+	return _card(d,stage,"supply:source","准备配送上游物资",prefix+"先查看实际物资来源，不能空等配送产生库存。","查看物资来源",{"action":"goals","section":"resource","resource":resource})
 
 static func _staff_rest_card(d:Dictionary,catalog:ContentCatalog,stage:Dictionary)->Dictionary:
 	if not CampaignPeople.autonomy_enabled(d):return {}
@@ -123,12 +152,25 @@ static func _rest_operation_card(d:Dictionary,catalog:ContentCatalog,stage:Dicti
 	for order:Dictionary in d.work_orders.values():
 		if order.status in ["done","failed","cancelled"]:continue
 		if (resource!="" and int(order.get("output",{}).get(resource,0))>0) or (resource=="" and str(order.facility_kind)==kind):
+			if order.status!="working":
+				if not CampaignClinicalFlow._stock_ready(d,order):return _supply_resource_card(d,catalog,stage,str(order.resource),int(order.quantity))
+				if CampaignClinicalFlow._available_cash(d)<int(order.cost):return _card(d,stage,"staff-rest:order-cash","准备工单实际费用",prefix+"已有工单尚未开工，可用资金不足；先查看财务，不会重复下单或自动借款。","查看财务",{"action":"goals","section":"finance"})
 			if d.paused:return _card(d,stage,"staff-rest:resume","让补给准备继续",prefix+"已有真实工单在进行；继续营业等待完成，不必重复下单。","继续营业",{"action":"resume"})
 			return _card(d,stage,"staff-rest:working","等待补给准备完成",prefix+"已有真实工单在进行；查看进度，完成后才会增加库存或修复设备。","查看工单",{"action":"operation","facility_kind":kind,"resource":resource})
 	var need:Dictionary=OpeningLoop._facility_requirement(d,catalog,kind)
 	# The existing operation rules allow a staffed, open repair workshop to
 	# perform paid field repair even when that workshop itself is damaged.
-	if kind=="O11" and CampaignOperations.readiness(d,catalog,kind).is_empty():need={"code":""}
+	var repair_workshop:String=""
+	if kind=="O11":
+		var operation_reasons:Array=CampaignOperations.readiness(d,catalog,kind)
+		if operation_reasons.is_empty():need={"code":""}
+		elif operation_reasons.has("missing_staff:"+kind):
+			var ids:Array=d.facilities.keys();ids.sort()
+			for id:String in ids:
+				if d.facilities[id].kind==kind and CampaignOperations._long_operable(d.facilities[id],catalog):repair_workshop=id;break
+			if repair_workshop!="":
+				var role:String=str(catalog.campaign.facilities[kind].roles[0])
+				need={"code":"assign" if _unassigned_staff(d,role)!="" else "hire","role":role}
 	var focus:Dictionary={"facility_kind":kind,"resource":resource}
 	match str(need.code):
 		"build":
@@ -136,6 +178,7 @@ static func _rest_operation_card(d:Dictionary,catalog:ContentCatalog,stage:Dicti
 			return _card(d,stage,"staff-rest:source-build","准备"+name,prefix+"这项真实补给来源尚未建设。","建设"+name,focus)
 		"hire","assign":
 			focus.action="staff";focus.role=str(need.role);focus.control=str(need.code);focus.facility_id=_facility_id(d,kind)
+			if repair_workshop!="":focus.facility_id=repair_workshop
 			if need.code=="assign":focus.staff_id=_unassigned_staff(d,str(need.role))
 			return _card(d,stage,"staff-rest:source-staff","配齐补给生产岗位",prefix+"补给库存不足；生产新物资需要"+str(catalog.campaign.roles[need.role].name)+"到岗，有库存的自助短休本身不需要另配人。","安排补给岗位",focus)
 		"waiting_treatment":

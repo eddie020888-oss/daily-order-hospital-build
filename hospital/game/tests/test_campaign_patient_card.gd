@@ -247,6 +247,162 @@ func test_closed_existing_and_synthetic_broken_therapy(data:Dictionary)->void:
 	check(session.sim.snapshot()==before and int(session.sim.snapshot().facilities[facility_id].condition)>0,"synthetic wear and preparation remain UI-only and cannot mutate actual condition inventory money or work orders")
 	card.free()
 
+# New boundaries below are detached UI projections, not valid saved hospitals.
+# Facility geometry, roles and the queued O15 order first come from real commands;
+# only explicit stock/order-state boundary copies are passed to Card.present.
+func _delivery_input_fixture(data:Dictionary,suffix:String)->Dictionary:
+	var session:GameSession=restored(data.pending,suffix)
+	if session==null:return {}
+	if build(session,"U04-E2",129)=="":return {}
+	var order:Dictionary=issue(session,"run_operation",{"facility_kind":"O15"})
+	if not order.get("ok",false):return {}
+	return {"session":session,"order_id":str(order.data.work_order_id)}
+
+func _delivery_projection(session:GameSession,order_id:String,supplies:int)->Dictionary:
+	var copy:Dictionary=session.sim.snapshot()
+	copy.resources.delivered=0
+	copy.resources.supplies=supplies
+	# UI-only walking/not-started shortage boundary; never loaded into Simulation.
+	copy.work_orders[order_id].status="walking"
+	copy.work_orders[order_id].started_tick=-1
+	copy.work_orders[order_id].reason="insufficient_resources" if supplies<6 else ""
+	copy.paused=false
+	return copy
+
+func test_blocked_delivery_prepares_upstream_without_hiding_referral(data:Dictionary)->void:
+	var fixture:Dictionary=_delivery_input_fixture(data,"blocked-delivery-absent-source")
+	if fixture.is_empty():return
+	var session:GameSession=fixture.session
+	var before:Dictionary=session.sim.snapshot()
+	var card:Control=card_for(session)
+	card.show_patient(data.id)
+	card.present(_delivery_projection(session,fixture.order_id,4))
+	var focus:Dictionary=card.preparation_focus
+	check(focus.get("action","")=="build" and focus.get("facility_kind","")=="O14","unstarted O15 with only4 of6 supplies prepares the actual absent O14 input source rather than waiting for delivered output")
+	check(not card.controls.decision_refer.disabled and card.controls.decision_refer.is_visible_in_tree(),"a feasible paid referral remains visible and actionable while delivery input preparation is needed")
+	var count:int=preparations.size()
+	card.controls.prepare_treatment.pressed.emit()
+	check(preparations.size()==count+1 and preparations[-1].get("facility_kind","")=="O14","blocked delivery preparation signal names upstream supply production rather than another O15")
+	check(session.sim.snapshot()==before,"stock shortage projection and upstream navigation do not create stock orders costs or clinical receipts")
+	card.controls.decision_refer.pressed.emit()
+	var after:Dictionary=session.sim.snapshot()
+	check(after.patients[data.id].clinical_decision.receipts.size()==1 and after.patients[data.id].clinical_decision.receipts[-1].action=="refer" and int(after.metrics.completed)==0,"preparation guidance cannot swallow the real feasible referral decision or count it as an immediate cure")
+	card.free()
+
+func test_blocked_delivery_resolves_real_input_source_staff_and_reservations(data:Dictionary)->void:
+	var fixture:Dictionary=_delivery_input_fixture(data,"blocked-delivery-source-staff")
+	if fixture.is_empty():return
+	var session:GameSession=fixture.session
+	var definition:Dictionary=catalog.campaign.facilities["O14"]
+	var layout:Dictionary=FacilityLayout.default_layout(definition.unit_id,"O14",0)
+	var source_id:String=""
+	for cell:int in range(GridService.WIDTH*GridService.HEIGHT):
+		var payload:Dictionary={"unit_id":definition.unit_id,"origin_cell":cell,"layout":layout}
+		if not FacilityLayout.preview(session.sim.snapshot(),payload).get("ok",false):continue
+		var built:Dictionary=issue(session,"build_department",payload)
+		if built.get("ok",false):source_id=str(built.data.facility_ids[0])
+		break
+	check(source_id!="","real geometry creates an unstaffed O14 input source for routing boundary")
+	if source_id=="":return
+	var card:Control=card_for(session)
+	card.show_patient(data.id)
+	card.present(_delivery_projection(session,fixture.order_id,4))
+	var focus:Dictionary=card.preparation_focus
+	check(focus.get("action","")=="staff" and focus.get("facility_kind","")=="O14" and focus.get("facility_id","")==source_id and focus.get("role","")=="logistics","existing unstaffed O14 prepares its actual logistics role instead of duplicate building or a disabled source-run control")
+	var hire:Dictionary=issue(session,"hire",{"role":"logistics"})
+	if not hire.get("ok",false):card.free();return
+	if not issue(session,"assign",{"staff_id":hire.data.staff_id,"facility_id":source_id}).get("ok",false):card.free();return
+	var before:Dictionary=session.sim.snapshot()
+	card.present(_delivery_projection(session,fixture.order_id,4))
+	focus=card.preparation_focus
+	check(focus.get("action","")=="goals" and focus.get("section","")=="resource" and focus.get("resource","")=="supplies" and focus.get("facility_kind","")=="O14" and focus.get("control","")=="resource_run_O14","staffed affordable O14 routes to its real supplies production control without auto-producing")
+	# UI-only reservation boundary: nominal6 supplies,2 held for existing care =>4 usable.
+	var reserved:Dictionary=_delivery_projection(session,fixture.order_id,6)
+	reserved.patients[data.id].reservation_resource="supplies"
+	reserved.patients[data.id].reservation_quantity=2
+	reserved.work_orders[fixture.order_id].reason="insufficient_resources"
+	card.present(reserved)
+	focus=card.preparation_focus
+	check(focus.get("resource","")=="supplies" and focus.get("facility_kind","")=="O14","patient reservations prevent nominal6 supplies from being misreported as6 available delivery inputs")
+	check(session.sim.snapshot()==before,"source staffing navigation and detached reservation projections cannot mutate the real hospital")
+	card.free()
+
+func test_real_eligible_or_paid_delivery_waits_without_duplicate_order(data:Dictionary)->void:
+	var fixture:Dictionary=_delivery_input_fixture(data,"eligible-delivery-progress")
+	if fixture.is_empty():return
+	var session:GameSession=fixture.session
+	var before:Dictionary=session.sim.snapshot()
+	var card:Control=card_for(session)
+	card.show_patient(data.id)
+	var moving:Dictionary=_delivery_projection(session,fixture.order_id,6)
+	card.present(moving)
+	var focus:Dictionary=card.preparation_focus
+	check(focus.get("action","")=="goals" and focus.get("section","")=="resource" and focus.get("resource","")=="delivered" and focus.get("control","")!="resource_run_O15","a genuinely supplied not-yet-started delivery only exposes progress and never queues another O15")
+	moving.paused=true
+	card.present(moving)
+	check(card.preparation_focus.get("action","")=="resume","paused delivery with sufficient unreserved inputs may resume rather than manufacture upstream work")
+	# Paid-working UI boundary: inputs were already consumed when actual service started.
+	var paid:Dictionary=_delivery_projection(session,fixture.order_id,0)
+	paid.work_orders[fixture.order_id].status="working"
+	paid.work_orders[fixture.order_id].started_tick=int(paid.tick)
+	paid.work_orders[fixture.order_id].reason=""
+	card.present(paid)
+	focus=card.preparation_focus
+	check(focus.get("action","")=="goals" and focus.get("resource","")=="delivered" and focus.get("facility_kind","")!="O14","a paid working delivery does not require its already-consumed6 inputs a second time")
+	check(session.sim.snapshot()==before,"eligible and paid delivery projections preserve all actual finance stock and order evidence")
+	card.free()
+
+# Disease disclosure boundaries: real completed examination and real treatment.
+# The original pre-exam hidden-name test above is retained unchanged.
+func _check_diagnosis_header(card:Control,snapshot:Dictionary,id:String,label:String)->void:
+	var patient:Dictionary=snapshot.patients[id]
+	var disease_name:String=str(catalog.campaign.diseases[patient.disease_id].name)
+	var header:Label=card.controls.phase
+	check(header.text.contains(disease_name) and (header.text.contains("疑似") or header.text.contains("初诊")) and not header.text.contains("已确诊"),label+" fixed header names the actual catalog disease with a preliminary qualifier rather than claiming confirmation")
+	check(not header.text.contains(str(catalog.campaign.cases[patient.case_id].title)),label+" uses actual disease identity rather than the case-task title")
+	var width:float=header.get_theme_font("font").get_string_size(header.text,HORIZONTAL_ALIGNMENT_LEFT,-1,header.get_theme_font_size("font_size")).x
+	check(width<=header.size.x+1.0,label+" actual disease and qualifier fit the visible short-card header without relying on clipped tooltip text",str({"text_width":width,"available":header.size.x}))
+
+func test_pending_patient_discloses_actual_preliminary_diagnosis(data:Dictionary)->void:
+	var session:GameSession=restored(data.pending,"disease-label-pending")
+	if session==null:return
+	var before:Dictionary=session.sim.snapshot()
+	check(CampaignClinicalDecisions.preview(before,catalog,data.id).pending,"diagnosis-label fixture uses a genuinely completed first examination")
+	var card:Control=card_for(session)
+	card.configure(Rect2(59,90,814,224))
+	card.show_patient(data.id)
+	await _frames()
+	_check_diagnosis_header(card,before,data.id,"pending first examination")
+	check(session.sim.snapshot()==before,"disclosing the real preliminary diagnosis cannot create clinical evidence or change treatment")
+	card.free()
+
+func test_actual_treatment_keeps_preliminary_disease_visible(data:Dictionary)->void:
+	var session:GameSession=restored(data.pending,"disease-label-active-treatment")
+	if session==null:return
+	if build(session,"U04-E2",129)=="":return
+	var view:Dictionary=CampaignClinicalDecisions.preview(session.sim.snapshot(),catalog,data.id)
+	if not issue(session,"clinical_decision",{"patient_id":data.id,"action":"cautious_treat","expected_revision":int(view.revision)}).get("ok",false):return
+	issue(session,"set_paused",{"paused":false})
+	var active:bool=false
+	for _n:int in range(1600):
+		var current:Dictionary=session.sim.snapshot()
+		var patient:Dictionary=current.patients[data.id]
+		var index:int=int(patient.step_index)
+		if patient.phase=="care_service" and patient.clinical_decision.state=="authorized" and index<patient.steps.size() and patient.steps[index].facility_kind=="U04-E2":active=true;break
+		session.sim.advance_ticks(1)
+	if not active:
+		check(false,"real authorized patient reaches actual distinct U04-E2 treatment before diagnosis-header inspection")
+		return
+	var before:Dictionary=session.sim.snapshot()
+	check(SnapshotValidator.validate(before,catalog)=="","active-treatment diagnosis-label fixture is a real save-valid service state")
+	var card:Control=card_for(session)
+	card.configure(Rect2(59,90,814,224))
+	card.show_patient(data.id)
+	await _frames()
+	_check_diagnosis_header(card,before,data.id,"actual authorized treatment")
+	check(session.sim.snapshot()==before and int(before.metrics.completed)==0,"reading disease identity during real service cannot manufacture a completed cure")
+	card.free()
+
 func _run()->void:
 	root.size=Vector2i(932,430)
 	var loaded:Dictionary=ContentCatalog.load_checked("res://content")
@@ -262,6 +418,11 @@ func _run()->void:
 			test_stale_rejection_preserves_patient(data)
 			test_preparation_advances_and_old_hospital_callback(data)
 			test_closed_existing_and_synthetic_broken_therapy(data)
+			test_blocked_delivery_prepares_upstream_without_hiding_referral(data)
+			test_blocked_delivery_resolves_real_input_source_staff_and_reservations(data)
+			test_real_eligible_or_paid_delivery_waits_without_duplicate_order(data)
+			await test_pending_patient_discloses_actual_preliminary_diagnosis(data)
+			await test_actual_treatment_keeps_preliminary_disease_visible(data)
 	if test_paths.write_report({"ok":failed==0,"passed":passed,"failed":failed,"checks":checks,"scope":"focused compact real patient card; no native visual acceptance claim"},"\t")!=OK:
 		printerr("FORMAL TEST PATH ERROR: report_write_failed");quit(2);return
 

@@ -230,7 +230,7 @@ func _render() -> void:
     _sync_phone_footer()
 
 func _sync_phone_footer() -> void:
-    if footer!=null:footer.visible=not is_full_page() or section not in ["patients","staff","finance","operations"]
+    if footer!=null:footer.visible=not is_full_page() or section not in ["patients","staff","finance","operations","resource"]
 
 func _text(parent:Node,copy:String,size_value:int=16,color:Color=HospitalUiStyle.INK) -> Label:
     var label:=HospitalUiStyle.text(copy,size_value,color)

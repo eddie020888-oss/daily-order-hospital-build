@@ -403,6 +403,7 @@ def run_formal_gameplay_checks(godot, engine_env):
         ("opening-budget", "test_opening_budget_guide.gd", "BUDGET GUIDE RESULT:", 180),
         ("touch-parity", "test_campaign_touch_parity.gd", "TOUCH PARITY RESULT:", 180),
         ("patient-card", "test_campaign_patient_card.gd", "PATIENT CARD RESULT", 180),
+        ("resource-screen", "test_resource_short_screen.gd", "RESOURCE SCREEN RESULT:", 180),
     ]
     for tag, script, marker, timeout in cases:
         # Do not create this parent here, including for the runner log. The

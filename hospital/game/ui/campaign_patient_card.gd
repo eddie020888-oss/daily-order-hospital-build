@@ -7,6 +7,7 @@ signal preparation_requested(focus:Dictionary)
 signal all_patients_requested
 
 const ACTION_LABELS:Dictionary={"continue_exam":"继续检查","cautious_treat":"审慎治疗","refer":"转诊交接"}
+const ResourceInsights=preload("res://ui/hospital_operating_insights.gd")
 var patient_id:String=""
 var controls:Dictionary={}
 var preparation_focus:Dictionary:
@@ -156,6 +157,12 @@ func present(snapshot:Dictionary={})->void:
 	controls.phase.text=phase
 	controls.phase.tooltip_text=phase
 	var confidence:int=int(_decision.get("confidence",-1))
+	if confidence>=0:
+		var disease_name:String=str(_session.catalog.campaign.get("diseases",{}).get(str(patient.get("disease_id","")),{}).get("name",""))
+		if disease_name!="":
+			phase="疑似："+disease_name+" · "+("待决定" if pending else phase)
+			controls.phase.text=phase
+			controls.phase.tooltip_text=phase
 	controls.confidence.text="诊断依据：等待首诊检查" if confidence<0 else "诊断把握度 %d / 100 · 治疗建议线 %d"%[confidence,int(_decision.get("safe_threshold",80))]
 	_preparation={}
 	var unavailable:Array[String]=[]
@@ -240,17 +247,44 @@ func _staff_focus(subject:String)->Dictionary:
 			return focus
 	return {"action":"goals","section":"staff","facility_kind":kind,"patient_id":patient_id}
 
-func _resource_focus(resource:String)->Dictionary:
+func _resource_focus(resource:String,visited:Dictionary={})->Dictionary:
+	var focus:Dictionary={"action":"goals","section":"resource","resource":resource,"patient_id":patient_id}
+	if visited.has(resource):return focus
+	var seen:Dictionary=visited.duplicate()
+	seen[resource]=true
 	for order:Dictionary in _snapshot.get("work_orders",{}).values():
 		if int(order.get("output",{}).get(resource,0))<=0 or order.status in ["done","failed","cancelled"]:continue
+		# A queued/walking output is not progress when its inputs cannot be paid.
+		# Working jobs already consumed their locked input/cost; never charge twice.
+		if order.status!="working" and int(order.get("started_tick",-1))<0:
+			var input:String=str(order.get("resource",""))
+			if not CampaignClinicalFlow._stock_ready(_snapshot,{"resource":input,"quantity":int(order.get("quantity",0))}):
+				return _resource_focus(input,seen)
+			if CampaignClinicalFlow._available_cash(_snapshot)<int(order.get("cost",0)):
+				return {"action":"goals","section":"finance","patient_id":patient_id}
+			var missing:Array=CampaignOperations.readiness(_snapshot,_session.catalog,str(order.facility_kind))
+			if not missing.is_empty():return _prepare_for(missing)
+			var reason:String=str(order.get("reason",""))
+			if reason in ["missing_or_busy_staff","missing_staff"]:
+				return {"action":"goals","section":"staff","facility_kind":str(order.facility_kind),"patient_id":patient_id}
+			if reason in ["unreachable_workplace","path_blocked"]:
+				return {"action":"goals","section":"rooms","facility_id":str(order.facility_id),"patient_id":patient_id}
 		if bool(_snapshot.get("paused",true)):return {"action":"resume","resource":resource,"work_order_id":str(order.id),"patient_id":patient_id}
-		return {"action":"goals","section":"resource","resource":resource,"patient_id":patient_id}
-	var focus:Dictionary={"action":"goals","section":"resource","resource":resource,"patient_id":patient_id}
+		return focus
 	for definition:Dictionary in _session.catalog.campaign.facilities.values():
-		if int(definition.get("output",{}).get(resource,0))>0:
-			focus.facility_kind=str(definition.id)
-			focus.control="resource_run_"+str(definition.id)
-			break
+		if int(definition.get("output",{}).get(resource,0))<=0:continue
+		var kind:String=str(definition.id)
+		var missing:Array=CampaignOperations.readiness(_snapshot,_session.catalog,kind)
+		if not missing.is_empty():
+			var preparation:Dictionary=_prepare_for(missing)
+			preparation.resource=resource
+			return preparation
+		var estimate:Dictionary=ResourceInsights.operation(_snapshot,_session.catalog,kind)
+		if int(estimate.get("missing_input",0))>0:return _resource_focus(str(estimate.get("input_resource","")),seen)
+		if int(estimate.get("cash_after",0))<0:return {"action":"goals","section":"finance","patient_id":patient_id}
+		focus.facility_kind=kind
+		focus.control="resource_run_"+kind
+		break
 	return focus
 
 func _service_status(patient:Dictionary)->String:

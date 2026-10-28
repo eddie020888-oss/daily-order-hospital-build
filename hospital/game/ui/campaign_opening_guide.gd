@@ -63,6 +63,17 @@ static func current(snapshot:Dictionary,catalog:ContentCatalog) -> Dictionary:
 			if bool(snapshot.get("paused",true)):
 				return _card(snapshot,stage,"patients:resume","继续医院实际运转","当前诊疗或后勤仍待推进。医院暂停，诊疗、转诊与离院都不会推进；继续后可查看具体等待原因。","继续营业",{"action":"resume"})
 			return _card(snapshot,stage,"patients:waiting","先处理在院患者","当前开业客流%d / %d人。查看正在等待的检查、治疗或转诊；完成实际离院后才释放接诊名额。"%[int(opening.get("live_count",0)),int(opening.get("live_limit",2))],"查看在院患者",{"action":"patients","reason":str(need.get("reason",""))})
+	# A working referral route permits admission before optional therapy. Once
+	# that device is built, do not mistake its vacant role for completed setup.
+	if not bool(opening.get("treatment_ready",false)):
+		var therapy_state:=ClinicState.new();therapy_state.data=snapshot
+		var therapy_steps:Array=catalog.campaign.cases[str(opening.template_case_id)].steps.slice(2)
+		var therapy_reasons:Array=CampaignClinicalFlow._case_preparation_reasons(therapy_state,catalog,str(opening.template_case_id),false,therapy_steps)
+		if _only_staff_missing(therapy_reasons):
+			var therapy_focus:Dictionary=_staffing_focus(snapshot,catalog,str(opening.treatment_kind))
+			if not therapy_focus.is_empty():
+				var therapy_role_name:String=str(catalog.campaign.roles[therapy_focus.role].name)
+				return _card(snapshot,stage,"staff:"+str(therapy_focus.facility_id),"配齐本院治疗岗位","设备已经建成，仍缺"+therapy_role_name+"。查看已有员工和招聘费用，确认后才会招聘或派岗；诊疗方案仍由你决定。","安排诊疗岗位",therapy_focus)
 	if bool(snapshot.get("paused",true)):
 		return _card(snapshot,stage,"hospital:resume","继续医院的真实运转","当前准备已完成。继续营业后接待、首诊、配送和患者离院才会推进；暂停期间不会消耗经营时间。","继续营业",{"action":"resume"})
 	if not bool(opening.get("treatment_ready",false)) and _facility_id(snapshot,str(opening.treatment_kind))=="":
@@ -201,6 +212,14 @@ static func _clinical_card(snapshot:Dictionary,catalog:ContentCatalog,stage:Dict
 	if pending.is_empty():return {"visible":false}
 	var patient_id:String=str(pending[0])
 	var decision:Dictionary=CampaignClinicalDecisions.preview(snapshot,catalog,patient_id)
+	var treatment_missing:Array=decision.get("terms",{}).get("cautious_treat",{}).get("missing",[])
+	if decision.get("pending",false) and _only_staff_missing(treatment_missing):
+		for reason:String in treatment_missing:
+			var repair_focus:Dictionary=_staffing_focus(snapshot,catalog,reason.trim_prefix("missing_staff:"))
+			if repair_focus.is_empty():continue
+			repair_focus.patient_id=patient_id;repair_focus.expected_revision=int(decision.get("revision",0))
+			var repair_role_name:String=str(catalog.campaign.roles[repair_focus.role].name)
+			return _card(snapshot,stage,"clinical:"+patient_id,"先补齐这位患者的治疗岗位","当前把握度%d / 100，治疗设备尚缺%s。查看费用并确认后才招聘或派岗；治疗、复检与转诊仍由你决定。"%[int(decision.get("confidence",0)),repair_role_name],"安排诊疗岗位",repair_focus)
 	var control:String=""
 	for action:String in decision.get("options",[]):
 		var terms:Dictionary=decision.get("terms",{}).get(action,{})
@@ -209,6 +228,42 @@ static func _clinical_card(snapshot:Dictionary,catalog:ContentCatalog,stage:Dict
 		control="decision_"+patient_id+"_"+action
 		break
 	return _card(snapshot,stage,"clinical:"+patient_id,"根据首诊结果作决定","患者已完成真实检查，当前把握度%d / 100。查看继续检查、审慎治疗与转诊各自的时间、费用和缺项，再由你决定。"%int(decision.get("confidence",0)),"查看患者决定",{"action":"clinical","patient_id":patient_id,"control":control,"expected_revision":int(decision.get("revision",0))})
+
+static func _only_staff_missing(reasons:Array) -> bool:
+	if reasons.is_empty():return false
+	for reason:Variant in reasons:
+		if not str(reason).begins_with("missing_staff:"):return false
+	return true
+
+static func _staffing_focus(snapshot:Dictionary,catalog:ContentCatalog,kind:String) -> Dictionary:
+	if not catalog.campaign.facilities.has(kind):return {}
+	var facility_ids:Array=snapshot.facilities.keys();facility_ids.sort()
+	var staff_ids:Array=snapshot.staff.keys();staff_ids.sort()
+	for id:String in facility_ids:
+		var facility:Dictionary=snapshot.facilities[id]
+		if facility.kind!=kind or facility.status!="open" or int(facility.condition)<=0:continue
+		var room:Dictionary=snapshot.rooms.get(facility.room_id,{})
+		if room.is_empty() or room.get("status","open")!="open" or room.get("closed",false):continue
+		# Match the focused staffing card's real owned vacancies, including
+		# repeated catalog roles. Training/closure is not a missing new hire.
+		var missing:Array=catalog.campaign.facilities[kind].roles.duplicate()
+		for sid:String in facility.staff_ids:
+			var employee:Dictionary=snapshot.staff.get(sid,{})
+			if employee.get("facility_id","")==id and employee.get("role","") in missing:missing.erase(employee.role)
+		if missing.is_empty():continue
+		var role:String=str(missing[0])
+		var focus:Dictionary={"action":"staff","facility_kind":kind,"facility_id":id,"role":role,"control":"hire"}
+		for sid:String in staff_ids:
+			var employee:Dictionary=snapshot.staff[sid]
+			if employee.role!=role or employee.get("facility_id","")!="" or int(employee.get("fatigue",0))>=95:continue
+			var assignment_state:=ClinicState.new();assignment_state.data=snapshot.duplicate(true)
+			if CampaignCommands._assign(assignment_state,catalog,{"staff_id":sid,"facility_id":id}).get("ok",false):
+				focus.control="assign";focus.staff_id=sid;return focus
+		# Reuse backend rules on a detached quote, never recruit for navigation.
+		var hire_state:=ClinicState.new();hire_state.data=snapshot.duplicate(true)
+		var hired:Dictionary=CampaignCommands._hire(hire_state.data,catalog,{"role":role},"opening-guide-preview")
+		if hired.get("ok",false) and CampaignCommands._assign(hire_state,catalog,{"staff_id":hired.data.staff_id,"facility_id":id}).get("ok",false):return focus
+	return {}
 
 static func _facility_id(snapshot:Dictionary,kind:String) -> String:
 	var ids:Array=snapshot.get("facilities",{}).keys()

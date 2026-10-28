@@ -1,6 +1,8 @@
 class_name HospitalHud
 extends Control
 
+const StaffingCard=preload("res://ui/campaign_staffing_card.gd")
+
 var session: GameSession
 var touch: TouchController
 var world: HospitalWorld
@@ -73,6 +75,7 @@ var campaign_panel:CampaignHospitalPanel
 var campaign_build:CampaignBuildEditor
 var opening_card:CampaignOpeningCard
 var patient_card:CampaignPatientCard
+var staffing_card:Variant
 var _campaign_overlay:CampaignBuildOverlay
 var _opening_signature:=""
 var _opening_current:Dictionary={}
@@ -489,6 +492,12 @@ func initialize(owner_session: GameSession, controller: TouchController, view: H
 	patient_card.preparation_requested.connect(_patient_preparation_requested)
 	patient_card.decision_submitted.connect(func(_result:Dictionary)->void:_opening_signature="";present())
 	flow.opening.connect(func()->void:patient_card.close())
+	staffing_card=StaffingCard.new()
+	add_child(staffing_card)
+	staffing_card.initialize(session)
+	staffing_card.closed.connect(func()->void:_opening_signature="";present();_sync_world_framing.call_deferred())
+	staffing_card.manage_requested.connect(_staffing_management_requested)
+	flow.opening.connect(func()->void:staffing_card.close())
 	if world!=null:
 		_campaign_overlay=CampaignBuildOverlay.new()
 		world.add_child(_campaign_overlay)
@@ -583,6 +592,7 @@ func _footer_style(short_landscape: bool) -> StyleBoxFlat:
 
 func _close_drawers() -> void:
 	_cancel_campaign_build()
+	if staffing_card!=null:staffing_card.close()
 	if patient_card!=null:patient_card.close()
 	if campaign_panel!=null:
 		campaign_panel.hide()
@@ -726,6 +736,7 @@ func _sync_world_framing() -> void:
 	if campaign_build!=null and campaign_build.active:
 		left=maxf(left,campaign_build.card.position.x+campaign_build.card.size.x+12)
 	if patient_card!=null and patient_card.visible:right=minf(right,patient_card.position.x-12)
+	if staffing_card!=null and staffing_card.visible:right=minf(right,staffing_card.position.x-12)
 	right=maxf(left+48,right)
 	bottom=maxf(top+48,bottom)
 	var center:=Vector2((left+right)*.5,(top+bottom)*.5)
@@ -1028,6 +1039,7 @@ func configure_display(output_pixels: Vector2, viewport_size: Vector2, dpi: floa
 		_sync_drawer_layout()
 	if campaign_build!=null:campaign_build.configure(_campaign_build_bounds())
 	if patient_card!=null:patient_card.configure(_campaign_build_bounds())
+	if staffing_card!=null:staffing_card.configure(_campaign_build_bounds())
 	_format_status(session.sim.snapshot())
 	_sync_actions(session.sim.snapshot())
 	_update_preview_visibility.call_deferred()
@@ -1236,6 +1248,7 @@ func hits_gui(point: Vector2) -> bool:
 	return _hits_campaign_external(point)
 
 func _hits_campaign_external(point: Vector2) -> bool:
+	if staffing_card!=null and staffing_card.is_visible_in_tree() and staffing_card.get_global_rect().has_point(point):return true
 	if patient_card!=null and patient_card.is_visible_in_tree() and patient_card.get_global_rect().has_point(point):return true
 	if opening_card!=null and opening_card.is_visible_in_tree() and opening_card.get_global_rect().has_point(point):return true
 	if _experience_button!=null and _experience_button.is_visible_in_tree() and _experience_button.get_global_rect().has_point(point):return true
@@ -1772,6 +1785,28 @@ func _show_campaign(section:String) -> void:
 	campaign_panel.show_section(section)
 	_update_nav({"facilities":"build","rooms":"build","staff":"staff","cases":"patients","patients":"patients","finance":"finance"}.get(section,"finance"))
 
+func show_campaign_staffing(id:String) -> bool:
+	if session==null or session.storage_blocked or not session.is_campaign() or staffing_card==null:return false
+	var snapshot:Dictionary=session.presentation_snapshot()
+	if not snapshot.facilities.has(id):return false
+	touch.reset_input();_close_drawers()
+	if flow!=null:flow.close()
+	staffing_card.configure(_campaign_build_bounds())
+	if not staffing_card.show_facility(id):return false
+	var target:Dictionary=snapshot.facilities[id]
+	if world!=null and snapshot.rooms.has(target.room_id):world.focus_room(snapshot.rooms[target.room_id])
+	_update_nav("staff");_opening_signature="";present()
+	_sync_world_framing.call_deferred()
+	return true
+
+func _staffing_management_requested(focus:Dictionary) -> void:
+	_show_campaign("staff")
+	if str(focus.get("role",""))!="":campaign_panel._hire_role=str(focus.role)
+	if session.presentation_snapshot().staff.has(str(focus.get("staff_id",""))):campaign_panel._selected_staff=str(focus.staff_id)
+	campaign_panel._signature="";campaign_panel._render()
+	_opening_staff_focus.call_deferred("","assign",str(focus.get("facility_id","")))
+	present()
+
 func show_campaign_patient(id:String) -> bool:
 	if session==null or session.storage_blocked or not session.is_campaign() or patient_card==null:return false
 	if not session.presentation_snapshot().get("patients",{}).has(id):return false
@@ -1855,7 +1890,7 @@ func _campaign_build_preview(proposal:Dictionary,result:Dictionary) -> void:
 	if proposal.is_empty():
 		_cancel_campaign_build()
 		return
-	var signature:String=JSON.stringify([proposal,result.get("ok",false),result.get("code","")])
+	var signature:String=JSON.stringify([proposal,result.get("ok",false),result.get("code",""),result.get("data",{})])
 	if signature==_campaign_preview_signature:return
 	_campaign_preview_signature=signature
 	var record:Dictionary=proposal.duplicate(true)
@@ -1891,7 +1926,7 @@ func _present_opening_guide(snapshot:Dictionary) -> void:
 	if signature!=_opening_signature:
 		_opening_signature=signature
 		_opening_current=CampaignOpeningGuide.current(snapshot,session.catalog)
-	var available:bool=not session.storage_blocked and not (flow!=null and flow.visible) and not campaign_panel.visible and not campaign_build.active and not (patient_card!=null and patient_card.visible) and session.notice==""
+	var available:bool=not session.storage_blocked and not (flow!=null and flow.visible) and not campaign_panel.visible and not campaign_build.active and not (patient_card!=null and patient_card.visible) and not (staffing_card!=null and staffing_card.visible) and session.notice==""
 	var top:float=_top_frame.position.y+_top_frame.size.y+8 if _top_frame.visible else _safe.position.y+8
 	var bottom:float=_dock.position.y-8 if _dock.visible else _safe.end.y-8
 	opening_card.present(_opening_current,available,Rect2(Vector2(_safe.position.x+8,top),Vector2(_safe.size.x-16,maxf(48,bottom-top))))
@@ -1902,6 +1937,11 @@ func _campaign_opening_action(focus:Dictionary) -> void:
 	match str(focus.get("action","")):
 		"build":begin_campaign_build("build",kind)
 		"staff":
+			var exact_facility:String=str(focus.get("facility_id",""))
+			if exact_facility=="":
+				for facility:Dictionary in session.presentation_snapshot().facilities.values():
+					if facility.kind==kind and facility.status=="open":exact_facility=str(facility.id);break
+			if exact_facility!="" and show_campaign_staffing(exact_facility):return
 			_show_campaign("staff")
 			campaign_panel._hire_role=str(focus.get("role","doctor"))
 			var snapshot:Dictionary=session.presentation_snapshot()
@@ -1988,6 +2028,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		campaign_build.cancel()
 	elif patient_card!=null and patient_card.visible:
 		patient_card.close()
+	elif staffing_card!=null and staffing_card.visible:
+		staffing_card.close()
 	elif flow!=null and flow.visible:
 		match flow.page:
 			"launch": pass
@@ -2035,6 +2077,7 @@ func _present_campaign(snapshot:Dictionary) -> void:
 	campaign_panel.present(snapshot)
 	if campaign_build!=null:campaign_build.present(snapshot)
 	if patient_card!=null:patient_card.present(snapshot)
+	if staffing_card!=null:staffing_card.present(snapshot)
 	if session.storage_blocked:_close_drawers()
 	_sync_drawer_layout()
 

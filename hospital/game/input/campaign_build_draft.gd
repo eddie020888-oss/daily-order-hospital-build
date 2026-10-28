@@ -84,15 +84,25 @@ func _would_crop_opening(width:int,height:int) -> bool:
 	return false
 
 func adjust_bounds(delta:Vector2i,offset:Vector2i=Vector2i.ZERO) -> bool:
-	if step!=0 or origin_cell<0 or (mode=="edit" and offset!=Vector2i.ZERO):return false
+	if step!=0:return false
 	bounds_issue=""
+	if origin_cell<0:
+		bounds_issue="先在医院空地划定房间，再调整大小。";return false
+	if mode=="edit" and offset!=Vector2i.ZERO:
+		bounds_issue="调整已有房间时，请保留房间起点。";return false
 	var width:int=int(layout.width)+delta.x
 	var height:int=int(layout.height)+delta.y
 	var x:int=origin_cell%24+offset.x
 	var y:int=int(origin_cell/24)+offset.y
-	if width<3 or width>22 or height<3 or height>7 or x<1 or x+width>23 or y<1 or y+height>17:return false
+	if width<3 or width>22:
+		bounds_issue="房间宽度须为3至22格。";return false
+	if height<3 or height>7:
+		bounds_issue="房间深度须为3至7格。";return false
+	if x<1 or x+width>23 or y<1 or y+height>17:
+		bounds_issue="此方向超出院区可建范围，请移动房间后再扩建。";return false
 	for row:int in range(y,y+height):
-		if row in [8,9]:return false
+		if row in [8,9]:
+			bounds_issue="此方向会占用主走廊，请移动房间或改向另一侧扩建。";return false
 	if _would_crop_opening(width,height):
 		bounds_issue="先移动边缘门窗，再缩小房间。";return false
 	layout.width=width;layout.height=height;origin_cell=y*24+x;_anchor=origin_cell;_awaiting_corner=false

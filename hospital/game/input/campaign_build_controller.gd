@@ -1,6 +1,9 @@
 class_name CampaignBuildController
 extends RefCounted
 
+const BuildDiagnostics=preload("res://input/campaign_build_diagnostics.gd")
+
+const Recommendation=preload("res://input/campaign_build_recommendation.gd")
 signal changed(view:Dictionary)
 signal active_changed(value:bool)
 signal preview_changed(proposal:Dictionary,result:Dictionary)
@@ -141,6 +144,62 @@ func adjust_bounds(size_delta:Vector2i,offset:Vector2i=Vector2i.ZERO) -> bool:
 	present()
 	return adjusted
 
+func recommended_dimensions() -> Dictionary:
+	return Recommendation.dimensions(draft.kind) if active else {}
+
+func _recommendation_allowed(require_idle:bool=true) -> bool:
+	if not active or _submitting or session==null or session.storage_blocked or session.sim!=_owner_sim or draft.mode!="build":return false
+	if require_idle:
+		for index:Variant in _fingers:
+			if not bool(_blocked.get(index,false)):return false
+	return true
+
+func _can_recommend_size(require_idle:bool=true) -> bool:
+	return _recommendation_allowed(require_idle) and draft.step==0 and draft.layout.facilities.is_empty() and draft.layout.doors.is_empty() and draft.layout.windows.is_empty()
+
+func _can_recommend_layout(require_idle:bool=true) -> bool:
+	return _recommendation_allowed(require_idle) and draft.step in [0,1,2] and draft.origin_cell>=0 and draft.layout.facilities.is_empty() and draft.bounds_error(session.presentation_snapshot())==""
+
+func apply_recommended_size() -> bool:
+	if not _can_recommend_size():return false
+	_drop_confirm_request();_stop_pointer_gesture();_navigation_mode=false
+	var preferred:int=179
+	if world!=null and world.camera_rig!=null:
+		var center:Vector2=world.get_viewport().get_visible_rect().get_center()
+		var visible:int=world.camera_rig.screen_to_cell(center)
+		if visible>=0:preferred=visible
+	var reserved:Array=session.level_data().get("build_restrictions",{}).get("reserved_cells",[])
+	var offered:Dictionary=Recommendation.room(session.sim.snapshot(),draft.kind,draft.origin_cell,preferred,reserved)
+	if not offered.get("ok",false):
+		draft.bounds_issue=_recommendation_failure(offered);present();return false
+	var proposal:Dictionary=offered.proposal
+	draft.origin_cell=int(proposal.origin_cell)
+	draft.layout.width=int(proposal.layout.width);draft.layout.height=int(proposal.layout.height)
+	draft._anchor=draft.origin_cell;draft._awaiting_corner=false;draft.bounds_issue=""
+	present();return true
+
+func apply_recommended_layout() -> bool:
+	if not _can_recommend_layout():return false
+	_drop_confirm_request();_stop_pointer_gesture();_navigation_mode=false
+	var reserved:Array=session.level_data().get("build_restrictions",{}).get("reserved_cells",[])
+	var offered:Dictionary=Recommendation.furnish(session.sim.snapshot(),draft.kind,draft.origin_cell,draft.layout,Recommendation.MAX_PREVIEWS,reserved)
+	if not offered.get("ok",false):
+		draft.bounds_issue=_recommendation_failure(offered);present();return false
+	draft.layout=offered.proposal.layout.duplicate(true)
+	draft.selected_index=0;draft.selected_kind=draft.kind;draft._rotation=int(draft.layout.facilities[0].rotation)
+	draft.step=3;draft.bounds_issue="";_manual_openings=true
+	present();return true
+
+func _recommendation_failure(result:Dictionary) -> String:
+	match str(result.get("code","")):
+		"boundary":return "推荐尺寸超出可建设范围，请先移动房间。"
+		"main_corridor":return "推荐尺寸会占用主走廊，请先移动房间。"
+		"room_overlap":return "推荐尺寸与已有房间重叠，请先移动房间。"
+		"reserved_plot":return "所选房间包含本关保留地块，请移动房间后再使用推荐。"
+		"actor_blocked","in_flight_edge_blocked","queue_position_blocked":return "推荐摆放会挡住在院人员，请调整房间或稍后再试。"
+	var size:Dictionary=recommended_dimensions()
+	return "当前范围未找到可用的推荐摆放。可参考%d×%d格，或继续手动摆放。"%[int(size.get("width",0)),int(size.get("height",0))]
+
 func rotate() -> void:
 	if active:_drop_confirm_request();draft.rotate();present()
 
@@ -190,6 +249,12 @@ func present(snapshot:Dictionary={}) -> Dictionary:
 		var checked:Dictionary=CampaignCommands.apply(state,session.catalog,command)
 		if checked.get("ok",false):quote=int(checked.get("data",{}).get("cost",quote))
 		else:preview={"ok":false,"code":checked.code,"data":preview.get("data",{}),"detail":checked.get("data",{})}
+	if not preview.get("ok",false):
+		var diagnostic:Dictionary=BuildDiagnostics.diagnose(_snapshot,proposal,str(preview.get("code","")))
+		if not diagnostic.get("conflict_cells",[]).is_empty() or str(diagnostic.get("conflict_hint",""))!="":
+			preview["data"]=preview.get("data",{}).duplicate(true)
+			preview.data["conflict_cells"] = diagnostic.get("conflict_cells",[]).duplicate()
+			preview.data["conflict_hint"] = str(diagnostic.get("conflict_hint",""))
 	var can_advance:=false
 	match draft.step:
 		0:can_advance=bounds_error==""
@@ -206,6 +271,9 @@ func present(snapshot:Dictionary={}) -> Dictionary:
 	var options:Array=_option_cache
 
 	_projection={"active":true,"mode":draft.mode,"step":draft.step,"navigation_mode":_navigation_mode and draft.step==0,"kind":draft.kind,"name":str(names.get(draft.kind,{}).get("name","科室")),"unit_id":draft.unit_id,"room_id":draft.room_id,"proposal":proposal,"preview":preview,"bounds_error":bounds_error,"bounds_issue":draft.bounds_issue,"queued_confirm":not _pending_confirm.is_empty(),"can_advance":can_advance,"can_confirm":draft.step==3 and ready and preview.get("ok",false) and not _submitting and _pending_confirm.is_empty(),"quote":quote,"cash":int(_snapshot.cash),"balance":int(_snapshot.cash)-quote,"opening_tool":draft.opening_tool,"selected_index":draft.selected_index,"selected_kind":draft.selected_kind,"options":options}
+	_projection["recommended_dimensions"]=recommended_dimensions()
+	_projection["can_recommend_size"]=_can_recommend_size(false)
+	_projection["can_recommend_layout"]=_can_recommend_layout(false)
 	changed.emit(_projection.duplicate(true));preview_changed.emit(proposal.duplicate(true),preview.duplicate(true))
 	return _projection
 

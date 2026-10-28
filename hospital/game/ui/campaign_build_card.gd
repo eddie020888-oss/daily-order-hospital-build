@@ -8,6 +8,7 @@ var _instruction:Label
 var _quote:Label
 var _status:Label
 var _bounds:HBoxContainer
+var _recommendations:HBoxContainer
 var _openings:HFlowContainer
 var _extras:VBoxContainer
 var _column:VBoxContainer
@@ -31,6 +32,9 @@ func initialize(owner:CampaignBuildController) -> void:
 	_scroll.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_AUTO;_scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	_column.add_child(_scroll)
 	_body=VBoxContainer.new();_body.size_flags_horizontal=Control.SIZE_EXPAND_FILL;_body.add_theme_constant_override("separation",3);_scroll.add_child(_body)
+	_recommendations=HBoxContainer.new();_recommendations.add_theme_constant_override("separation",4);_body.add_child(_recommendations)
+	_button(_recommendations,"recommend_size","推荐尺寸",func()->void:controller.apply_recommended_size())
+	_button(_recommendations,"recommend_layout","推荐摆放",func()->void:controller.apply_recommended_layout())
 	_instruction=HospitalUiStyle.text("",15,HospitalA2Skin.INK,500);_instruction.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;_body.add_child(_instruction)
 	_quote=HospitalUiStyle.text("",14,HospitalA2Skin.MUTED)
 	_quote.clip_text=true;_quote.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS;_body.add_child(_quote)
@@ -87,6 +91,14 @@ func present(view:Dictionary) -> void:
 	if navigating:_title.text+=" · 移视角"
 	_instruction.text=["单指划房；双指移动、缩放视角。","点墙放门窗；拖动画面，双指缩放。","点地面摆设备；拖动画面，双指缩放。","添加配套后点地面；拖动画面可移视角。"][step]
 	if navigating:_instruction.text="单指拖动画面；点“继续划房”返回。"
+	elif step==0 and view.mode=="build":_instruction.text="可点推荐，或单指划房；双指移动、缩放。"
+	_recommendations.visible=view.mode=="build" and step in [0,1,2] and not navigating
+	controls.recommend_size.visible=step==0
+	controls.recommend_size.disabled=not bool(view.get("can_recommend_size",false))
+	controls.recommend_layout.disabled=not bool(view.get("can_recommend_layout",false))
+	var suggested:Dictionary=view.get("recommended_dimensions",{})
+	controls.recommend_size.tooltip_text="建议 %d×%d 格，采用后仍可移动和调整；确认建设才扣费。"%[int(suggested.get("width",0)),int(suggested.get("height",0))]
+	controls.recommend_layout.tooltip_text="在当前空房预览门与设备，保留已有门窗；最终确认才扣费。"
 	_quote.text="当前草稿 %s 币 · 可用 %s 币"%[HospitalHud.grouped_number(int(view.quote)),HospitalHud.grouped_number(int(view.cash))]
 	var valid:bool=bool(view.preview.get("ok",false))
 	if step==0:
@@ -101,6 +113,11 @@ func present(view:Dictionary) -> void:
 		_status.text=CampaignHospitalPanel.reason_text(view.preview,controller.session.catalog.campaign,controller.session.sim.snapshot())
 		_status.add_theme_color_override("font_color",Color("ae4935"))
 	else:_status.add_theme_color_override("font_color",HospitalA2Skin.INK)
+	var conflict_hint:String=str(view.preview.get("data",{}).get("conflict_hint",""))
+	if step>0 and conflict_hint!="":_status.text+=" · "+conflict_hint
+	if step in [1,2] and str(view.get("bounds_issue",""))!="":
+		_status.text+=" · "+str(view.bounds_issue)
+		_status.add_theme_color_override("font_color",Color("ae4935"))
 	_bounds.visible=step==0 and not navigating;_openings.visible=step==1;_extras.visible=step==3
 	controls.pan_view.visible=step==0
 	controls.pan_view.text="继续划房" if navigating else "移视角"

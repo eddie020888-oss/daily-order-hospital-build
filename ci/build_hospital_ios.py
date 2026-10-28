@@ -412,6 +412,20 @@ def run_formal_gameplay_checks(godot, engine_env):
         ('policy-workflow', 'test_campaign_policy_workflow.gd', 'POLICY APPLY RESULT:', 180),
         ('patient-geometry', 'test_campaign_patient_geometry.gd', 'CARD GEOMETRY RESULT:', 180),
         ('case-actions', 'test_campaign_case_actions.gd', 'CASE ACTIONS RESULT:', 180),
+        ('build-feedback', 'test_build_feedback_red.gd', 'BUILD FEEDBACK RESULT:', 180),
+        ('build-feedback-boundaries', 'test_build_feedback_boundaries.gd', 'BUILD FEEDBACK RESULT:', 180),
+        ('layout-recommendation', 'test_layout_recommendation_red.gd', 'RECOMMENDATION RESULT:', 180),
+        ('layout-recommendation-boundaries', 'test_layout_recommendation_boundaries.gd', 'RECOMMENDATION BOUNDARY RESULT:', 180),
+        ('recommendation-after-draw', 'test_recommendation_after_draw.gd', 'DRAW RECOMMEND RESULT:', 180),
+        ('recommendation-ui', 'test_build_card_recommendation_ui.gd', 'RECOMMEND UI RESULT:', 180),
+        ('reserved-recommendation', 'test_recommendation_reserved_plot.gd', 'RESERVED RECOMMENDATION RESULT:', 180),
+        ('reserved-recommendation-boundaries', 'test_recommendation_reserved_boundaries.gd', 'RESERVED BOUNDARY RESULT:', 180),
+        ('staffing-card', 'test_staffing_card_red.gd', 'STAFFING CARD RESULT:', 180),
+        ('staffing-boundaries', 'test_staffing_card_boundaries.gd', 'STAFFING BOUNDARY RESULT:', 180),
+        ('staffing-header', 'test_staffing_header_layout.gd', 'STAFFING HEADER RESULT:', 180),
+        ('opening-treatment-staff-guide', 'test_opening_treatment_staff_guide_red.gd', 'TREATMENT STAFF GUIDE RESULT:', 180),
+        ('opening-clinical-staff-guide', 'test_opening_clinical_staff_guide_red.gd', 'CLINICAL STAFF GUIDE RESULT:', 420),
+        ('build-feedback-text', 'test_build_feedback_text_red.gd', 'BUILD FEEDBACK TEXT RESULT:', 180),
     ]
     for tag, script, marker, timeout in cases:
         # Do not create this parent here, including for the runner log. The

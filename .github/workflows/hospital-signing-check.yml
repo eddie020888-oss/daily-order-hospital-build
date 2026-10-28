@@ -1,0 +1,48 @@
+name: Hospital signing preflight
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Signing check only; no build or upload
+        type: choice
+        options: [signed-no-upload]
+        default: signed-no-upload
+        required: true
+permissions:
+  contents: read
+concurrency:
+  group: hospital-signing-preflight
+  cancel-in-progress: false
+jobs:
+  signing-check:
+    if: >-
+      github.event.repository.private == false &&
+      github.repository == 'eddie020888-oss/daily-order-hospital-build' &&
+      github.repository == vars.HOSPITAL_EXPECTED_REPOSITORY &&
+      github.actor == 'eddie020888-oss' && github.ref == 'refs/heads/main' &&
+      inputs.mode == 'signed-no-upload'
+    runs-on: macos-26
+    timeout-minutes: 10
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+      HOSPITAL_REPOSITORY_VISIBILITY: public
+      HOSPITAL_EXPECTED_REPOSITORY: ${{ vars.HOSPITAL_EXPECTED_REPOSITORY }}
+      HOSPITAL_BUNDLE_ID: ${{ vars.HOSPITAL_BUNDLE_ID }}
+      HOSPITAL_TEAM_ID: ${{ vars.HOSPITAL_TEAM_ID }}
+      HOSPITAL_VERSION: ${{ vars.HOSPITAL_VERSION }}
+      HOSPITAL_BUILD_NUMBER: '1'
+    steps:
+      - name: Checkout reviewed CI only
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: ci
+      - name: Check existing signing material without building or uploading
+        env:
+          HOSPITAL_DISTRIBUTION_P12_B64: ${{ secrets.HOSPITAL_DISTRIBUTION_P12_B64 }}
+          HOSPITAL_P12_PASSWORD: ${{ secrets.HOSPITAL_P12_PASSWORD }}
+          HOSPITAL_PROFILE_B64: ${{ secrets.HOSPITAL_PROFILE_B64 }}
+        run: python3 ci/build_hospital_ios.py check-signing
+      # Existing signing validation imports only into a temporary keychain,
+      # verifies the matching private-key identity, then always cleans it up.
+      # No Godot, archive, Apple API, artifact or cache step is present.

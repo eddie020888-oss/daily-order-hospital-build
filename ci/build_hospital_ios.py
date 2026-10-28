@@ -446,7 +446,7 @@ def archive(config, signed=None):
     (OUT / "build-identity.json").write_text(json.dumps(identity, indent=2), encoding="utf-8")
 
 
-def signed_archive(config):
+def signed_archive(config, verify_only=False):
     bundle, team, _, _ = config
     signing = SCRATCH / "signing"
     signing.mkdir(parents=True, exist_ok=False)
@@ -475,7 +475,10 @@ def signed_archive(config):
         run(["security", "import", p12, "-k", keychain, "-P", need("HOSPITAL_P12_PASSWORD"), "-T", "/usr/bin/codesign"], "import-p12", secret=True)
         run(["security", "set-key-partition-list", "-S", "apple-tool:,apple:", "-s", "-k", password, keychain], "key-access", secret=True)
         signing_profile["identitySha1"] = select_signing_identity(keychain, document, signing_profile, config, signing)
-        archive(config, signed=signing_profile)
+        if verify_only:
+            print("HOSPITAL_SIGNING_PREFLIGHT_OK", flush=True)
+        else:
+            archive(config, signed=signing_profile)
     finally:
         subprocess.run(["security", "list-keychains", "-d", "user", "-s", *original], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         subprocess.run(["security", "delete-keychain", str(keychain)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -493,14 +496,16 @@ if __name__ == "__main__":
             archive(config)
         elif mode == "signed":
             signed_archive(config)
+        elif mode == "check-signing":
+            signed_archive(config, verify_only=True)
         else:
-            raise RuntimeError("Use export, unsigned or signed")
+            raise RuntimeError("Use export, unsigned, signed or check-signing")
         print("Hospital stage completed:", mode, "(no upload performed)")
     except Exception as error:
         # Never serialize environment, private key data, JWTs or raw signing errors.
         print("HOSPITAL_IOS_STAGE_FAILED:", str(error) if isinstance(error, RuntimeError) else type(error).__name__, file=sys.stderr)
         sys.exit(1)
     finally:
-        if len(sys.argv) == 2 and sys.argv[1] == "signed":
+        if len(sys.argv) == 2 and sys.argv[1] in {"signed", "check-signing"}:
             for filename in ["distribution.p12", "hospital.mobileprovision"]:
                 (SCRATCH / "signing" / filename).unlink(missing_ok=True)

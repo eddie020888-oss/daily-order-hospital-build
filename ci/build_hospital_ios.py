@@ -292,6 +292,43 @@ def entitlement_plist(raw):
     return result
 
 
+def extract_signed_leaf_identity(code, certificate_dir, config, stage):
+    # Apple TN3161's exact default syntax writes codesign0, codesign1, ... in cwd.
+    # A fresh directory avoids an optional-prefix argument or stale certificate.
+    certificate_dir.mkdir(parents=True, exist_ok=False)
+    try:
+        run(["codesign", "--display", "--extract-certificates", Path(code).resolve()],
+            stage, secret=True, cwd=certificate_dir, timeout=90)
+        leaf = certificate_dir / "codesign0"
+        if not leaf.is_file() or leaf.is_symlink():
+            raise RuntimeError("Code signing tool did not produce the leaf public certificate")
+        return certificate_metadata(leaf.read_bytes(), config, certificate_dir)
+    finally:
+        for path in certificate_dir.glob("codesign*"):
+            if re.fullmatch(r"codesign[0-9]+", path.name) and path.is_file():
+                path.unlink(missing_ok=True)
+
+
+def probe_codesign_toolchain(config, keychain, profile, signing):
+    probe = signing / "codesign-preflight-echo"
+    if probe.exists():
+        raise RuntimeError("Preserve an existing code signing probe")
+    try:
+        # The system executable is copied only to this temporary signing folder.
+        # It is never executed; this checks signing/display CLI behavior quickly.
+        shutil.copyfile("/bin/echo", probe)
+        probe.chmod(0o700)
+        run(["codesign", "--force", "--sign", profile["identitySha1"], "--keychain", keychain, probe],
+            "preflight-sign-tool-probe", secret=True, timeout=90)
+        run(["codesign", "--verify", "--strict", probe], "preflight-verify-tool-probe", secret=True, timeout=90)
+        actual = extract_signed_leaf_identity(probe, signing / "preflight-certificates", config,
+                                              "preflight-extract-public-certificate")
+        if actual != profile["identitySha1"] or actual not in profile["certificateSha1s"]:
+            raise RuntimeError("Code signing probe leaf does not match the hospital profile identity")
+    finally:
+        probe.unlink(missing_ok=True)
+
+
 def verify_final_ipa(ipa, config, signing):
     bundle, team, version, build = config
     verification = SCRATCH / "verify-ipa"
@@ -328,16 +365,10 @@ def verify_final_ipa(ipa, config, signing):
     if (entitlements.get("application-identifier") != profile["applicationIdentifier"] or
             entitlements.get("com.apple.developer.team-identifier") != team or entitlements.get("get-task-allow")):
         raise RuntimeError("Actual signed IPA entitlements do not match the hospital profile")
-    cert_prefix = verification / "signature-certificate-"
-    try:
-        run(["codesign", "--display", "--extract-certificates", cert_prefix, app], "extract-ipa-public-certificate", secret=True)
-        leaf_path = Path(str(cert_prefix) + "0")
-        actual_identity = certificate_metadata(leaf_path.read_bytes(), config, verification)
-        if actual_identity != signing["identitySha1"]:
-            raise RuntimeError("Final IPA was signed by a different certificate")
-    finally:
-        for cert_path in verification.glob("signature-certificate-*"):
-            cert_path.unlink(missing_ok=True)
+    actual_identity = extract_signed_leaf_identity(app, verification / "signature-certificates", config,
+                                                   "extract-ipa-public-certificate")
+    if actual_identity != signing["identitySha1"]:
+        raise RuntimeError("Final IPA was signed by a different certificate")
     pck = app / (NAME + ".pck")
     if not pck.is_file() or pck.stat().st_size == 0:
         raise RuntimeError("Final IPA is missing the real hospital game pack")
@@ -498,6 +529,7 @@ def signed_archive(config, verify_only=False):
         run(["security", "set-key-partition-list", "-S", "apple-tool:,apple:", "-s", "-k", password, keychain], "key-access", secret=True)
         signing_profile["identitySha1"] = select_signing_identity(keychain, document, signing_profile, config, signing)
         if verify_only:
+            probe_codesign_toolchain(config, keychain, signing_profile, signing)
             print("HOSPITAL_SIGNING_PREFLIGHT_OK", flush=True)
         else:
             archive(config, signed=signing_profile)

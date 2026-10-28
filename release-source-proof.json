@@ -9,7 +9,7 @@
   "publicRunnerSmokeRun": 40607322226,
   "signingCredentialsIncluded": false,
   "packageArtifactsRetained": false,
-  "appleAppRecordPending": true,
+  "appleAppRecordPending": false,
   "baselineLocalVerification": {
     "native-regression-all-02.log.output.txt": {
       "sha256": "ea3a9e07fcef029bccdceba241fdf6a679289e014a866cdd9e4699e7dda68335",
@@ -94,5 +94,19 @@
     "passed": 2419,
     "exactFailuresPendingDiagnosticRerun": true
   },
-  "packedStartupGateAdded": true
+  "packedStartupGateAdded": true,
+  "hospitalAppId": "6827795375",
+  "secondMacRun": {
+    "id": 40611134011,
+    "failed": 3,
+    "passed": 2419,
+    "failures": [
+      "benchmark full evidence file opens",
+      "layout evidence opens",
+      "load evidence opens"
+    ],
+    "rootCause": "Fresh Mac test harness did not create reports/implementation parent; preserve all test assertions and prepare isolated output parent."
+  },
+  "nextMode": "testflight",
+  "nextBuild": "1"
 }

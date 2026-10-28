@@ -345,6 +345,9 @@ def export_project(config):
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "source-manifest.json").write_text(json.dumps({"commit": os.environ.get("GITHUB_SHA"), "files": baseline}, indent=2), encoding="utf-8")
     shutil.copytree(GAME, COPY, ignore=shutil.ignore_patterns(".godot", "export_credentials.cfg"))
+    # The Windows test launcher normally creates this parent with its log file.
+    # Prepare the same evidence folder inside the isolated Mac job before All.
+    (SCRATCH / "reports" / "implementation").mkdir(parents=True, exist_ok=True)
     XCODE.mkdir(parents=True)
     godot = Path(need("GODOT_BIN"))
     engine_env = engine_environment()

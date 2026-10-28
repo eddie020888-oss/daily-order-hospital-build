@@ -1,0 +1,24 @@
+{
+  "canonical_asset_id": "doctor-01",
+  "version": "doctor-refinement-v10",
+  "glb_sha256": "ce64121251362a7e1e78533e0dbd1ddc94f358637007648b7e39b6a41eb06faa",
+  "portrait_sha256": "afc22f8a608dd5c30c5082296464a6ee607ac19b7165caabdd2ca76e8e5e03a6",
+  "source_authoring": "E:\\CODEX\\2026-10-26\\医生角色成品质感\\outputs\\candidates\\mature-doctor-04\\editable.blend",
+  "source_authoring_sha256": "d3a3c815461f141a13b6d22a73b5b0479aac012f3582c3c392a9d3073c526c25",
+  "attribution": "Rain Rig (CC) Blender Foundation | studio.blender.org",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_url": "https://studio.blender.org/characters/rain/v3/",
+  "modifications": "Rain Rig (CC) Blender Foundation | studio.blender.org\nOriginal: https://studio.blender.org/characters/rain/v3/\nLicense: Creative Commons Attribution 4.0, https://creativecommons.org/licenses/by/4.0/\nModified: evaluated head/hair and facial parts; baked unlit material colours into standard PBR textures; fitted to original doctor body, glasses and uniform; neck weights/collar and tied hair adapted.\n\nBase body: Quaternius Universal Base Characters Standard, CC0.\nSource: https://quaternius.com/packs/universalbasecharacters.html\nOriginal medical uniform, fitting, glasses and animation integration: this hospital project.\n",
+  "triangles": 50909,
+  "bones": 65,
+  "clip_duration_seconds": {
+    "Idle": 2,
+    "Walk": 1.0666666666666667,
+    "Examine": 2.4,
+    "Consult": 8
+  },
+  "walk_source_speed": 1.0663354770576525,
+  "walk_measurement": "E:\\CODEX\\2026-10-26\\医生角色成品质感\\outputs\\candidates\\measure-mature-doctor-04-walk\\manifest.json",
+  "runtime_texture_max_side": 1024,
+  "production_scope": "Only doctor-01 model/portrait/cadence; other identities and original v9 preserved"
+}

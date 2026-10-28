@@ -1,0 +1,14 @@
+{
+  "doctor01_retained_sha256": "36734a5fc91f7baa9dfcee8cf07b6929b0733d20e8fe2b81b9e5769fd728b0fd",
+  "registry_sha256": "18ff9940c5e19b1bb7da97f7edc6046ecfcfcd7de047863000118d0e420ff072",
+  "generation_manifest_sha256": "2804eea2681163444280078db92effd8794361948377f98f9e61c082444f339a",
+  "portrait_capture_result_sha256": "a31eff5829ddadded660199bd30acca690977efa41aefe5d47a10de9487804b8",
+  "source_credits": [
+    "Rain Rig (CC) Blender Foundation | studio.blender.org",
+    "Snow Rig (CC) Blender Foundation | studio.blender.org"
+  ],
+  "license": "CC-BY-4.0",
+  "source_gameplay_unchanged": true,
+  "runtime": "Blender5.2 / Godot4.7.2 Compatibility",
+  "scope": "real 3D and matching portraits; mobile hardware not measured"
+}

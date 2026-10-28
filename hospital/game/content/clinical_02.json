@@ -1,0 +1,393 @@
+{
+  "version": "0.1.0",
+  "id": "clinical_02",
+  "name": "联合诊疗",
+  "description": "统筹检查、药房与双床护理，接诊六种不同病情。",
+  "initial_cash": 15000,
+  "fixed_daily_cost": 80,
+  "day_ticks": 1200,
+  "end_tick": 12000,
+  "patience_ticks": 2400,
+  "negative_cash_limit_ticks": 1200,
+  "max_staff": 12,
+  "max_patients": 40,
+  "initial_unlocked_room_kinds": [
+    "reception",
+    "diagnosis",
+    "echo",
+    "motion",
+    "sensory",
+    "recovery",
+    "general_exam",
+    "pharmacy",
+    "ward"
+  ],
+  "unlocks": [],
+  "goal": {
+    "completed_min": 48,
+    "cash_min": 0,
+    "require_all_departed": true
+  },
+  "arrivals": [
+    {
+      "id": "patient_001",
+      "tick": 200,
+      "disease_id": "echo",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_002",
+      "tick": 320,
+      "disease_id": "rhythm_hiccup",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_003",
+      "tick": 440,
+      "disease_id": "motion",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_004",
+      "tick": 560,
+      "disease_id": "pillow_dependency",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_005",
+      "tick": 680,
+      "disease_id": "sensory",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_006",
+      "tick": 800,
+      "disease_id": "warmwind_sneeze",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_007",
+      "tick": 920,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_008",
+      "tick": 1040,
+      "disease_id": "rhythm_hiccup",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_009",
+      "tick": 1160,
+      "disease_id": "motion",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_010",
+      "tick": 1280,
+      "disease_id": "pillow_dependency",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_011",
+      "tick": 1400,
+      "disease_id": "sensory",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_012",
+      "tick": 1520,
+      "disease_id": "warmwind_sneeze",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_013",
+      "tick": 1640,
+      "disease_id": "echo",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_014",
+      "tick": 1760,
+      "disease_id": "rhythm_hiccup",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_015",
+      "tick": 1880,
+      "disease_id": "motion",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_016",
+      "tick": 2000,
+      "disease_id": "pillow_dependency",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_017",
+      "tick": 2120,
+      "disease_id": "sensory",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_018",
+      "tick": 2240,
+      "disease_id": "warmwind_sneeze",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_019",
+      "tick": 2360,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_020",
+      "tick": 2480,
+      "disease_id": "rhythm_hiccup",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_021",
+      "tick": 2600,
+      "disease_id": "motion",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_022",
+      "tick": 2720,
+      "disease_id": "pillow_dependency",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_023",
+      "tick": 2840,
+      "disease_id": "sensory",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_024",
+      "tick": 2960,
+      "disease_id": "warmwind_sneeze",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_025",
+      "tick": 3080,
+      "disease_id": "echo",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_026",
+      "tick": 3200,
+      "disease_id": "rhythm_hiccup",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_027",
+      "tick": 3320,
+      "disease_id": "motion",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_028",
+      "tick": 3440,
+      "disease_id": "pillow_dependency",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_029",
+      "tick": 3560,
+      "disease_id": "sensory",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_030",
+      "tick": 3680,
+      "disease_id": "warmwind_sneeze",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_031",
+      "tick": 3800,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_032",
+      "tick": 3920,
+      "disease_id": "rhythm_hiccup",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_033",
+      "tick": 4040,
+      "disease_id": "motion",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_034",
+      "tick": 4160,
+      "disease_id": "pillow_dependency",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_035",
+      "tick": 4280,
+      "disease_id": "sensory",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_036",
+      "tick": 4400,
+      "disease_id": "warmwind_sneeze",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_037",
+      "tick": 4520,
+      "disease_id": "echo",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_038",
+      "tick": 4640,
+      "disease_id": "rhythm_hiccup",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_039",
+      "tick": 4760,
+      "disease_id": "motion",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_040",
+      "tick": 4880,
+      "disease_id": "pillow_dependency",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_041",
+      "tick": 5000,
+      "disease_id": "sensory",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_042",
+      "tick": 5120,
+      "disease_id": "warmwind_sneeze",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_043",
+      "tick": 5240,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_044",
+      "tick": 5360,
+      "disease_id": "rhythm_hiccup",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_045",
+      "tick": 5480,
+      "disease_id": "motion",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_046",
+      "tick": 5600,
+      "disease_id": "pillow_dependency",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_047",
+      "tick": 5720,
+      "disease_id": "sensory",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_048",
+      "tick": 5840,
+      "disease_id": "warmwind_sneeze",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_049",
+      "tick": 5960,
+      "disease_id": "echo",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_050",
+      "tick": 6080,
+      "disease_id": "rhythm_hiccup",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_051",
+      "tick": 6200,
+      "disease_id": "motion",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_052",
+      "tick": 6320,
+      "disease_id": "pillow_dependency",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_053",
+      "tick": 6440,
+      "disease_id": "sensory",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_054",
+      "tick": 6560,
+      "disease_id": "warmwind_sneeze",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_055",
+      "tick": 6680,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_056",
+      "tick": 6800,
+      "disease_id": "rhythm_hiccup",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_057",
+      "tick": 6920,
+      "disease_id": "motion",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_058",
+      "tick": 7040,
+      "disease_id": "pillow_dependency",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_059",
+      "tick": 7160,
+      "disease_id": "sensory",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_060",
+      "tick": 7280,
+      "disease_id": "warmwind_sneeze",
+      "tolerance": 70
+    }
+  ]
+}

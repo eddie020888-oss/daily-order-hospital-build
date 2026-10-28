@@ -1,0 +1,15 @@
+{
+  "canonical_asset_id": "doctor-01",
+  "refinement_version": 7,
+  "source_candidate": "E:\\CODEX\\2026-10-24\\医生完整精修样板_v7\\outputs\\candidates\\doctor-v7-09",
+  "candidate_manifest_sha256": "528204602599fa3f64f552b87e525adfce645501f3632b2373bce390c202aab7",
+  "generator_sha256": "124415a5844f3bb9e4bbe4d484993c6b2a0b281f95f5b4ae01fdb149f1c66c6f",
+  "source_blend": "E:\\CODEX\\2026-10-24\\医生完整精修样板_v7\\outputs\\candidates\\doctor-v7-09\\editable.blend",
+  "source_blend_sha256": "9c5287f3a41b1d4f7bd917f00132982b4ae6fe314595ab2b6e192566a858dc1a",
+  "source_glb_sha256": "04d487c000fb6fce319a23b8b35f754533402fcfdae27bb8243cc500acb4dbb9",
+  "actual_review": "E:\\CODEX\\2026-10-24\\医生完整精修样板_v7\\outputs\\game-review-v7-09\\result.json",
+  "actual_review_sha256": "58b6673f4edd35e2f2ad553d15a8c2772da3c8c378a3bb5fe68bd0c597708724",
+  "audit": "E:\\CODEX\\2026-10-24\\医生完整精修样板_v7\\reports\\audit-doctor-v7-09.json",
+  "audit_sha256": "58bfef4850a0846356d5f661f4dcf9c6824a60f566e7b87c0622d3d8a606ca24",
+  "scope": "Only doctor01 adopted; remaining v6/HQ identities retained. No phone, APK or all-character quality claim."
+}

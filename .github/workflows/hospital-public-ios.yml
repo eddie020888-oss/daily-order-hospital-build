@@ -1,0 +1,80 @@
+name: Hospital public iOS beta
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [signed-no-upload, testflight]
+        default: signed-no-upload
+        required: true
+      build_number:
+        description: Hospital CFBundleVersion; increment after an accepted Apple upload
+        type: string
+        required: true
+      upload_confirmation:
+        description: TestFlight mode only, enter UPLOAD_HOSPITAL_BETA
+        type: string
+        required: false
+permissions:
+  contents: read
+concurrency:
+  group: hospital-public-ios
+  cancel-in-progress: false
+jobs:
+  hospital:
+    if: >-
+      github.event.repository.private == false &&
+      github.repository == 'eddie020888-oss/daily-order-hospital-build' &&
+      github.repository == vars.HOSPITAL_EXPECTED_REPOSITORY &&
+      github.actor == 'eddie020888-oss' && github.ref == 'refs/heads/main' &&
+      (inputs.mode != 'testflight' || inputs.upload_confirmation == 'UPLOAD_HOSPITAL_BETA')
+    runs-on: macos-26
+    timeout-minutes: 70
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+      HOSPITAL_REPOSITORY_VISIBILITY: public
+      HOSPITAL_EXPECTED_REPOSITORY: ${{ vars.HOSPITAL_EXPECTED_REPOSITORY }}
+      HOSPITAL_BUNDLE_ID: ${{ vars.HOSPITAL_BUNDLE_ID }}
+      HOSPITAL_TEAM_ID: ${{ vars.HOSPITAL_TEAM_ID }}
+      HOSPITAL_ASC_APP_ID: ${{ vars.HOSPITAL_ASC_APP_ID }}
+      HOSPITAL_VERSION: ${{ vars.HOSPITAL_VERSION }}
+      HOSPITAL_BUILD_NUMBER: ${{ inputs.build_number }}
+    steps:
+      - name: Checkout approved public source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check available runner disk
+        run: df -h . "$RUNNER_TEMP"
+      - name: Install exact official Godot and iOS template
+        id: install
+        run: bash ci/install-godot.sh
+      - name: Test real hospital and export Xcode project, NO signing secrets
+        id: export
+        run: python3 ci/build_hospital_ios.py export
+      - name: Sign and verify the real hospital IPA
+        id: signing
+        env:
+          HOSPITAL_DISTRIBUTION_P12_B64: ${{ secrets.HOSPITAL_DISTRIBUTION_P12_B64 }}
+          HOSPITAL_P12_PASSWORD: ${{ secrets.HOSPITAL_P12_PASSWORD }}
+          HOSPITAL_PROFILE_B64: ${{ secrets.HOSPITAL_PROFILE_B64 }}
+        run: python3 ci/build_hospital_ios.py signed
+      - name: Validate hospital App and upload directly to TestFlight
+        id: upload
+        if: inputs.mode == 'testflight'
+        env:
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          HOSPITAL_UPLOAD_CONFIRMATION: ${{ inputs.upload_confirmation }}
+        run: node ci/upload-hospital.mjs
+      - name: Emit only a small public build status
+        if: always()
+        env:
+          HOSPITAL_INSTALL_OUTCOME: ${{ steps.install.outcome }}
+          HOSPITAL_EXPORT_OUTCOME: ${{ steps.export.outcome }}
+          HOSPITAL_SIGNING_OUTCOME: ${{ steps.signing.outcome }}
+          HOSPITAL_UPLOAD_OUTCOME: ${{ steps.upload.outcome }}
+        run: python3 ci/print-public-status.py
+      # No upload-artifact/release/cache output. IPA, PCK, source manifest and raw
+      # logs remain only on this ephemeral runner. Signed checks do not upload.

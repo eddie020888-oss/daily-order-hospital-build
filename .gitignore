@@ -1,0 +1,8 @@
+.godot/
+**/.godot/
+out/
+*.p8
+*.p12
+*.key
+*.mobileprovision
+**/export_credentials.cfg

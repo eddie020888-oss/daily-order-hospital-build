@@ -1,0 +1,379 @@
+{
+  "version": 3,
+  "layout": "direction-pages",
+  "canonical_asset_id": "doctor-02",
+  "artwork_source_id": "D01-high-pilot-v3",
+  "source_blend": "E:\\CODEX\\2026-10-21\\医院医生口周精修\\work\\doctor-mouth-source-03\\doctor-mouth-refined.blend",
+  "source_blend_sha256": "371d11017b50cccbc4c5c9ebbd83c67586368820b325aa29a3b035ff0948f5b7",
+  "source_bones": 20,
+  "frame_size": [
+    384,
+    512
+  ],
+  "directions": 8,
+  "camera_offset": [
+    18,
+    18,
+    18
+  ],
+  "ortho_height": 2.4,
+  "center_height": 1.0,
+  "pixel_size": 0.0046875,
+  "walk_source_speed": 0.8332078831569689,
+  "portrait": "portrait.png",
+  "embedded_chair": false,
+  "clips": {
+    "Idle": {
+      "frames": 4,
+      "duration": 2.0,
+      "loop": true,
+      "chair_included": false,
+      "columns": 4,
+      "rows_per_direction": 1,
+      "directions_per_page": 4,
+      "pages": [
+        "idle-00.png",
+        "idle-01.png"
+      ],
+      "texture": "idle-00.png",
+      "atlas_size": [
+        1536,
+        2048
+      ],
+      "source_action": "Idle",
+      "source_frames": [
+        1.0,
+        61.0
+      ],
+      "source_fps": 30
+    },
+    "Walk": {
+      "frames": 16,
+      "duration": 0.8,
+      "loop": true,
+      "chair_included": false,
+      "columns": 4,
+      "rows_per_direction": 4,
+      "directions_per_page": 1,
+      "pages": [
+        "walk-00.png",
+        "walk-01.png",
+        "walk-02.png",
+        "walk-03.png",
+        "walk-04.png",
+        "walk-05.png",
+        "walk-06.png",
+        "walk-07.png"
+      ],
+      "texture": "walk-00.png",
+      "atlas_size": [
+        1536,
+        2048
+      ],
+      "source_action": "Walk",
+      "source_frames": [
+        1.0,
+        25.0
+      ],
+      "source_fps": 30
+    },
+    "Examine": {
+      "frames": 8,
+      "duration": 2.4,
+      "loop": true,
+      "chair_included": false,
+      "columns": 4,
+      "rows_per_direction": 2,
+      "directions_per_page": 2,
+      "pages": [
+        "examine-00.png",
+        "examine-01.png",
+        "examine-02.png",
+        "examine-03.png"
+      ],
+      "texture": "examine-00.png",
+      "atlas_size": [
+        1536,
+        2048
+      ],
+      "source_action": "Examine",
+      "source_frames": [
+        1.0,
+        73.0
+      ],
+      "source_fps": 30
+    },
+    "Consult": {
+      "frames": 64,
+      "duration": 8.0,
+      "loop": false,
+      "chair_included": false,
+      "columns": 4,
+      "rows_per_direction": 4,
+      "directions_per_page": 1,
+      "pages": [
+        "consult-00.png",
+        "consult-01.png",
+        "consult-02.png",
+        "consult-03.png",
+        "consult-04.png",
+        "consult-05.png",
+        "consult-06.png",
+        "consult-07.png",
+        "consult-08.png",
+        "consult-09.png",
+        "consult-10.png",
+        "consult-11.png",
+        "consult-12.png",
+        "consult-13.png",
+        "consult-14.png",
+        "consult-15.png",
+        "consult-16.png",
+        "consult-17.png",
+        "consult-18.png",
+        "consult-19.png",
+        "consult-20.png",
+        "consult-21.png",
+        "consult-22.png",
+        "consult-23.png",
+        "consult-24.png",
+        "consult-25.png",
+        "consult-26.png",
+        "consult-27.png",
+        "consult-28.png",
+        "consult-29.png",
+        "consult-30.png",
+        "consult-31.png"
+      ],
+      "texture": "consult-00.png",
+      "atlas_size": [
+        1536,
+        2048
+      ],
+      "source_action": "Consult",
+      "source_frames": [
+        1.0,
+        241.0
+      ],
+      "source_fps": 30,
+      "frames_per_page": 16,
+      "pages_per_direction": 4
+    }
+  },
+  "actual_frames": 736,
+  "atlas_pages": 46,
+  "art_accepted": false,
+  "overall_art_accepted": false,
+  "status": "Actual full high source frames packed and mechanically verified; user visual acceptance pending",
+  "render_settings": {
+    "engine": "Cycles",
+    "samples": 48,
+    "denoise": true,
+    "device": "GPU",
+    "backend": "OPTIX",
+    "devices": [
+      {
+        "name": "NVIDIA GeForce RTX 5080",
+        "type": "OPTIX",
+        "id": "CUDA_NVIDIA GeForce RTX 5080_0000:02:00_OptiX"
+      }
+    ],
+    "view_transform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "transparent": true,
+    "output": "RGBA8 PNG",
+    "seed": 17,
+    "no_background_composite": true
+  },
+  "animated_source_metadata_sha256": "00282036d88d11ac58f2e22ad8b824dc90413f8694b128fad60a07b7f2cff180",
+  "actual_skinned_sole_audit": {
+    "L": {
+      "measured_speed": 0.8332889917905308,
+      "fit_max_residual_m": 3.477523014656925e-05,
+      "min_sole_z": 0.0005019038799218833,
+      "max_sole_z": 0.0022416359279304743,
+      "samples": [
+        {
+          "min_z": 0.0007847701199352741,
+          "max_z": 0.0022416359279304743,
+          "center": [
+            0.10616473853588104,
+            -0.1989462971687317,
+            0.0017439681105315685
+          ],
+          "seconds": 0.096
+        },
+        {
+          "min_z": 0.0007672536885365844,
+          "max_z": 0.002224142197519541,
+          "center": [
+            0.10616651922464371,
+            -0.14560607075691223,
+            0.0017264544731006026
+          ],
+          "seconds": 0.16000000000000003
+        },
+        {
+          "min_z": 0.0007454914739355445,
+          "max_z": 0.002203139243647456,
+          "center": [
+            0.10616859793663025,
+            -0.09229008853435516,
+            0.0017049043672159314
+          ],
+          "seconds": 0.22400000000000003
+        },
+        {
+          "min_z": 0.0007116371998563409,
+          "max_z": 0.0021699608769267797,
+          "center": [
+            0.10617171972990036,
+            -0.038982514292001724,
+            0.0016712413635104895
+          ],
+          "seconds": 0.288
+        },
+        {
+          "min_z": 0.000651750189717859,
+          "max_z": 0.0021102011669427156,
+          "center": [
+            0.10617687553167343,
+            0.014342239126563072,
+            0.0016113938763737679
+          ],
+          "seconds": 0.35200000000000004
+        },
+        {
+          "min_z": 0.0005019038799218833,
+          "max_z": 0.001960200257599354,
+          "center": [
+            0.10618912428617477,
+            0.0677366703748703,
+            0.0014615098480135202
+          ],
+          "seconds": 0.41600000000000004
+        }
+      ]
+    },
+    "R": {
+      "measured_speed": 0.833126774523407,
+      "fit_max_residual_m": 1.0495632886908801e-05,
+      "min_sole_z": -0.0002400603552814573,
+      "max_sole_z": 0.0013889088295400143,
+      "samples": [
+        {
+          "min_z": -0.00010711606591939926,
+          "max_z": 0.0013889088295400143,
+          "center": [
+            -0.14528058469295502,
+            -0.2568996846675873,
+            0.0007166751311160624
+          ],
+          "seconds": 0.496
+        },
+        {
+          "min_z": -0.0001245939638465643,
+          "max_z": 0.0013714489759877324,
+          "center": [
+            -0.14528225362300873,
+            -0.2035595029592514,
+            0.0006992052658461034
+          ],
+          "seconds": 0.5599999999999999
+        },
+        {
+          "min_z": -0.0001463203807361424,
+          "max_z": 0.0013497406616806984,
+          "center": [
+            -0.14528435468673706,
+            -0.15024346113204956,
+            0.0006774774519726634
+          ],
+          "seconds": 0.6240000000000001
+        },
+        {
+          "min_z": -0.0001802307233447209,
+          "max_z": 0.0013158353976905346,
+          "center": [
+            -0.14528745412826538,
+            -0.09693581610918045,
+            0.0006435610121116042
+          ],
+          "seconds": 0.6880000000000001
+        },
+        {
+          "min_z": -0.0002400603552814573,
+          "max_z": 0.001255994662642479,
+          "center": [
+            -0.14529269933700562,
+            -0.043610960245132446,
+            0.0005837242933921516
+          ],
+          "seconds": 0.752
+        }
+      ]
+    }
+  },
+  "source_provenance": {
+    "prepared_source": "E:\\CODEX\\2026-10-21\\医院医生面部精修\\work\\doctor-face-source-03\\doctor-face-refined.blend",
+    "prepared_source_sha256": "b1309f6ece0f73f267909fefebc46aa5cc98dd89d9317f7eb939b41911175e01",
+    "raw_render_manifest": "E:\\CODEX\\2026-10-21\\医院医生口周精修\\work\\doctor-mouth-bake-03\\raw-render.json",
+    "raw_render_manifest_sha256": "29f45094a95f58f22db9c93204729ef98986fe6ca002bb7ace7aca963c745cc3"
+  },
+  "alpha_border_check": {
+    "minimum_pixels": 4,
+    "frames_checked": 736,
+    "failed": 0
+  },
+  "source_unchanged": true,
+  "android_hardware_tested": false,
+  "face_refinement": {
+    "schema": "doctor-mouth-source-1",
+    "audit": "E:\\CODEX\\2026-10-21\\医院医生口周精修\\work\\doctor-mouth-source-03\\mouth-source-audit.json",
+    "audit_sha256": "825f6a05226f4e25b479349b1b28e81f23d8b7c6b2f45afb0ea30f6435664253",
+    "geometry_uv_weights_rig_actions_images_preserved": false,
+    "topology_uv_weights_rig_actions_images_preserved": true,
+    "geometry_repair_count": 1,
+    "materials_preserved": true,
+    "original_action_durations_preserved": true
+  },
+  "parent_mouth_baseline_refinement": {
+    "schema": "doctor-face-source-1",
+    "audit": "E:\\CODEX\\2026-10-21\\医院医生面部精修\\work\\doctor-face-source-03\\face-source-audit.json",
+    "audit_sha256": "902b3334ae58476101db3a8c2b04a5577df983c54c03c8e965cef9875848e0a2",
+    "geometry_uv_weights_rig_actions_images_preserved": false,
+    "topology_uv_weights_rig_actions_images_preserved": true,
+    "geometry_repair_count": 1,
+    "original_action_durations_preserved": true
+  },
+  "parent_face_baseline_refinement": {
+    "schema": "refined-source-2",
+    "audit": "E:\\CODEX\\2026-10-21\\医院自有人物二次精修\\work\\doctor-owned-refined-03\\refined-source-audit.json",
+    "audit_sha256": "f1b7d51dcff75d29976511a584552c42005aa139f2249c05ef717550a967183b",
+    "base_geometry_uv_weights_rig_actions_images_preserved": false,
+    "base_topology_uv_weights_rig_actions_images_preserved": true,
+    "topology_uv_weights_rig_actions_images_preserved": true,
+    "added_overlay_count": 0,
+    "geometry_repair_count": 1,
+    "original_action_durations_preserved": true
+  },
+  "parent_moderate_refinement": {
+    "audit": "E:\\CODEX\\2026-10-21\\医院人物适度精修\\work\\doctor-refined-02\\refined-source-audit.json",
+    "audit_sha256": "e3d0e2f8b6af98edc997845ace93a2547f9776b9698e1abebc9194a90a70944d",
+    "base_geometry_uv_weights_rig_actions_images_preserved": true,
+    "added_overlay_count": 10,
+    "original_action_durations_preserved": true
+  },
+  "parent_mobile_readability": {
+    "audit": "E:\\CODEX\\2026-10-21\\医院手机清爽画风\\work\\doctor-mobile-clean-03\\mobile-clean-audit.json",
+    "audit_sha256": "8cb9af7377eb8e4380984f73a929a146a93ce64ef4f97a69f9211dd739bf2138",
+    "geometry_uv_skin_rig_actions_images_identical": true,
+    "source_action_durations_unchanged": true,
+    "walk_speed_inherited_from_unchanged_geometry_and_actions": true
+  },
+  "source_audit_schema": "doctor-mouth-source-1",
+  "face_geometry_uv_weights_rig_actions_images_preserved": false,
+  "face_topology_uv_weights_rig_actions_images_preserved": true,
+  "geometry_repair_count": 1,
+  "original_action_durations_preserved": true
+}

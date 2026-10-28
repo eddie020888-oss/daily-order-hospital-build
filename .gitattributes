@@ -1,0 +1,5 @@
+/hospital/game/** -text
+/ci/** text eol=lf
+/.github/** text eol=lf
+/README.md text eol=lf
+/release-source-proof.json text eol=lf

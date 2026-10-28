@@ -1,0 +1,15 @@
+{
+  "canonical_asset_id": "doctor-01",
+  "refinement_version": 8,
+  "source_candidate": "E:\\CODEX\\2026-10-24\\医生造型与表情精修_v8\\outputs\\candidates\\doctor-v8-03",
+  "candidate_manifest_sha256": "c06fd9af04add993e9c15304002bce9472ebfc2bf74581ac5fe9594f441d27fb",
+  "generator_sha256": "1ea71c9218b125f39d16fd64d839d3d19850f6507208d4528496c0fafddd386f",
+  "source_blend": "E:\\CODEX\\2026-10-24\\医生造型与表情精修_v8\\outputs\\candidates\\doctor-v8-03\\editable.blend",
+  "source_blend_sha256": "18ded000e70c883f93bc8ead08aa22fda524ec4a54acb8e2a9a90157aab50b6f",
+  "source_glb_sha256": "d465bc1ddf907e2472c9f0bb3ba38516e0e5bb3ccb53ac8e533419978a491f9f",
+  "actual_review": "E:\\CODEX\\2026-10-24\\医生造型与表情精修_v8\\outputs\\game-review-v8-03\\result.json",
+  "actual_review_sha256": "e82d67c1f041233903a40f8ca723b17c470858a2d115dc8ea14351cfd006a0ae",
+  "audit": "E:\\CODEX\\2026-10-24\\医生造型与表情精修_v8\\reports\\audit-doctor-v8-03.json",
+  "audit_sha256": "f7b3f9631d9fdc55302ae727b57927ca67d25732b78c5d1cb1cdda2bbb20e9cf",
+  "scope": "Only doctor01 adopted; remaining v6/HQ identities retained. No phone, APK or all-character quality claim."
+}

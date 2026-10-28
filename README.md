@@ -1,5 +1,7 @@
-# Hospital iOS build tooling
+# 日常秩序医院 · iOS
 
-Public build tooling for the hospital game. This repository currently contains only an environment check. Game source, art, signing material and application packages are not included.
+This public repository contains the actual Godot hospital game and its art under `hospital/game`, published with the project owner's explicit authorization, plus its iOS build tooling.
 
-The check uses the standard `macos-26` GitHub-hosted runner. It runs only when manually dispatched by the repository owner and does not use repository secrets, publish artifacts or submit an app.
+Release builds use the standard `macos-26` GitHub-hosted runner and run only when manually dispatched by the repository owner on `main`. Signing material stays in encrypted repository secrets. No signed packages, raw logs, Actions artifacts or caches are published or retained by the workflow. TestFlight mode uploads directly to Apple in the same job; it does not submit an App Store release.
+
+The small `macos-check.yml` environment check contains no credentials or application upload.

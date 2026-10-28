@@ -1,0 +1,135 @@
+{
+  "version": 2,
+  "canonical_asset_id": "doctor-02",
+  "artwork_source_id": "D01",
+  "status": "Playable clinic pilot; NOT ART APPROVED",
+  "source_blend": "E:\\CODEX\\2026-10-19\\医院诊室可玩样板\\work\\doctor-consult-06\\doctor-consult-editable.blend",
+  "source_blend_sha256": "3b9b2df129c1cf2661945bd8cbe40a1cbb54392a5446ac4c80b700608096eb8d",
+  "source_bones": 20,
+  "source_method": "Retained independent D01 high sculpt and own rig; continuous sleeves, rest-space facial mask, authored Consult with actual clipboard and same chair geometry; Blender Cycles",
+  "body_rgb_projection": false,
+  "teal_category_mask_from_original_uv": true,
+  "face_method": "Retained original face image and UV; position/normal masks use rest attributes to follow sitting and turning",
+  "frame_size": [
+    384,
+    512
+  ],
+  "directions": 8,
+  "camera_offset": [
+    8.5,
+    19,
+    23
+  ],
+  "ortho_height": 2.0,
+  "center_height": 0.75,
+  "pixel_size": 0.00390625,
+  "frames": 160,
+  "clips": {
+    "Idle": {
+      "frames": 4,
+      "duration": 2.0,
+      "loop": true,
+      "chair_included": false,
+      "columns": 4,
+      "rows_per_direction": 1,
+      "directions_per_page": 4,
+      "pages": [
+        "idle-0.png",
+        "idle-1.png"
+      ],
+      "texture": "idle-0.png",
+      "atlas_size": [
+        1536,
+        2048
+      ]
+    },
+    "Walk": {
+      "frames": 8,
+      "duration": 1.0666666666666667,
+      "loop": true,
+      "chair_included": false,
+      "columns": 4,
+      "rows_per_direction": 2,
+      "directions_per_page": 2,
+      "pages": [
+        "walk-0.png",
+        "walk-1.png",
+        "walk-2.png",
+        "walk-3.png"
+      ],
+      "texture": "walk-0.png",
+      "atlas_size": [
+        1536,
+        2048
+      ]
+    },
+    "Examine": {
+      "frames": 8,
+      "duration": 2.4,
+      "loop": true,
+      "chair_included": false,
+      "columns": 4,
+      "rows_per_direction": 2,
+      "directions_per_page": 2,
+      "pages": [
+        "examine-0.png",
+        "examine-1.png",
+        "examine-2.png",
+        "examine-3.png"
+      ],
+      "texture": "examine-0.png",
+      "atlas_size": [
+        1536,
+        2048
+      ]
+    },
+    "Consult": {
+      "frames": 16,
+      "duration": 8.0,
+      "loop": false,
+      "chair_included": true,
+      "columns": 4,
+      "rows_per_direction": 4,
+      "directions_per_page": 1,
+      "pages": [
+        "consult-0.png",
+        "consult-1.png",
+        "consult-2.png",
+        "consult-3.png",
+        "consult-4.png",
+        "consult-5.png",
+        "consult-6.png",
+        "consult-7.png"
+      ],
+      "texture": "consult-0.png",
+      "atlas_size": [
+        1536,
+        2048
+      ]
+    }
+  },
+  "heading_rule": "same world-yaw rows 0..7, actual geometry views without mirroring",
+  "elapsed_seconds": 133.49721217155457,
+  "portrait": "portrait.png",
+  "portrait_sha256": "4f92745e8198719d2b1c3ee59bb189113e572301aa19f15109237a86b177a0d6",
+  "sitting_clip_completed": true,
+  "equipment_contact_completed": false,
+  "overall_art_accepted": false,
+  "layout": "direction-pages",
+  "edge_clipped_frames": [],
+  "empty_frames": [],
+  "memory_scope": "Only active heading page is strongly referenced at runtime; each 1536x2048 page can use ~4 MiB BC3/BC7/ETC2 RGBA with mipmaps. Actual device measurement pending.",
+  "body_front_projection_albedo_used": false,
+  "body_reference_use": "Restricted teal category mask from original UV only; no original RGB applied directly as body albedo.",
+  "render_settings": {
+    "engine": "Cycles",
+    "samples": 48,
+    "look": "AgX - Medium High Contrast",
+    "transparent": true
+  },
+  "consult_source_blend": "E:\\CODEX\\2026-10-19\\医院诊室可玩样板\\work\\doctor-consult-06\\doctor-consult-editable.blend",
+  "consult_source_sha256": "3b9b2df129c1cf2661945bd8cbe40a1cbb54392a5446ac4c80b700608096eb8d",
+  "source_high_parent": "E:\\CODEX\\2026-10-19\\医院画面原稿对齐\\work\\D01-clean-02\\D01-clean-detailed-high.blend",
+  "source_vertices": 331353,
+  "clipboard_hand_attached": true
+}

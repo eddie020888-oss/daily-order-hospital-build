@@ -1,0 +1,246 @@
+{
+  "version": "0.1.0",
+  "id": "level_01",
+  "initial_cash": 8000,
+  "fixed_daily_cost": 80,
+  "day_ticks": 1200,
+  "end_tick": 9000,
+  "patience_ticks": 1800,
+  "negative_cash_limit_ticks": 1200,
+  "max_staff": 8,
+  "max_patients": 40,
+  "initial_unlocked_room_kinds": [
+    "reception",
+    "diagnosis",
+    "echo",
+    "recovery"
+  ],
+  "unlocks": [
+    {
+      "room_kind": "motion",
+      "tick": 2400
+    },
+    {
+      "room_kind": "sensory",
+      "tick": 4800
+    }
+  ],
+  "arrivals": [
+    {
+      "id": "patient_001",
+      "tick": 200,
+      "disease_id": "echo",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_002",
+      "tick": 400,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_003",
+      "tick": 600,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_004",
+      "tick": 800,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_005",
+      "tick": 1000,
+      "disease_id": "echo",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_006",
+      "tick": 1200,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_007",
+      "tick": 1400,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_008",
+      "tick": 1600,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_009",
+      "tick": 1800,
+      "disease_id": "echo",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_010",
+      "tick": 2000,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_011",
+      "tick": 2200,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_012",
+      "tick": 2400,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_013",
+      "tick": 2600,
+      "disease_id": "echo",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_014",
+      "tick": 2800,
+      "disease_id": "motion",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_015",
+      "tick": 3000,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_016",
+      "tick": 3200,
+      "disease_id": "motion",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_017",
+      "tick": 3400,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_018",
+      "tick": 3600,
+      "disease_id": "motion",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_019",
+      "tick": 3800,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_020",
+      "tick": 4000,
+      "disease_id": "motion",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_021",
+      "tick": 4200,
+      "disease_id": "echo",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_022",
+      "tick": 4400,
+      "disease_id": "motion",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_023",
+      "tick": 4600,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_024",
+      "tick": 4800,
+      "disease_id": "motion",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_025",
+      "tick": 5000,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_026",
+      "tick": 5050,
+      "disease_id": "motion",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_027",
+      "tick": 5100,
+      "disease_id": "sensory",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_028",
+      "tick": 5150,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_029",
+      "tick": 5200,
+      "disease_id": "motion",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_030",
+      "tick": 5250,
+      "disease_id": "sensory",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_031",
+      "tick": 5300,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_032",
+      "tick": 5350,
+      "disease_id": "motion",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_033",
+      "tick": 5400,
+      "disease_id": "sensory",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_034",
+      "tick": 5450,
+      "disease_id": "echo",
+      "tolerance": 70
+    },
+    {
+      "id": "patient_035",
+      "tick": 5500,
+      "disease_id": "motion",
+      "tolerance": 30
+    },
+    {
+      "id": "patient_036",
+      "tick": 5550,
+      "disease_id": "sensory",
+      "tolerance": 30
+    }
+  ]
+}

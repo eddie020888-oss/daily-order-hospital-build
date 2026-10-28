@@ -1,0 +1,3073 @@
+{
+  "schema_version": 1,
+  "batch": "unified-cast-v1",
+  "entries": {
+    "doctor-01": {
+      "canonical_asset_id": "doctor-01",
+      "family": "doctor",
+      "model": "doctor-01.glb",
+      "portrait": "doctor-01-portrait.png",
+      "expected_bones": 65,
+      "clips": [
+        "Idle",
+        "Walk",
+        "Examine",
+        "Consult"
+      ],
+      "clip_duration_seconds": {
+        "Idle": 2.0,
+        "Walk": 1.0666667222976685,
+        "Examine": 2.4000000953674316,
+        "Consult": 8.0
+      },
+      "walk_source_speed": 1.0663354770576525,
+      "glb_sha256": "36734a5fc91f7baa9dfcee8cf07b6929b0733d20e8fe2b81b9e5769fd728b0fd",
+      "portrait_sha256": "4ef9ddaf8a30f6321c5dc692e5a620f507a82c5eb78da6e30d61f4af932a0290",
+      "retained_v11_unchanged": true
+    },
+    "doctor-02": {
+      "canonical_asset_id": "doctor-02",
+      "family": "doctor",
+      "model": "doctor-02.glb",
+      "portrait": "doctor-02-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.21863411579813286,
+      "glb_sha256": "56e777a8e40bb3994460754d6ccd31fe5fc69a434bc78337c9bb3dd7b82c43bd",
+      "portrait_sha256": "978b67f0144e57bff86dddbe81a39fa6914536438ee737a36a6ec7baa6c7a0d6",
+      "geometry_sha256": "d3c7a5d6f49c8cfccbbd69fc06e027a1557684bcc8c3389c9167fd1fb8d717bb",
+      "triangles": 18298,
+      "head_source": "snow"
+    },
+    "doctor-03": {
+      "canonical_asset_id": "doctor-03",
+      "family": "doctor",
+      "model": "doctor-03.glb",
+      "portrait": "doctor-03-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "deb3e0e710be08252ce5ab52dd2c34cc09d6309482eb03bc278f45c886f415c3",
+      "portrait_sha256": "0aa3ac649ffb06f13d29b94d6020910da30175e4fe18d48017432fd0e90cf4b8",
+      "geometry_sha256": "8b685775c92159b246319541ff7d97dc43a305d606e1dc0bc4a9fb0c93ef51f3",
+      "triangles": 20058,
+      "head_source": "snow"
+    },
+    "doctor-04": {
+      "canonical_asset_id": "doctor-04",
+      "family": "doctor",
+      "model": "doctor-04.glb",
+      "portrait": "doctor-04-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "7f1ccbb2ab68913f812126bf7b13fbab931e842c0b7414e677007022bda712b2",
+      "portrait_sha256": "d125260042c0b7c82fb2db10442b8c9abe3e98f89d1d0e6195c2705c7158a672",
+      "geometry_sha256": "3e14489afea51f8cd50c73593e256803b7c5c97402d7d53a8357d85890b15791",
+      "triangles": 17916,
+      "head_source": "snow"
+    },
+    "doctor-05": {
+      "canonical_asset_id": "doctor-05",
+      "family": "doctor",
+      "model": "doctor-05.glb",
+      "portrait": "doctor-05-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "9bb109bd5ff3b2aa147af9e08443f7c2dc9eabea72f596f7a45744cb1a5c8ff2",
+      "portrait_sha256": "4ce4fba83cc4948fe9e74bb155efca7d6cb87c650e827ce69fa4ed1532111185",
+      "geometry_sha256": "021861306b60602c7bd670ecf755741ec566ddfdb5e8c8ed45e3eb87bfc7bc96",
+      "triangles": 17746,
+      "head_source": "snow"
+    },
+    "doctor-06": {
+      "canonical_asset_id": "doctor-06",
+      "family": "doctor",
+      "model": "doctor-06.glb",
+      "portrait": "doctor-06-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "a9a8a9e51672e020eb4d4e9c0067827d938a9a2782128a683d61842ead8d6fb5",
+      "portrait_sha256": "1fb1f90dadd3b21223d7779345caac43d792e6ea968a49abe93f1f55549671c5",
+      "geometry_sha256": "bedc7cd75662a720c64591fb03549bdb47e8a5caab5847622114a25604072aec",
+      "triangles": 18228,
+      "head_source": "snow"
+    },
+    "doctor-07": {
+      "canonical_asset_id": "doctor-07",
+      "family": "doctor",
+      "model": "doctor-07.glb",
+      "portrait": "doctor-07-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "492ec36d5d1294ef64bac811cc3821176a390237f3551eb33d357475688f3eeb",
+      "portrait_sha256": "dc78b0edf8c14eafb1bd6fa4f9ed28b36a0e0ed79d7924019de5d320037c49e7",
+      "geometry_sha256": "1cf516492fe1022e2cee6865e8ec2e8c3138adcf3cb8c3ee9b3f0923b50b0724",
+      "triangles": 22960,
+      "head_source": "rain"
+    },
+    "doctor-08": {
+      "canonical_asset_id": "doctor-08",
+      "family": "doctor",
+      "model": "doctor-08.glb",
+      "portrait": "doctor-08-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "ade6f56c5fad757837e637751dcbbcaf5b761dba66d3a1794c69bf3051499177",
+      "portrait_sha256": "56c3f6ceac7f34b2061c73e379ccb2d67eb32923c12aa694ff1176daedc880d8",
+      "geometry_sha256": "70e5d8a4513eab19918f28c07c61b9e9e89f7adb15198a7486d9e70ba671b54e",
+      "triangles": 17868,
+      "head_source": "snow"
+    },
+    "doctor-09": {
+      "canonical_asset_id": "doctor-09",
+      "family": "doctor",
+      "model": "doctor-09.glb",
+      "portrait": "doctor-09-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "f17fa454b6f0156836a79191dbf4319377b7d67c4444a145220b5d54c4ab1e2e",
+      "portrait_sha256": "fac90c4018a0191abf84c12add9ecfca995e8c1a92006709315df13a2401eae4",
+      "geometry_sha256": "44024ddd096f1eadac38471e7d2a6d5b2c03bb8567e4c991d10bccd88337e8ae",
+      "triangles": 18980,
+      "head_source": "snow"
+    },
+    "doctor-10": {
+      "canonical_asset_id": "doctor-10",
+      "family": "doctor",
+      "model": "doctor-10.glb",
+      "portrait": "doctor-10-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "fd56f572ed34c479f6378e46406d187fbbd844c7f08acf83841eddf1368814ff",
+      "portrait_sha256": "118ff012daf548e2099616c7b2972927fd7df2f9fff59487946b265611d32cdc",
+      "geometry_sha256": "7a2bd8684a4947ab366a0175384069d5e210d50f8478c84dd8f245b57aa57fdd",
+      "triangles": 19282,
+      "head_source": "snow"
+    },
+    "doctor-11": {
+      "canonical_asset_id": "doctor-11",
+      "family": "doctor",
+      "model": "doctor-11.glb",
+      "portrait": "doctor-11-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "914c2ddb468f67dea8cf29120aa74cb576fcde211cd48dad899f9055895d20c4",
+      "portrait_sha256": "80024f09797ded551d000dfaf0981789833df0e6fb53b55bbb6363ab035e39b0",
+      "geometry_sha256": "ee37d05017783614b328be182b3933d19fdee2844b41150455c602e1accebb24",
+      "triangles": 17128,
+      "head_source": "snow"
+    },
+    "doctor-12": {
+      "canonical_asset_id": "doctor-12",
+      "family": "doctor",
+      "model": "doctor-12.glb",
+      "portrait": "doctor-12-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "c12ea55df88b63d99b2c31d369ebf8e18ab02fd200f32e14093c33a58ec52c3e",
+      "portrait_sha256": "381fd1484e8fe2ffe1f9b5303fc77c662cda39a1282061ef3bf9d9c88ea96a98",
+      "geometry_sha256": "020cd72fcb39413595eb92a054346ee5ebe9545c4490a3815e2efa61674c1f38",
+      "triangles": 22764,
+      "head_source": "rain"
+    },
+    "doctor-13": {
+      "canonical_asset_id": "doctor-13",
+      "family": "doctor",
+      "model": "doctor-13.glb",
+      "portrait": "doctor-13-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "0d3577a78936e4ba9ae1b0ab3e7e3004b82b3cb95e71762b2bcdfcfed9df1fc5",
+      "portrait_sha256": "b5d2b76393bb8f7d5f584e9732b562b8f656b64d7a5379cbf5542fd3dca8a8de",
+      "geometry_sha256": "dd72237f6dd576b67540c95ef1b59d8baa5c2f3408cd90df01bbb7de711b2a02",
+      "triangles": 17802,
+      "head_source": "snow"
+    },
+    "doctor-14": {
+      "canonical_asset_id": "doctor-14",
+      "family": "doctor",
+      "model": "doctor-14.glb",
+      "portrait": "doctor-14-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "feb96d6a4487e6fc691c20a96899b31c505f20c8c79517a9540b4565e80b1e58",
+      "portrait_sha256": "5ea8da99631b4e86e0a8409852df41732f294601768d5c1d541183c4b3b2bdbf",
+      "geometry_sha256": "3b8db9dda7020b2150fc7da127b3c9f3452cf6f42d18d2e6aa2fa34652272a42",
+      "triangles": 22338,
+      "head_source": "rain"
+    },
+    "doctor-15": {
+      "canonical_asset_id": "doctor-15",
+      "family": "doctor",
+      "model": "doctor-15.glb",
+      "portrait": "doctor-15-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "708ef8de828027934f8c5ab6a3cb5f3720f7f93f3561034b90a10b3ba7894221",
+      "portrait_sha256": "7f8566036ba44c511de5a10d2c9428f2808c37fd54d41028d6c43bf92fbe4434",
+      "geometry_sha256": "ef85a19a5bb8955fcfe93140cae309517a8d3c9ab7358fc05fe9fd4f6c44d0cc",
+      "triangles": 21986,
+      "head_source": "rain"
+    },
+    "doctor-16": {
+      "canonical_asset_id": "doctor-16",
+      "family": "doctor",
+      "model": "doctor-16.glb",
+      "portrait": "doctor-16-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "cfffa4bf35478cb63c4ce5c7fd0be74060db262fcf84a618b71b081cbe1acf47",
+      "portrait_sha256": "99a35c112dc93d188e9719e5da23f569c3a4806158f2abb6d82940be6777ed0c",
+      "geometry_sha256": "c7541415248823e6bd08c7dd4047e06e2fdd5fa81f345f5ffcc19b7718856fed",
+      "triangles": 17918,
+      "head_source": "snow"
+    },
+    "doctor-17": {
+      "canonical_asset_id": "doctor-17",
+      "family": "doctor",
+      "model": "doctor-17.glb",
+      "portrait": "doctor-17-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "ee2c6dbe3c0af00cda9572db89d1b3634483615f29c681e1777f90a342fcae16",
+      "portrait_sha256": "d705d8491a6aa26002a1137fc3d382f08b25752be0d7720113e3103412bd6fa1",
+      "geometry_sha256": "d8c5d8ef42625f854cc9d1146a4d14244a0771876c32c88b3f71b3f565509dfc",
+      "triangles": 17454,
+      "head_source": "snow"
+    },
+    "doctor-18": {
+      "canonical_asset_id": "doctor-18",
+      "family": "doctor",
+      "model": "doctor-18.glb",
+      "portrait": "doctor-18-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "7e83b18c06072ac0bdca7fddff0834f67e01ecbaaab21319cef61b1e28acf866",
+      "portrait_sha256": "a5e2a5feb083e9bffd5336b81cc15ecd9691ff1e4100165c36f21e6c1d053896",
+      "geometry_sha256": "3f3af8b400712342dbf5b37b3b6dd61c8d68bd30b94bd3adb2af2f3bd4d393b0",
+      "triangles": 23816,
+      "head_source": "rain"
+    },
+    "doctor-19": {
+      "canonical_asset_id": "doctor-19",
+      "family": "doctor",
+      "model": "doctor-19.glb",
+      "portrait": "doctor-19-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "5e543d7cadbe25262e8c790bd0582d65d8bd880f16f89eb93abf5b05bc682d62",
+      "portrait_sha256": "9978ab237cd30f6653621891f86a8f445ecc19d07f833aa837cef140fa30a10f",
+      "geometry_sha256": "ef074023ed2312e574d7ec0c9cfe2e1a2cc68fe624879637f7ae219bfb5fc96d",
+      "triangles": 22760,
+      "head_source": "rain"
+    },
+    "doctor-20": {
+      "canonical_asset_id": "doctor-20",
+      "family": "doctor",
+      "model": "doctor-20.glb",
+      "portrait": "doctor-20-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "a19b494f6099dd29aa714db1e4ffe95e1fc011edb58bfb0c2d643bebc9cbfc4b",
+      "portrait_sha256": "151e50bdcbfe90bc2722ff169e3cc91ab1838c0867b50b6f7fb078f2863e4fd4",
+      "geometry_sha256": "d6d74761611d653d7989defbd1de0e304c11768986fca83c7c37f822ee502773",
+      "triangles": 21318,
+      "head_source": "snow"
+    },
+    "doctor-21": {
+      "canonical_asset_id": "doctor-21",
+      "family": "doctor",
+      "model": "doctor-21.glb",
+      "portrait": "doctor-21-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "42d98443e0d5219e809e8e5573a3ed100442308a71bad5719cbeed16fe188273",
+      "portrait_sha256": "8fdf4ba1e130ce5acd36bb480d279c0b1510d0577196cb9afa754c6828a81021",
+      "geometry_sha256": "fd6dbc7a745d80876c36d4494be7ea772c76bd7258cb5b25f545959952eadb8f",
+      "triangles": 24588,
+      "head_source": "rain"
+    },
+    "doctor-22": {
+      "canonical_asset_id": "doctor-22",
+      "family": "doctor",
+      "model": "doctor-22.glb",
+      "portrait": "doctor-22-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "914b4d610701f0c933337911f834491e30ebf9f67ae096277a8196ca90fb4f13",
+      "portrait_sha256": "421bc5528220769ba49d22786253d9d99f61940dc8c579660fcf05a97d66245f",
+      "geometry_sha256": "b81df14b19f61b546f50a9defe59a43ef13299fd301da4c9727667a86eb584fd",
+      "triangles": 17452,
+      "head_source": "snow"
+    },
+    "doctor-23": {
+      "canonical_asset_id": "doctor-23",
+      "family": "doctor",
+      "model": "doctor-23.glb",
+      "portrait": "doctor-23-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "e85e94fde473cc23596adbb59c8cc171efee87aa902e8c8449b6a21a00d5a865",
+      "portrait_sha256": "bd350cede215d590a3d116175e96ef7170d88f6497a26bdd98c27944ab1b0083",
+      "geometry_sha256": "5cacea49581b1c0c17ba7eaba5c0a26ab494c90de5916701565bdbb8008b42f3",
+      "triangles": 21364,
+      "head_source": "rain"
+    },
+    "doctor-24": {
+      "canonical_asset_id": "doctor-24",
+      "family": "doctor",
+      "model": "doctor-24.glb",
+      "portrait": "doctor-24-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "9a1694f2283e1e49c2b14077b8fa4d4cc478b5b6178d1c42b07279ac94386c94",
+      "portrait_sha256": "aa380a350dbca29dc6c7112a56f32abe46187e5715d9d7c240e62c4181a07553",
+      "geometry_sha256": "1570014ef879011802965cba83e8164f7b080c9289d0d450399b4e551dace928",
+      "triangles": 23886,
+      "head_source": "rain"
+    },
+    "doctor-25": {
+      "canonical_asset_id": "doctor-25",
+      "family": "doctor",
+      "model": "doctor-25.glb",
+      "portrait": "doctor-25-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "b2d12c019a87dee50bd8308ef833be609bfa53086bd1024d1315d6da09697e57",
+      "portrait_sha256": "fd9ccea9406b15c9d5711c93a8334961af5724fb66266dbfd01d7265a41af926",
+      "geometry_sha256": "939366417544854fa9872a8a4f2ae8e8911651541ab411e18a40a2101ef3da98",
+      "triangles": 24096,
+      "head_source": "rain"
+    },
+    "doctor-26": {
+      "canonical_asset_id": "doctor-26",
+      "family": "doctor",
+      "model": "doctor-26.glb",
+      "portrait": "doctor-26-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "413cbb86374c996f7bc3a948f2585c7ca02693f1764cbbb9602a883e1fd93afb",
+      "portrait_sha256": "c3a84c0af8406722f5f3feacaac392b797ac8dc9e95c834f662fb51ce578d359",
+      "geometry_sha256": "89949fdd911d06ccba97d9c2e6fda005f59042ebe64e350981c2fcd39ac8fad1",
+      "triangles": 16828,
+      "head_source": "snow"
+    },
+    "doctor-27": {
+      "canonical_asset_id": "doctor-27",
+      "family": "doctor",
+      "model": "doctor-27.glb",
+      "portrait": "doctor-27-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "c96ff707267f1ccf7d1f296c136602d5fa9d7503f705926ebc57087081f1f875",
+      "portrait_sha256": "288bc1997a81b12f504eb6f159d29a264a87e3f90c244dafaba180f9b1509780",
+      "geometry_sha256": "bd443024ac6889f0a758a1c2eb0f3596189df000575b31781939278647d41df5",
+      "triangles": 17734,
+      "head_source": "snow"
+    },
+    "doctor-28": {
+      "canonical_asset_id": "doctor-28",
+      "family": "doctor",
+      "model": "doctor-28.glb",
+      "portrait": "doctor-28-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "e47e4b2252080e0f23b2aece790e52a0ae4b303e7c89565bdcf808c80841adfe",
+      "portrait_sha256": "85cfd6f20beef2f47d55216f6a447e94989b6f0459ee3509691c37441d4ed00b",
+      "geometry_sha256": "dc86a0dd47ced6085ccb9ebd7ea01b0b766b7bef9820c2dea59263efaeb690bd",
+      "triangles": 18366,
+      "head_source": "snow"
+    },
+    "doctor-29": {
+      "canonical_asset_id": "doctor-29",
+      "family": "doctor",
+      "model": "doctor-29.glb",
+      "portrait": "doctor-29-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "186202630135b7d57536d0a56fd1c4bb6df4a54cbb035a1c1a9648376ba81a77",
+      "portrait_sha256": "a3a1caf52d6f7cdf80ca2b1785b14d58e1e36c921861e41fb1accca6b2df9f0b",
+      "geometry_sha256": "ad3d1174e975a7c69445fbba4dccf7b251cccea86de0d7290a9b8bb856faee10",
+      "triangles": 20254,
+      "head_source": "snow"
+    },
+    "doctor-30": {
+      "canonical_asset_id": "doctor-30",
+      "family": "doctor",
+      "model": "doctor-30.glb",
+      "portrait": "doctor-30-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "33da54a005ff655db192daaec51757c9fbe0c4f31c6acc7e89898a19cc11fd9f",
+      "portrait_sha256": "2a9eb1174e7b9f5d3452825f9b1bb73474bb2be5f4aa11c40edc56f57949f0c4",
+      "geometry_sha256": "dcad3576c4585f5375c1d93aebaa20d2c958a4731f6df6fff123e490c0775014",
+      "triangles": 24096,
+      "head_source": "rain"
+    },
+    "doctor-31": {
+      "canonical_asset_id": "doctor-31",
+      "family": "doctor",
+      "model": "doctor-31.glb",
+      "portrait": "doctor-31-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "5046533b64522ae24caf2785946e47fca1fa23539d79f2703d68b50c766c860b",
+      "portrait_sha256": "f3838e5bb82fce41736dcad181dc6b4265a58f9d3002cf6c24a22f32e9647c52",
+      "geometry_sha256": "63d500126c2d30bc1f09065b575c214d09960bff9fe705109ede2c8cfcb1c768",
+      "triangles": 21664,
+      "head_source": "rain"
+    },
+    "doctor-32": {
+      "canonical_asset_id": "doctor-32",
+      "family": "doctor",
+      "model": "doctor-32.glb",
+      "portrait": "doctor-32-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "8b5f293096fe170ae47b46c7f7051e70552e3351f02d68c30ee023eef08890d3",
+      "portrait_sha256": "8e0c05080c39c4b13c13a45b52b49ce36092753a6180da6f8bf7ad747526779f",
+      "geometry_sha256": "7fcecd4b9c99ec19dc566fa4fb31144886fff7c3794b5e9e665fb944839b4112",
+      "triangles": 17290,
+      "head_source": "snow"
+    },
+    "doctor-33": {
+      "canonical_asset_id": "doctor-33",
+      "family": "doctor",
+      "model": "doctor-33.glb",
+      "portrait": "doctor-33-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "3c7edadd64c5c5da5b15ecf7a227fc6ebb730d6aeb58275186b897a18cd177b4",
+      "portrait_sha256": "61cca968f0fc1ff819172e0281784a661b86a3f09e03545a79d4180e442efa61",
+      "geometry_sha256": "946479e932594c0d4be8523344e31f1562843a0703ad353fb9dceafb2146d597",
+      "triangles": 19280,
+      "head_source": "snow"
+    },
+    "doctor-34": {
+      "canonical_asset_id": "doctor-34",
+      "family": "doctor",
+      "model": "doctor-34.glb",
+      "portrait": "doctor-34-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "bccddefd648e57b08a7a38e331f130aa7fd9d6a0a0a2533b00ece78da5c25040",
+      "portrait_sha256": "221a9d3321c8e14c34a81049b4119b263935c6a6c8149bb53218064449a6515e",
+      "geometry_sha256": "b6f44bb60c36892a75cf16d846100db791993cc321833ef3dfa462007a6d872d",
+      "triangles": 20254,
+      "head_source": "snow"
+    },
+    "doctor-35": {
+      "canonical_asset_id": "doctor-35",
+      "family": "doctor",
+      "model": "doctor-35.glb",
+      "portrait": "doctor-35-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "f28943aa3c88302ab5538cc54cca08ba45c49b886413d7d51fd3e89f50ba6c97",
+      "portrait_sha256": "a697961fedd6544591b5dd1b1f4832e40e7257940378b5ea225565bb4faa8f7f",
+      "geometry_sha256": "949317095876765f6a41e9a478fd973c84cb5cc5f20a25425586e05b51e1214d",
+      "triangles": 19262,
+      "head_source": "snow"
+    },
+    "doctor-36": {
+      "canonical_asset_id": "doctor-36",
+      "family": "doctor",
+      "model": "doctor-36.glb",
+      "portrait": "doctor-36-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "788a0104d491d1c8d07627a5cd2ddfe45594bed688227ea44a6007ad5e19f014",
+      "portrait_sha256": "c26d91370bb51876423ca24044b3043765eaacd916e01c7bdc7976b52088cce4",
+      "geometry_sha256": "00e5d664b65d7231538b62970816262a00dbf612c28358213bd53c07eeadfd3e",
+      "triangles": 21980,
+      "head_source": "rain"
+    },
+    "doctor-37": {
+      "canonical_asset_id": "doctor-37",
+      "family": "doctor",
+      "model": "doctor-37.glb",
+      "portrait": "doctor-37-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "3ae30f70a35aa884a911c53ed61ab63a277e200209311590c70483c2e38dcc4d",
+      "portrait_sha256": "46c31cdd2eee7bac6507fd37351d10aec640c7e4e94e39e302cb5eedd7b0ab4e",
+      "geometry_sha256": "47611ed7f7124f8af339d77791155e70821b003227cd400013b191aa4a8f3e94",
+      "triangles": 17454,
+      "head_source": "snow"
+    },
+    "doctor-38": {
+      "canonical_asset_id": "doctor-38",
+      "family": "doctor",
+      "model": "doctor-38.glb",
+      "portrait": "doctor-38-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "a0b13d11714c4ab0aeca777b58a205b98a76a6792c0491e82e03202461d72044",
+      "portrait_sha256": "17a9e564e1e0d41dd76655345d6fb6ab22275b6fa2d29078c3d1f3e251a6328a",
+      "geometry_sha256": "69c3ae48420b56a56b3ab8963ed0a83326d001438a85c8de296298cd511bc24f",
+      "triangles": 19574,
+      "head_source": "snow"
+    },
+    "doctor-39": {
+      "canonical_asset_id": "doctor-39",
+      "family": "doctor",
+      "model": "doctor-39.glb",
+      "portrait": "doctor-39-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "108c3c6c4bfc18dc6a95b7b897d929ec0d742883871a33ca3ed8ca086a2c97e0",
+      "portrait_sha256": "76866778701acab32459588bae69cd03ba74a9a107d58855fd51a4ba69cf9749",
+      "geometry_sha256": "9ea3536ca9d14cf8f72b76f8cba853294208e503a26725d3f917a34a918e1424",
+      "triangles": 24588,
+      "head_source": "rain"
+    },
+    "doctor-40": {
+      "canonical_asset_id": "doctor-40",
+      "family": "doctor",
+      "model": "doctor-40.glb",
+      "portrait": "doctor-40-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "fa3bae4d8f349e77447ef758f61ec7a76806275b3527a5503a3f067981ef348d",
+      "portrait_sha256": "830254d25f03a0b8c28858f8800b4235e971bbd7dd331d77608cf2caf6e24a22",
+      "geometry_sha256": "77b24ba554e090e38a718056c105249c7789c6c291e009356d55ebd214c3c13a",
+      "triangles": 18560,
+      "head_source": "snow"
+    },
+    "doctor-41": {
+      "canonical_asset_id": "doctor-41",
+      "family": "doctor",
+      "model": "doctor-41.glb",
+      "portrait": "doctor-41-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "b497e6e72f57402b6f9eb3a4776f1122c0a0c1c854c138857785264c97c06acb",
+      "portrait_sha256": "7c94c654fbde17f578a92f93c6604b8a82f99aa9ef2105c33b8fa59b99f3bbdc",
+      "geometry_sha256": "7523c24c8c4fefb98764d09d4adde1575f812846fd306ef7922a2fa9d0fd7995",
+      "triangles": 23814,
+      "head_source": "rain"
+    },
+    "doctor-42": {
+      "canonical_asset_id": "doctor-42",
+      "family": "doctor",
+      "model": "doctor-42.glb",
+      "portrait": "doctor-42-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "cd64fdfc88ef912e633471494197a8c33c08d26adc494ef44a8bb26d308b4a91",
+      "portrait_sha256": "b482d6ba28fe202fe6ddfd7681992a50b67824dd82db3a7b22f4408afaf83545",
+      "geometry_sha256": "bc9b49742f0301149723371a4bdd5dd3440390189015767a11fd5ad7fccb04b3",
+      "triangles": 22316,
+      "head_source": "rain"
+    },
+    "doctor-43": {
+      "canonical_asset_id": "doctor-43",
+      "family": "doctor",
+      "model": "doctor-43.glb",
+      "portrait": "doctor-43-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "f7c1e5e3291a31c398c47959b269e3b70b2a841e0b3a1715d22c05092ef66671",
+      "portrait_sha256": "7a1b68aa0584ddca58169ea07e79ece4f980b3e0fd84854351116c5b2acf7486",
+      "geometry_sha256": "269e3990def99f7678f2502eaee2e144b7c249cd4bd19d8a5884bbc5d9adf5be",
+      "triangles": 25416,
+      "head_source": "rain"
+    },
+    "doctor-44": {
+      "canonical_asset_id": "doctor-44",
+      "family": "doctor",
+      "model": "doctor-44.glb",
+      "portrait": "doctor-44-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "e628a4459fc67bd63f53cbfbeb3549e5097cf4768f355d2bf003294a9d04f226",
+      "portrait_sha256": "4589460f661fddc56129183043e9332c260f71300a994d6da674b12d82a5e8cc",
+      "geometry_sha256": "70877f2c0ad47c901e5a6ddd422810b755e47dabd5b6c5ac4e50fd1aba968cf3",
+      "triangles": 17918,
+      "head_source": "snow"
+    },
+    "doctor-45": {
+      "canonical_asset_id": "doctor-45",
+      "family": "doctor",
+      "model": "doctor-45.glb",
+      "portrait": "doctor-45-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "b71fad463a482dffda9187121a76bd4028dd235caaa2ea2db073bf797d55f90d",
+      "portrait_sha256": "52678d726e45ff4a8e66dae3efc569bc3299c9837ab41e98427ce7b96c1c30dc",
+      "geometry_sha256": "4e3768f99a53e56c1dc8c4421f86440deaab7211f37a09351e1422ae89b356ee",
+      "triangles": 23492,
+      "head_source": "rain"
+    },
+    "doctor-46": {
+      "canonical_asset_id": "doctor-46",
+      "family": "doctor",
+      "model": "doctor-46.glb",
+      "portrait": "doctor-46-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "cd0bf95116d692ee417c16d2c6371e26e532f3c56f61082a12a299d8551482eb",
+      "portrait_sha256": "92e1d3ba573af703296983e0402d33b20ecaefb8b4adc3d4d1fccd3fd461e113",
+      "geometry_sha256": "613469c7a171c7b6317b9e77d4a80bb4586fc67c84a0cdd388d8a5b97e1b3d4e",
+      "triangles": 19262,
+      "head_source": "snow"
+    },
+    "doctor-47": {
+      "canonical_asset_id": "doctor-47",
+      "family": "doctor",
+      "model": "doctor-47.glb",
+      "portrait": "doctor-47-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "b29ddf7d5d0c743570a792f3dc2862a7b91bfeb47d64e48fd87f5a8a3c07ffa2",
+      "portrait_sha256": "7ed66c48a8cdf1f1fbd65440719cce2287f2deefc370aa8484945c3f657aeb84",
+      "geometry_sha256": "70019e71480913254ed795cc8025dd8c3fddff7d6b4db9ed661a52f1e728d659",
+      "triangles": 22460,
+      "head_source": "rain"
+    },
+    "doctor-48": {
+      "canonical_asset_id": "doctor-48",
+      "family": "doctor",
+      "model": "doctor-48.glb",
+      "portrait": "doctor-48-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "5dc7a8512f3f77939aecb304090c7ceee499184cb6f378b543ae19ee613abe75",
+      "portrait_sha256": "807756b7f8373bd9f87242fa81a053acb5c31fa2c1eda9b86d3a2945d3789c72",
+      "geometry_sha256": "34e882f3444bd3b853f9a0f6549620232eaeacd56cf1b6d5f8b6e8eefe39df76",
+      "triangles": 17590,
+      "head_source": "snow"
+    },
+    "doctor-49": {
+      "canonical_asset_id": "doctor-49",
+      "family": "doctor",
+      "model": "doctor-49.glb",
+      "portrait": "doctor-49-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "2b005b730114335db9073891dfefd7f6352cb21de15e7a6f99294fd832df32f9",
+      "portrait_sha256": "866bb4bfc8af3345d695872a37d4b474f9057028988edcf2f025e64421f0adec",
+      "geometry_sha256": "74242cc4eb0902ba1495fa32ee7b4a8b2aee76936b775ac9a47f626a7231dfb2",
+      "triangles": 22758,
+      "head_source": "rain"
+    },
+    "doctor-50": {
+      "canonical_asset_id": "doctor-50",
+      "family": "doctor",
+      "model": "doctor-50.glb",
+      "portrait": "doctor-50-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "8f647deca82b0c47315e17b8ec2df017aaaef8f7f021575530015eb3d46516a0",
+      "portrait_sha256": "fad11ef6dda65e8e247e04e5b8b895e25a390e8b2a09a10a6171e9c5848e767f",
+      "geometry_sha256": "98440288b9e4bf88d069bcb999fe8169472024a6c660f6c508cadab66f5ba6dc",
+      "triangles": 21664,
+      "head_source": "rain"
+    },
+    "doctor-51": {
+      "canonical_asset_id": "doctor-51",
+      "family": "doctor",
+      "model": "doctor-51.glb",
+      "portrait": "doctor-51-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "9b1df2d0f5b51ebaa37563072c5ec59d655d22a095c88145b57ab82548a71e4d",
+      "portrait_sha256": "3cb14aa5f94a873b0c0fc3375af28359dad5b43e4f92da89e79c5e3ad8c83d3e",
+      "geometry_sha256": "c3996b17a38e9cbf388f2d4734b40994a22bcc7cbea9b0f0c18d7250e6a6f354",
+      "triangles": 18226,
+      "head_source": "snow"
+    },
+    "doctor-52": {
+      "canonical_asset_id": "doctor-52",
+      "family": "doctor",
+      "model": "doctor-52.glb",
+      "portrait": "doctor-52-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "5b7e97a13b8b8eee7c27e26e3054528cb9ee3f38d18f1edef401a21b0e7648aa",
+      "portrait_sha256": "fadd233bcf50d6363538e2b01c8c5906e97d60ef1c1e15c204d41676637a11e0",
+      "geometry_sha256": "b8bb324022ce6d069681b700a9086721f097e74b97c2b119cd67da9c475fb708",
+      "triangles": 23816,
+      "head_source": "rain"
+    },
+    "doctor-53": {
+      "canonical_asset_id": "doctor-53",
+      "family": "doctor",
+      "model": "doctor-53.glb",
+      "portrait": "doctor-53-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "3c02855fc4e89c7d969d139368155eb56916f17a45979de6cbfcff3fababebc8",
+      "portrait_sha256": "c0e11766ea47b4f048d65008c5a3a30f5642f310dcd81d7ee3c84d5b9073a107",
+      "geometry_sha256": "0db5736cddac648d5be39cfeeb0e19c85cb0295be07ca675e339623fc846745f",
+      "triangles": 22458,
+      "head_source": "rain"
+    },
+    "doctor-54": {
+      "canonical_asset_id": "doctor-54",
+      "family": "doctor",
+      "model": "doctor-54.glb",
+      "portrait": "doctor-54-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "9b78de49d02e44d1082137c26d2019ef172957c7f90bde0123992bf55a8f34b8",
+      "portrait_sha256": "97e8361ae31413fa0186953b26f858191c48308839765b35f0b5f97d4322ca79",
+      "geometry_sha256": "8f65b48a94f1f581030e66d180029f76294fc16efa5fbaf7dba04993f6acf668",
+      "triangles": 19562,
+      "head_source": "snow"
+    },
+    "doctor-55": {
+      "canonical_asset_id": "doctor-55",
+      "family": "doctor",
+      "model": "doctor-55.glb",
+      "portrait": "doctor-55-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "0ae3e73259df028f208bb8555f98bb9b4c18be9ec0514432df1dae51d1502540",
+      "portrait_sha256": "99d46f6bc3a1e6711c5eda58451e85a1a3526cb9293c9dca8213de1e94a4c361",
+      "geometry_sha256": "4882a5e296b1b49a777d9e991764db331d9b44cb554971b05bb9a2a27a62062d",
+      "triangles": 17482,
+      "head_source": "snow"
+    },
+    "doctor-56": {
+      "canonical_asset_id": "doctor-56",
+      "family": "doctor",
+      "model": "doctor-56.glb",
+      "portrait": "doctor-56-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "798eae422a702114c0f65211c091326168b78e1284af5cbaa02001b12daa1d0a",
+      "portrait_sha256": "06b67650c797614a85932166a1d64dcf2e96706b4f76519544322251e43de85a",
+      "geometry_sha256": "bd6491666d27f7f8de439897caffb09f47303b482204911063b800fec5f33546",
+      "triangles": 22958,
+      "head_source": "rain"
+    },
+    "doctor-57": {
+      "canonical_asset_id": "doctor-57",
+      "family": "doctor",
+      "model": "doctor-57.glb",
+      "portrait": "doctor-57-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "175bb45c9006c9af135c38a045d48634732f3904c543b328f8f26f0d4e9c7d9b",
+      "portrait_sha256": "b6f128cd1c8b3d2b8ec19968bea8403776cb4f66cbc57ec7c4482a646b7117b0",
+      "geometry_sha256": "4b93c1dffeb9858da8997d03a8dcb63cdf096bfa99197a466dc0a1a694ae2351",
+      "triangles": 22764,
+      "head_source": "rain"
+    },
+    "doctor-58": {
+      "canonical_asset_id": "doctor-58",
+      "family": "doctor",
+      "model": "doctor-58.glb",
+      "portrait": "doctor-58-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "b6497a7eee4fc16614fb850260e7878b7152ef65970798ffba253ec4536ae8cb",
+      "portrait_sha256": "fd40abe6bac9a3762d2a4bc37ad18d9f34cddce253f5bb8c32a085f668db3176",
+      "geometry_sha256": "b54c6fbab03fc17588f7651b765dd6553d323cc1b2e92855bc51e53ceb1a9b55",
+      "triangles": 23192,
+      "head_source": "rain"
+    },
+    "doctor-59": {
+      "canonical_asset_id": "doctor-59",
+      "family": "doctor",
+      "model": "doctor-59.glb",
+      "portrait": "doctor-59-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "c65cf0dea5a54cc7dc3fbe44faeb4404dc2116f39ea41ea04639bfdcbe814ffa",
+      "portrait_sha256": "3547305b0abc46b136d50d98f7db287a7b9af04672090ca7bd4a3f3f9ea7c052",
+      "geometry_sha256": "12fec2cd1800d4dc92ca218a229eeaddc1798c9d3f4d373236b42d8110c4f674",
+      "triangles": 24096,
+      "head_source": "rain"
+    },
+    "doctor-60": {
+      "canonical_asset_id": "doctor-60",
+      "family": "doctor",
+      "model": "doctor-60.glb",
+      "portrait": "doctor-60-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "ad6348e69838f14a39ef368bbd18c46db8193a770405849caaa4c8fdaaa9c033",
+      "portrait_sha256": "5b87db205b9a18063dcea52b40832632f4106d8d7719ce52f9893b1f68f079cb",
+      "geometry_sha256": "7ed9b59180f99709d63d54e69f57470140a8bd338ea88f22ebf41601be4f40a9",
+      "triangles": 23492,
+      "head_source": "rain"
+    },
+    "technician-01": {
+      "canonical_asset_id": "technician-01",
+      "family": "technician",
+      "model": "technician-01.glb",
+      "portrait": "technician-01-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8437496982832353,
+      "glb_sha256": "93dc72bc5a73e8787d05bf51b4aaa9b9e53310f5e34e0ba3ed1ff22ac6675d13",
+      "portrait_sha256": "59a889fc3882b43c37c1efafda950c2fb9c6f43f086ee5ff6e93ce5504108f7b",
+      "geometry_sha256": "e48333bc8ba1c0f3cf71ff184bd295ac7ce6f3968dc065753450fb60d747b632",
+      "triangles": 20555,
+      "head_source": "rain"
+    },
+    "technician-02": {
+      "canonical_asset_id": "technician-02",
+      "family": "technician",
+      "model": "technician-02.glb",
+      "portrait": "technician-02-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8437496967783028,
+      "glb_sha256": "1e02384b7825db6869961d0c995a62dcfc00aff3bce461e18676e072066eb1fe",
+      "portrait_sha256": "43707d559e5362a6f862e4165ee4d9bccc6e2c21a2571a3262a83498ba2350ec",
+      "geometry_sha256": "3380c76c2e716d1c08c912aebdcb7e7bbb5cb892790edd51aa8a70a2594e3668",
+      "triangles": 16928,
+      "head_source": "snow"
+    },
+    "technician-03": {
+      "canonical_asset_id": "technician-03",
+      "family": "technician",
+      "model": "technician-03.glb",
+      "portrait": "technician-03-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8437496991087258,
+      "glb_sha256": "ad1570f5f28735ceae94b58ddf9a2498dcb0c9feec62a0ca3e24942d3c064012",
+      "portrait_sha256": "d9eaf173c6fbad4d15b83860d65d19e2c3353557025ef7a9cd8a549ef6af2ccb",
+      "geometry_sha256": "d8995738ca813acb545c609509020c4ccf3b37391c9d837db21aac3e65f3cfaa",
+      "triangles": 20366,
+      "head_source": "snow"
+    },
+    "technician-04": {
+      "canonical_asset_id": "technician-04",
+      "family": "technician",
+      "model": "technician-04.glb",
+      "portrait": "technician-04-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8437496982832353,
+      "glb_sha256": "f7c65a93e3e2858065a876a87052b7171ca454e21a45d3a2a9c383730bc24c25",
+      "portrait_sha256": "6a06863283e39066924173844bdd9aa29f5f46493a01301e123ee2d2d85398f9",
+      "geometry_sha256": "0dade90e6e9dc8a153cc44b28a882aeb419c4ec7c3f66bb7720bdbeda93e7616",
+      "triangles": 23479,
+      "head_source": "rain"
+    },
+    "technician-05": {
+      "canonical_asset_id": "technician-05",
+      "family": "technician",
+      "model": "technician-05.glb",
+      "portrait": "technician-05-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8437496967783028,
+      "glb_sha256": "53604d6555e26c8bd200fad67a0cdb46bf5192f1fea74f9b0c7d0c588461e316",
+      "portrait_sha256": "c1054adb598fc06059c4507cf5617427432d2152ffe9a5375c33f0750e7ebe0a",
+      "geometry_sha256": "0a3c4746d41142e163373ff3bb8f28a6dc889126346978122fc943bfcfb6b44b",
+      "triangles": 17392,
+      "head_source": "snow"
+    },
+    "technician-06": {
+      "canonical_asset_id": "technician-06",
+      "family": "technician",
+      "model": "technician-06.glb",
+      "portrait": "technician-06-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8437496993944726,
+      "glb_sha256": "9548e397ebfe0fbb7824816ea9a7618ebdc1f5e52ad51b7cf542d159a4d44196",
+      "portrait_sha256": "fab0e5bd2d98661d42b6a7d421ab53b5235d6decf224b2120e1d344d2bbb30a1",
+      "geometry_sha256": "7cd50965df84e4f5f501daf526ca7a255494790b6c2d7671dd1a9fa75613519e",
+      "triangles": 21227,
+      "head_source": "rain"
+    },
+    "technician-07": {
+      "canonical_asset_id": "technician-07",
+      "family": "technician",
+      "model": "technician-07.glb",
+      "portrait": "technician-07-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8437496982832353,
+      "glb_sha256": "61434b77d7ffc6261c01650d8dc120aee5cc0070acdf0a1d56a6fee2ef06b224",
+      "portrait_sha256": "544176b3e140c0a3d9fef160245130cd2e6e3258fb3f86baac50cc34d20c1c4a",
+      "geometry_sha256": "5c9b99c40da543b34b7b1383fe5687ec2dd227aebcf0555e5f240dd8be834143",
+      "triangles": 21462,
+      "head_source": "rain"
+    },
+    "technician-08": {
+      "canonical_asset_id": "technician-08",
+      "family": "technician",
+      "model": "technician-08.glb",
+      "portrait": "technician-08-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8437496967783028,
+      "glb_sha256": "0d74e80e3076c34c9bf7dacfd24f8dbb176a75ab5d400cb0f20ce27437e1e93a",
+      "portrait_sha256": "4101afe12fcd987d8a587a606d05136850b2658866fd0668c57f7a08d05367ea",
+      "geometry_sha256": "e831331bf0d3436cc31d0ccb385fe7c7ea4c4e6bd043668aa554758fa1b2ad27",
+      "triangles": 18659,
+      "head_source": "snow"
+    },
+    "receptionist-01": {
+      "canonical_asset_id": "receptionist-01",
+      "family": "receptionist",
+      "model": "receptionist-01.glb",
+      "portrait": "receptionist-01-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124990506277588,
+      "glb_sha256": "830ea745bb31063dd8981b8537397d08d301eced94a02c36c6a828536d223676",
+      "portrait_sha256": "45bc61a5713bcd5b7899681a5ca658291c73aceaf24344d7149716229feaf320",
+      "geometry_sha256": "26b5471c97e4e088fbce8c52dac101c420964bca02de571012f97a8e6dd3d541",
+      "triangles": 24817,
+      "head_source": "rain"
+    },
+    "receptionist-02": {
+      "canonical_asset_id": "receptionist-02",
+      "family": "receptionist",
+      "model": "receptionist-02.glb",
+      "portrait": "receptionist-02-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124990495006469,
+      "glb_sha256": "14fd2a48fdd17f831b03f1f24004e252f906980c586f2ec422b2de6762d4c062",
+      "portrait_sha256": "20186f0e7086a255e9f201969a836d842bfb15eb6bd4af2c63b3c4fd3024cffe",
+      "geometry_sha256": "20176464269bdde8c3c2bf75dd351e6a9039554b9d610846ff3ef47e3e4ba166",
+      "triangles": 21578,
+      "head_source": "rain"
+    },
+    "receptionist-03": {
+      "canonical_asset_id": "receptionist-03",
+      "family": "receptionist",
+      "model": "receptionist-03.glb",
+      "portrait": "receptionist-03-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124990487386556,
+      "glb_sha256": "913edc8f8ec0b3bb6ccc786dacb78241b83f1ace51ee866366375fd53b851d23",
+      "portrait_sha256": "1b0249d823242266f059210a0c5a570a195737416e340e2fedcb8bee95169ca0",
+      "geometry_sha256": "bd816feb84e13aa13a71838ed5f29a76e453e93c9daa8188ad96fb69ed443ef6",
+      "triangles": 21999,
+      "head_source": "rain"
+    },
+    "receptionist-04": {
+      "canonical_asset_id": "receptionist-04",
+      "family": "receptionist",
+      "model": "receptionist-04.glb",
+      "portrait": "receptionist-04-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124990503007377,
+      "glb_sha256": "10077bfccbdf61973f0366855c12f10aedadafa1be577894ebf2d10b0652b80f",
+      "portrait_sha256": "202bee4bc1e0dbfa034b97ff463404ded38cd57e0520f4dd97cbdb71ebdceac6",
+      "geometry_sha256": "3b4f15ea864568b3aa67766b09b429428e47581bd5df94393e4e0c5270991b4c",
+      "triangles": 21726,
+      "head_source": "rain"
+    },
+    "receptionist-05": {
+      "canonical_asset_id": "receptionist-05",
+      "family": "receptionist",
+      "model": "receptionist-05.glb",
+      "portrait": "receptionist-05-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124990495006469,
+      "glb_sha256": "4e58985417253047a9f882e488bf39d915158635d0a9a1d2b6dcaf358d2815c1",
+      "portrait_sha256": "ab47f03adf0c31176838a0bc6a2dbd9ecfd1a01f521aa02855f8a8329cfbf959",
+      "geometry_sha256": "70a61272153d5038900385e776a1eb8eee6d4401c944607cac846e5fdfb1ec0e",
+      "triangles": 17004,
+      "head_source": "snow"
+    },
+    "receptionist-06": {
+      "canonical_asset_id": "receptionist-06",
+      "family": "receptionist",
+      "model": "receptionist-06.glb",
+      "portrait": "receptionist-06-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124990487386556,
+      "glb_sha256": "97594af82c216a8ca2e3835583a1784660f9884f6cdc303032db81da90985fea",
+      "portrait_sha256": "eaf3b1016d0aa6a8e214f31d3ad198165269726ca0b099b6fc44257d1780f346",
+      "geometry_sha256": "259c920c0e6558c75fb9328ab8b840baec4080ad4160ec755ed0f6c01caa41d2",
+      "triangles": 24628,
+      "head_source": "rain"
+    },
+    "receptionist-07": {
+      "canonical_asset_id": "receptionist-07",
+      "family": "receptionist",
+      "model": "receptionist-07.glb",
+      "portrait": "receptionist-07-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124990503007377,
+      "glb_sha256": "fd9e9061fc7d670a55a3efef60699b439d2eb9794216fb71f4db6a4978f6c2df",
+      "portrait_sha256": "b14f92da4b1f209e8443daa47cb51385259d341a0529e0a6659388a0d2a9ff73",
+      "geometry_sha256": "d66bb9911771a50b7350ab1ceb871e311f91bcfa3b29a38c19d73d871279d51c",
+      "triangles": 22081,
+      "head_source": "rain"
+    },
+    "receptionist-08": {
+      "canonical_asset_id": "receptionist-08",
+      "family": "receptionist",
+      "model": "receptionist-08.glb",
+      "portrait": "receptionist-08-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124990495006469,
+      "glb_sha256": "f38150fdbef9ee01d8c2a19fa680f3e48ff9652816ac9c14e42b137999a0e852",
+      "portrait_sha256": "aa3daac8143de588138bad113c243169e7e0e5e980762ad780d7be12c6282569",
+      "geometry_sha256": "3e46ac221d48e08497c14d27b525f523b0f582ba145bad7f797211155b9431cf",
+      "triangles": 23636,
+      "head_source": "rain"
+    },
+    "patient-01": {
+      "canonical_asset_id": "patient-01",
+      "family": "patient",
+      "model": "patient-01.glb",
+      "portrait": "patient-01-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.2186341104762895,
+      "glb_sha256": "59ae5570cc7100b264fb9dc535917930c064408584be9f05e986c88eb55387f0",
+      "portrait_sha256": "8210a3a120593d41d9079239b589590580cffa2d293fcb98e98199f8a3e9741c",
+      "geometry_sha256": "1e0cb0a86a5965fc1233ef6e90e411813b9db1ab94a54b9b1bfa7c006dc5ec71",
+      "triangles": 18474,
+      "head_source": "snow"
+    },
+    "patient-02": {
+      "canonical_asset_id": "patient-02",
+      "family": "patient",
+      "model": "patient-02.glb",
+      "portrait": "patient-02-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "d34ec8589c75914a6354d7c99a4dc580829c19fa2765c1dcd15d46a7935bac9e",
+      "portrait_sha256": "b6b52c70734bb4813d5ebaeb08dc0350e9440525691e1e9d1488907b5dbe3b7d",
+      "geometry_sha256": "338ce082468d50d8328fb9029e9ebfa6df685de621cc2604e7f2b562da88e132",
+      "triangles": 17476,
+      "head_source": "snow"
+    },
+    "patient-03": {
+      "canonical_asset_id": "patient-03",
+      "family": "patient",
+      "model": "patient-03.glb",
+      "portrait": "patient-03-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "d70af33159554ecc0055543e0856444635ab5850c0e7639c2b5194a4684459ba",
+      "portrait_sha256": "64db175772f5d023a76f230b855d2b2623e7e98ce99626a3aa6c37feb23cbdd7",
+      "geometry_sha256": "071be2e71c4b0a71c26ee6372214a68bd961041a47b01282e9281ea498fe5dcd",
+      "triangles": 21500,
+      "head_source": "rain"
+    },
+    "patient-04": {
+      "canonical_asset_id": "patient-04",
+      "family": "patient",
+      "model": "patient-04.glb",
+      "portrait": "patient-04-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "ebdccc5bd528aaa87581b51987593f1f7972d31b42e31a3baf962eb75f5c4d8f",
+      "portrait_sha256": "b3f34c9186bdbc9394209344e8e150c071416b933ed55d9991c27a5b10847a0e",
+      "geometry_sha256": "5e91b23b2a06f8cb407473854f285993b4885bac00ea8a5ab9d67c1de472989d",
+      "triangles": 23140,
+      "head_source": "rain"
+    },
+    "patient-05": {
+      "canonical_asset_id": "patient-05",
+      "family": "patient",
+      "model": "patient-05.glb",
+      "portrait": "patient-05-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "041f29c2977e594b30f447490870e2c105acf9198b08945dbd904e9dbbe6d9ee",
+      "portrait_sha256": "290ba8574c19c2e0cbfc73a82fb4aa010ce4582b53c9ebdb44c6c3df1aa77dc3",
+      "geometry_sha256": "49e12447008077017c6010a485e8eaf1295640fd71e998c3548075633f17ec3b",
+      "triangles": 22012,
+      "head_source": "rain"
+    },
+    "patient-06": {
+      "canonical_asset_id": "patient-06",
+      "family": "patient",
+      "model": "patient-06.glb",
+      "portrait": "patient-06-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "f8feeaeb3494686a06f719e143e9c20e5c4368a418fb40224b9b8cfdece1f431",
+      "portrait_sha256": "c2c3494e52917797cb18eb58088693723736f56e836a6c2a64223a1d50e41258",
+      "geometry_sha256": "9f4128c1fb14958147560eaaab593dbe22252edde5ca1e7593f4015f1700d2a4",
+      "triangles": 19567,
+      "head_source": "snow"
+    },
+    "patient-07": {
+      "canonical_asset_id": "patient-07",
+      "family": "patient",
+      "model": "patient-07.glb",
+      "portrait": "patient-07-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "16c05aea9c18388954d38a40f295cf54a1adcced0e8f0d72be140bb39b618481",
+      "portrait_sha256": "d9ebeb6027ee79048c88c05181b3f73a7892de9318ee5c8cf347772fc031c366",
+      "geometry_sha256": "f932090b2178549281f126f131dad00c51485b577e1dbc18761746f1b0473340",
+      "triangles": 17038,
+      "head_source": "snow"
+    },
+    "patient-08": {
+      "canonical_asset_id": "patient-08",
+      "family": "patient",
+      "model": "patient-08.glb",
+      "portrait": "patient-08-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "46aa87f5463747ba8ba53a28b4f15b88127763b5b781496c7a97cb8d638d8b9e",
+      "portrait_sha256": "3d31c0d994690da05b20a57b4ae286874fe7dd2c84385c071ed8dc1778da5499",
+      "geometry_sha256": "d1b30632e2e2a87873ae5ac663276dd072f526061fade95f5615287b77c6146f",
+      "triangles": 17192,
+      "head_source": "snow"
+    },
+    "patient-09": {
+      "canonical_asset_id": "patient-09",
+      "family": "patient",
+      "model": "patient-09.glb",
+      "portrait": "patient-09-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "7e527c0653153e0ee1bf1d647afb365260d1a4fbaf71762ad2b73948eef86df9",
+      "portrait_sha256": "683bc9b1bf7c81ee66c0835a3613306b2ae76af77ccf6420989e5d13aec7feb3",
+      "geometry_sha256": "09325586cd324d37cdd22b1973bb1fd3e5fadb7610ff76962adb5f2b803012c0",
+      "triangles": 23328,
+      "head_source": "rain"
+    },
+    "patient-10": {
+      "canonical_asset_id": "patient-10",
+      "family": "patient",
+      "model": "patient-10.glb",
+      "portrait": "patient-10-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "889233aa6a15788598096a6b27027bc0fc1a5d98075e4c73d8049921f95c3f12",
+      "portrait_sha256": "3e40efebffb96ff167ca5ed528f8e6a59ce70df0ed9ae87401ddf2a6e09074ec",
+      "geometry_sha256": "27008aabfe392db07c8088bbe5f575415ded40788fb187485f3cdad05e3a968e",
+      "triangles": 17133,
+      "head_source": "snow"
+    },
+    "patient-11": {
+      "canonical_asset_id": "patient-11",
+      "family": "patient",
+      "model": "patient-11.glb",
+      "portrait": "patient-11-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "55c0c9173c250e938eec84d177cfc80f478f1f0bf2b90b9a8437be442c1fce06",
+      "portrait_sha256": "40cd8f42fe1299dc34cce0ab392eb39d20a21eef27fc13f169f798f4c5003515",
+      "geometry_sha256": "764188f4ad6516ddba824a757113f4e63df5ab2968713f1e6ee14c8e7f4f8fea",
+      "triangles": 21524,
+      "head_source": "rain"
+    },
+    "patient-12": {
+      "canonical_asset_id": "patient-12",
+      "family": "patient",
+      "model": "patient-12.glb",
+      "portrait": "patient-12-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "695ebd0bf0a424578fb817ced8ba2e3ae3c7c0d4b9972d65d200b6450dfe3de7",
+      "portrait_sha256": "107caa384ad66392e1648d2eb698011f7f8609957e0320a03ba5561631e77c2a",
+      "geometry_sha256": "5f7438716d80a96a88244f885a473e169b01b18f11728958beaaa40c899bec36",
+      "triangles": 24101,
+      "head_source": "rain"
+    },
+    "patient-13": {
+      "canonical_asset_id": "patient-13",
+      "family": "patient",
+      "model": "patient-13.glb",
+      "portrait": "patient-13-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "3071820764f2d0d853254cf002e41bb8cecff5529857a35c37b9d19397912993",
+      "portrait_sha256": "e759b3b32c2fc95542c449ff86bac17f1f886f5856c68b78f428d12f98f8151e",
+      "geometry_sha256": "f0acd3c022c8fb7eff3a8111cfb00a0278c5a573236044b55c8f06b8429425a6",
+      "triangles": 23046,
+      "head_source": "rain"
+    },
+    "patient-14": {
+      "canonical_asset_id": "patient-14",
+      "family": "patient",
+      "model": "patient-14.glb",
+      "portrait": "patient-14-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "b6b3ce036a0f9ccce2150d25b35cf057b170298c31f93d9fc49008d3b58cf8c7",
+      "portrait_sha256": "01fb0cba226b494bc3d967d8e38712afe504dc99c70d13722232bce748b00b4e",
+      "geometry_sha256": "bcfd73c966907b6d87f2f0a37511a0543f504f05f66b3b0abd804c26df600165",
+      "triangles": 18586,
+      "head_source": "snow"
+    },
+    "patient-15": {
+      "canonical_asset_id": "patient-15",
+      "family": "patient",
+      "model": "patient-15.glb",
+      "portrait": "patient-15-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "903962e40f2dbfcb99c309968651403b8d41a811f352fa14a512777a45e28d8b",
+      "portrait_sha256": "fcb46633ff2442929a4f539cae4e2b5ee7ad5da506d4ec9204c5039eca66a62e",
+      "geometry_sha256": "7d7fed223653eab83cd63f055b752c5fc8391c7345fcdf3d7e7be57cbde8bb55",
+      "triangles": 18812,
+      "head_source": "snow"
+    },
+    "patient-16": {
+      "canonical_asset_id": "patient-16",
+      "family": "patient",
+      "model": "patient-16.glb",
+      "portrait": "patient-16-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "e68bf5e6d6f686e494e36bce623a19bfbd02c68d2d5762c59d77476cf8ddd2a5",
+      "portrait_sha256": "1572ecd7707ce891c7c94a0fe43dcb4496d4553d2ac598dfe963528f8a3f5134",
+      "geometry_sha256": "0d7cd0a70527340d7bfc74415dee84f71f25f8d76c1a65871265e31ae9a03817",
+      "triangles": 23418,
+      "head_source": "rain"
+    },
+    "patient-17": {
+      "canonical_asset_id": "patient-17",
+      "family": "patient",
+      "model": "patient-17.glb",
+      "portrait": "patient-17-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "5df132a02fa73cdd2ab86d73eac844e350d028846adb096dfa463167016d424d",
+      "portrait_sha256": "b848a24e8bcd3081c12d978b6c9a19e7ea81403663e09a93f7618350b04b1801",
+      "geometry_sha256": "e1f50d3cc9166e9624ea97126b93c6d1a1f0a12778ec021d4c55bbb59c6f0b8e",
+      "triangles": 17291,
+      "head_source": "snow"
+    },
+    "patient-18": {
+      "canonical_asset_id": "patient-18",
+      "family": "patient",
+      "model": "patient-18.glb",
+      "portrait": "patient-18-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "da535b5879f422465c6d1b90a1a502e10fb070d17f35c928fb01b17b2889f035",
+      "portrait_sha256": "8d0599c0142cd2ef994456439837c77ad0bc37a884813a530724641491bab839",
+      "geometry_sha256": "d16f8ccde406628f1641975b38084d6d9740c9e6097bbf8048fc4b36e7ce6088",
+      "triangles": 22641,
+      "head_source": "rain"
+    },
+    "patient-19": {
+      "canonical_asset_id": "patient-19",
+      "family": "patient",
+      "model": "patient-19.glb",
+      "portrait": "patient-19-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "1f19be9578e97426eb44a86b8c34fa0c56717830efafe24400fa6602401a207d",
+      "portrait_sha256": "e69d72181ef9d1a6c8b869b6c73990a651c7166554fdb5672b1511ec8dded5ea",
+      "geometry_sha256": "16527ecffa2f2263185f51851566035f71af87e305118982ea2aa356d662d166",
+      "triangles": 21825,
+      "head_source": "rain"
+    },
+    "patient-20": {
+      "canonical_asset_id": "patient-20",
+      "family": "patient",
+      "model": "patient-20.glb",
+      "portrait": "patient-20-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "2d81512360bab726519a87015141ab27dd20c1d683a4a1f29788765f2ac012fe",
+      "portrait_sha256": "796262dbd0bf2f7e7afdf96dcf58dcfba6c27067abb60920011743f9fca5db74",
+      "geometry_sha256": "c07dfd92bf5d0d2186cc775737bb11064b2ae0c9de77ae30dddb9ab4a1102975",
+      "triangles": 16840,
+      "head_source": "snow"
+    },
+    "patient-21": {
+      "canonical_asset_id": "patient-21",
+      "family": "patient",
+      "model": "patient-21.glb",
+      "portrait": "patient-21-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "379f25f2ff48b87c9251b79aa8dfe9169097da0ea2a258551a1c769ceffc5f16",
+      "portrait_sha256": "e2187ebfa451045226a766b221f6a22c9e4b8805b4a2e7d1b6eb8ac0aaa0662f",
+      "geometry_sha256": "b8412fd11e8f41ec4f7f98d7d288a56ac7b3a26bb18a1b82c4b70eb25280e50b",
+      "triangles": 18884,
+      "head_source": "snow"
+    },
+    "patient-22": {
+      "canonical_asset_id": "patient-22",
+      "family": "patient",
+      "model": "patient-22.glb",
+      "portrait": "patient-22-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "dd09ff1cf1c41bc713e40aac4beee1d8baea729c98a5495ecc0dbfead9cbc740",
+      "portrait_sha256": "8be0c52805c4a3e8aad15b475e9df45a967068229c4156699e4e79ea3fe77072",
+      "geometry_sha256": "b1a6fb615a448b61560dd4ac2196ad18e1c7376227bb4b71e448383358777fc6",
+      "triangles": 17476,
+      "head_source": "snow"
+    },
+    "patient-23": {
+      "canonical_asset_id": "patient-23",
+      "family": "patient",
+      "model": "patient-23.glb",
+      "portrait": "patient-23-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "fd4cb9ddc7f8f769e8eb49ea0133ceb2c8c4af6ed8e19ad9229a10840b5e6963",
+      "portrait_sha256": "c84a797401dae3be12e987ad5bf8f2259a79652a698a15c99a3bbcf5fa44e7ad",
+      "geometry_sha256": "acc82d24adbfab44a584ba1ec2baf4e08696759b9e987714aebc77c9d98843f2",
+      "triangles": 21345,
+      "head_source": "rain"
+    },
+    "patient-24": {
+      "canonical_asset_id": "patient-24",
+      "family": "patient",
+      "model": "patient-24.glb",
+      "portrait": "patient-24-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "b3cfc61c00d37efacfee302ecd9095f24fad8fe897779b66345199ab2bb22e5d",
+      "portrait_sha256": "62baaeaf3ea03a3c07745b60b9208bfd173189afe9e7e0c2af028e15133e3f1a",
+      "geometry_sha256": "facffc0db418117ec575e0948ea7538f8b84ee3d4978865c529848c88c576914",
+      "triangles": 17100,
+      "head_source": "snow"
+    },
+    "patient-25": {
+      "canonical_asset_id": "patient-25",
+      "family": "patient",
+      "model": "patient-25.glb",
+      "portrait": "patient-25-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "28d567834deadc70aa6a20ef9fe00851c99b39807d95f5a8fc9ff7035741b469",
+      "portrait_sha256": "44074c098771ec04d812638f90466c25b122763c6bc40d65be25371f31e58346",
+      "geometry_sha256": "34681db3985f05a3cb1e87181528a66ed321b1b5d29a7ff015cd608db62c32b3",
+      "triangles": 25397,
+      "head_source": "rain"
+    },
+    "patient-26": {
+      "canonical_asset_id": "patient-26",
+      "family": "patient",
+      "model": "patient-26.glb",
+      "portrait": "patient-26-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "a2f20d3dfbcd334c81ee0995a640d0a81fbbf355bc98fa65d8f5f48a02c85a3f",
+      "portrait_sha256": "4f12a0fc2c72766ad26c3c576e7675e58f6606146a8bb343cc6f343a011e5a8c",
+      "geometry_sha256": "126cc141fcdcae89ea4137dce6054cc1fc82f110ae4486e229ba7404635e5750",
+      "triangles": 17255,
+      "head_source": "snow"
+    },
+    "patient-27": {
+      "canonical_asset_id": "patient-27",
+      "family": "patient",
+      "model": "patient-27.glb",
+      "portrait": "patient-27-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "1d5cf2eac46d4b0ef1e16ed41228a2068c4444e72943ed78976b5ea57d6b2f7c",
+      "portrait_sha256": "caba16d486aee197beacdddd12c8918986c89a3358481f6e416f4a09265f16f1",
+      "geometry_sha256": "4f1b12916151feb83ba01b77d449ab72eec9bbf3136b3edf44a26c0726be91f9",
+      "triangles": 17012,
+      "head_source": "snow"
+    },
+    "patient-28": {
+      "canonical_asset_id": "patient-28",
+      "family": "patient",
+      "model": "patient-28.glb",
+      "portrait": "patient-28-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "273217e1ca05a738703d0b151c78a60fa7e9a6bf6f9d4bb8ed5f209f59266d0d",
+      "portrait_sha256": "922fa0f3eed3c2dd3042ac2539380f2f7f17c7b366c31026fc264bc25bf7daaa",
+      "geometry_sha256": "7750517866ef8e18967fd410ba755cbdfd7917de09531d9435eb65e71b7a40bf",
+      "triangles": 19171,
+      "head_source": "snow"
+    },
+    "patient-29": {
+      "canonical_asset_id": "patient-29",
+      "family": "patient",
+      "model": "patient-29.glb",
+      "portrait": "patient-29-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "d29a5285f25ef08fe4e3313497e73904ec773a0e7a4405ae29e8a7ebab7b9530",
+      "portrait_sha256": "38bccbca257eac9001c81a8fa735fd3555c2025749dc9a89a539029a51f93515",
+      "geometry_sha256": "cc9c38dcb5e9d3ef51a1de35fe997337ff3e473378962f759f455991db704534",
+      "triangles": 16811,
+      "head_source": "snow"
+    },
+    "patient-30": {
+      "canonical_asset_id": "patient-30",
+      "family": "patient",
+      "model": "patient-30.glb",
+      "portrait": "patient-30-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "412c68a08c5d4d941bbe599279678f43a7016437f21c36d5cf9b665d672302f9",
+      "portrait_sha256": "62d767be4fb1334e78b5ff98a4723f5e58872ec785a244052df7f0389a899a7e",
+      "geometry_sha256": "dd97cdff286a64ccbad9d55578ed573ac1ce8c8abb222449438e99e95034e5e2",
+      "triangles": 19311,
+      "head_source": "snow"
+    },
+    "patient-31": {
+      "canonical_asset_id": "patient-31",
+      "family": "patient",
+      "model": "patient-31.glb",
+      "portrait": "patient-31-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "1fc7b6c573f0d7682aa0135e884adbbd5e646653d2eeaeb68dc502b184c0a76e",
+      "portrait_sha256": "1e3b6ded541d3bb752ede11cc9d39116973c4112f9dcc5cc381b5efaaa43abc7",
+      "geometry_sha256": "a772a26627f58348aaa01fa4acda3ec188b4ad93c4fdc9e4b1809730624268e6",
+      "triangles": 20894,
+      "head_source": "rain"
+    },
+    "patient-32": {
+      "canonical_asset_id": "patient-32",
+      "family": "patient",
+      "model": "patient-32.glb",
+      "portrait": "patient-32-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "50de907f46b6ff2d8688a631e4269ff17e2f2b5935c121563ac08a555a9987b5",
+      "portrait_sha256": "80e3d968e42d507f31944a1e61a96f7787f4db472e5353d7bd1c45c3fa70aedd",
+      "geometry_sha256": "7710b9ed81754b082a992d7b46d732a1b022713a3cbc40c7c4bb26481a507471",
+      "triangles": 18326,
+      "head_source": "snow"
+    },
+    "patient-33": {
+      "canonical_asset_id": "patient-33",
+      "family": "patient",
+      "model": "patient-33.glb",
+      "portrait": "patient-33-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "c1d979c3cfe58c2523909dfefbf9c208fa26231219f11361648b1fb13b856dae",
+      "portrait_sha256": "24944949e3729252078d5a86a33164c3ac78b7ee2306fba475f72d86a0e7d09d",
+      "geometry_sha256": "90dda7fcb777e7d47bb3de4ce50aba7efdcbd993b627f21e3b05ec119ccc58f6",
+      "triangles": 22192,
+      "head_source": "rain"
+    },
+    "patient-34": {
+      "canonical_asset_id": "patient-34",
+      "family": "patient",
+      "model": "patient-34.glb",
+      "portrait": "patient-34-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "2fdc9a6d99d8f15cedcbac7601fbcc69962d414573a9deaff44aa20fb51be609",
+      "portrait_sha256": "e41701364a49bac13498abb301e5b114cb3d2cec38800c94e7b3d25ff7caf864",
+      "geometry_sha256": "3e74e8eaa004a076d39a9320d364939162a6a4ad566bc8f58bf8fee82860fbfe",
+      "triangles": 21777,
+      "head_source": "rain"
+    },
+    "patient-35": {
+      "canonical_asset_id": "patient-35",
+      "family": "patient",
+      "model": "patient-35.glb",
+      "portrait": "patient-35-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "0c1a7b5df155689be11823a6a2b378f9bcdb03652f3941396dd041714f175c25",
+      "portrait_sha256": "bde27c2d9a10662f297ae7b31b1e19f81dd542485967ba1e879aa4fd9ed1f414",
+      "geometry_sha256": "6a3574ee88a3cb7655e2dd04ef50059be11f6f60267b7ba0614eee346e091734",
+      "triangles": 18963,
+      "head_source": "snow"
+    },
+    "patient-36": {
+      "canonical_asset_id": "patient-36",
+      "family": "patient",
+      "model": "patient-36.glb",
+      "portrait": "patient-36-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "5642f0748be1e55c71456e8ddcf8418fd6a87cc2d3635193699603094f0b2b42",
+      "portrait_sha256": "a7a64c1e7d27713b598761b0f676762de66298317396fdaf8a7307a1a114f9c9",
+      "geometry_sha256": "4fee5c36ba163203a26e3f0d6eb33b330038b8d9d775d2c381c12ba11614f343",
+      "triangles": 19379,
+      "head_source": "snow"
+    },
+    "patient-37": {
+      "canonical_asset_id": "patient-37",
+      "family": "patient",
+      "model": "patient-37.glb",
+      "portrait": "patient-37-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "4ba9021113539528148ec0ec2da6cd558a44b74a631970ac87a505be0cd45885",
+      "portrait_sha256": "eb0a9a501ffdda8269f0803edffaea1a93bfc8f6a18706b6733a9c1c01a7868b",
+      "geometry_sha256": "f92f9509518919e0628f6a4ee03e023f0306058e93656209a9daf686bb05f8a5",
+      "triangles": 16986,
+      "head_source": "snow"
+    },
+    "patient-38": {
+      "canonical_asset_id": "patient-38",
+      "family": "patient",
+      "model": "patient-38.glb",
+      "portrait": "patient-38-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "5b366a57d1745a4a72e59365fbeb59453c46bb8fdaa72d4be0a6f4272e109ba5",
+      "portrait_sha256": "a26c9e43a038e6875e44bb7e7f870dedc0b9defccd8b9a0de244cecc9b0b86f4",
+      "geometry_sha256": "71534ddc23f36fb8fc417c2d026ab6834bf5727583371ed02d284462530542cb",
+      "triangles": 17461,
+      "head_source": "snow"
+    },
+    "patient-39": {
+      "canonical_asset_id": "patient-39",
+      "family": "patient",
+      "model": "patient-39.glb",
+      "portrait": "patient-39-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "7a77c1e3763efba75e69a6c32b47bf2e4f5eee7e091ba19bf2a2e2c48a90bc7f",
+      "portrait_sha256": "7aef0479a7043aa4782fffa91981c00e4f4c81a7b5cb7b25c1f3a1c304d9aeae",
+      "geometry_sha256": "de3261d8f6b33534598872ca499dea7ccd60419d6bf69dc23b580b06930aeff4",
+      "triangles": 21244,
+      "head_source": "rain"
+    },
+    "patient-40": {
+      "canonical_asset_id": "patient-40",
+      "family": "patient",
+      "model": "patient-40.glb",
+      "portrait": "patient-40-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "28ee1d0e72281a34770badaef9f1f57ff6618d206033ef1d0bf0eac8c6473500",
+      "portrait_sha256": "ea21e059b28b3b4d96733db19b6de77c538c322f8fd3dd160550023d9420bfba",
+      "geometry_sha256": "1f544974c84cec7f5e9ba50d7217c0ff8d28be766a9bad516201ccce3e5879e9",
+      "triangles": 19869,
+      "head_source": "snow"
+    },
+    "patient-41": {
+      "canonical_asset_id": "patient-41",
+      "family": "patient",
+      "model": "patient-41.glb",
+      "portrait": "patient-41-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "4000a89a654be7da37abb8549c0a1db4ceaf99600ef6e151fb7ce3f9533ff372",
+      "portrait_sha256": "6b99275005df9d650aa04ea61872f747f6e6b57a9bf60d8dfc35da9f16ae855c",
+      "geometry_sha256": "7edddc0eff545ede6a22f545564c4bbb2d2b017d42220bfa7250a58456613032",
+      "triangles": 17253,
+      "head_source": "snow"
+    },
+    "patient-42": {
+      "canonical_asset_id": "patient-42",
+      "family": "patient",
+      "model": "patient-42.glb",
+      "portrait": "patient-42-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "996a29a0bf322459352c5dce1b5b06177ad4915662eca96c91d262203e4953de",
+      "portrait_sha256": "3a9c1ff4fba5115b5fd130579b42699719f0b75555881a41856591a307a28239",
+      "geometry_sha256": "eabe53548ab3fc959dddb354fa7e5dd0a83681f9815aa8434104000039100a97",
+      "triangles": 21240,
+      "head_source": "rain"
+    },
+    "patient-43": {
+      "canonical_asset_id": "patient-43",
+      "family": "patient",
+      "model": "patient-43.glb",
+      "portrait": "patient-43-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "cf60bbf2011d7186d5c70c21c6b802041107448d23533b1476b0ac8fd0b095f1",
+      "portrait_sha256": "bf19005a0f5281ff40a8c71080648bed55b8e4c682865dd51a8e26ffdc0e5f7d",
+      "geometry_sha256": "d94a966ee29b0b1fd4b8576817ca81d83aa97ed54391e113fa86f31df67eb0f2",
+      "triangles": 21789,
+      "head_source": "rain"
+    },
+    "patient-44": {
+      "canonical_asset_id": "patient-44",
+      "family": "patient",
+      "model": "patient-44.glb",
+      "portrait": "patient-44-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "702566fb30fb48c5083ccf3a949ff20b2a9c673db0698546dd05c1d1ef718217",
+      "portrait_sha256": "96e50a9d909c9c28843215035c4c85b61a8fce74bd9f376e2c668e75d8e1a6a0",
+      "geometry_sha256": "276bfb14ef53991d14c7615d6f6907e3e86eead8a705c0f4e06aca642ba54f41",
+      "triangles": 18069,
+      "head_source": "snow"
+    },
+    "patient-45": {
+      "canonical_asset_id": "patient-45",
+      "family": "patient",
+      "model": "patient-45.glb",
+      "portrait": "patient-45-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "eba7eb9678bf974b5c8bd3dacff9146fc60ae6db34d3afa8169deedab5207757",
+      "portrait_sha256": "073e6577060f1d958a20fe43f2d9d72ee6338c35edb8dc9613ccfbea8e66bbd8",
+      "geometry_sha256": "883c8e27263c52371b3478feaa26d9906268fa0a38d0f53ccd9b382d4f3b6ff8",
+      "triangles": 17680,
+      "head_source": "snow"
+    },
+    "patient-46": {
+      "canonical_asset_id": "patient-46",
+      "family": "patient",
+      "model": "patient-46.glb",
+      "portrait": "patient-46-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989149901507,
+      "glb_sha256": "b3e5a5c8fdbfbbf620a7d5fb885bfab2af8c7934c929c19c11c5e13d7b175ab6",
+      "portrait_sha256": "8f341d97681ef8bec5cde44bbbb83d6f0cf6be5cb49e0443d2840ca923ef5e8f",
+      "geometry_sha256": "7a364498f7586abd4cb272cbf12fcf85cebee5a3f81547bc042166158138b2fc",
+      "triangles": 23675,
+      "head_source": "rain"
+    },
+    "patient-47": {
+      "canonical_asset_id": "patient-47",
+      "family": "patient",
+      "model": "patient-47.glb",
+      "portrait": "patient-47-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.8124989120501347,
+      "glb_sha256": "8a21a119ad8e218d9b4d604b7cb4ece7fcdeb3ce0cb2835f3f61cfb902e39235",
+      "portrait_sha256": "76be355fbaee453635399f3be42b3526b7ab0db67f75e001a074604a99df4880",
+      "geometry_sha256": "b837fdce94791b748590a2739b1bc21b4ae450392b9e959b2fe5cb84a96ea6ae",
+      "triangles": 23001,
+      "head_source": "rain"
+    },
+    "patient-48": {
+      "canonical_asset_id": "patient-48",
+      "family": "patient",
+      "model": "patient-48.glb",
+      "portrait": "patient-48-portrait.png",
+      "expected_bones": 20,
+      "clips": [
+        "Consult",
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "clip_duration_seconds": {
+        "Consult": 8,
+        "Examine": 2.4,
+        "Idle": 2,
+        "Walk": 1.0666666666666667
+      },
+      "walk_source_speed": 0.812498913059773,
+      "glb_sha256": "654ee2f9e263c6b2131f7729172163fd2ca9640a2975516267342a7169339788",
+      "portrait_sha256": "e3f53afe259baa969d3c16f2ff046f9b8d1422e1e42a5611824db2d6a403d312",
+      "geometry_sha256": "7c4df8247df4fd543d5615c469418d1d9f66e87dca6b03a6e5947b51f9b2739b",
+      "triangles": 23048,
+      "head_source": "rain"
+    }
+  },
+  "scope": "124 original identities, mature modular heads with identity-specific shape, palette, hairstyle and existing body; not 124 hand-sculpted unique source meshes"
+}

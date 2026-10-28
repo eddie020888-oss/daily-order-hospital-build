@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "geometry_hash_algorithm": "HOSPITAL_GEOMETRY_V1",
+  "refinement_version": 6,
+  "presentation_scope": "Owned simplified skinned face refinement; not124 HQ or per-identity artistic approval.",
+  "entries": {
+    "technician-03": {
+      "canonical_asset_id": "technician-03",
+      "model": "technician-03.glb",
+      "portrait": "technician-03-portrait.png",
+      "walk_source_speed": 0.8437496991087258,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "geometry_sha256": "61c62ba9edb35afa8baf47bd44aee19f2905a1a2b0d242f378450992ab3c513e",
+      "family": "technician",
+      "geometry_hash_algorithm": "HOSPITAL_GEOMETRY_V1",
+      "triangles": 12758,
+      "glb_sha256": "efd40b9ab78ad1b3b7854cf763c4f6fdf78dde60261956f153c21966da95f977",
+      "portrait_sha256": "c91dd4c5eff70759c788dea320270bc7d805c4f086649a4240961e6a6450b2b6"
+    },
+    "receptionist-01": {
+      "canonical_asset_id": "receptionist-01",
+      "model": "receptionist-01.glb",
+      "portrait": "receptionist-01-portrait.png",
+      "walk_source_speed": 0.8124990506277588,
+      "clips": [
+        "Examine",
+        "Idle",
+        "Walk"
+      ],
+      "geometry_sha256": "22df60a0571bdb3d59a83604dfae1fe8e80c6efdd22fb918eb413bf11c96b1af",
+      "family": "receptionist",
+      "geometry_hash_algorithm": "HOSPITAL_GEOMETRY_V1",
+      "triangles": 11423,
+      "glb_sha256": "6a2bbec4285ea906537a6b7fe2f68ec0f7fd9334c72497883f44cf6f56be64e3",
+      "portrait_sha256": "1ae58967bcbd014f0770da900ba958dea56b2230fb3890fbfe8cf49cfdc2a2a0"
+    }
+  }
+}

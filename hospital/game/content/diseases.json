@@ -1,0 +1,92 @@
+{
+  "version": "0.1.0",
+  "items": [
+    {
+      "id": "echo",
+      "name": "句尾回放症",
+      "room_kind": "echo",
+      "income": 150,
+      "modes": {
+        "gentle": {
+          "duration_ticks": 200,
+          "cost": 15,
+          "stimulus": 20
+        },
+        "fast": {
+          "duration_ticks": 120,
+          "cost": 25,
+          "stimulus": 60
+        }
+      }
+    },
+    {
+      "id": "motion",
+      "name": "动作串线症",
+      "room_kind": "motion",
+      "income": 230,
+      "modes": {
+        "gentle": {
+          "duration_ticks": 300,
+          "cost": 30,
+          "stimulus": 20
+        },
+        "fast": {
+          "duration_ticks": 180,
+          "cost": 45,
+          "stimulus": 60
+        }
+      }
+    },
+    {
+      "id": "sensory",
+      "name": "感官串台症",
+      "room_kind": "sensory",
+      "income": 300,
+      "modes": {
+        "gentle": {
+          "duration_ticks": 400,
+          "cost": 45,
+          "stimulus": 20
+        },
+        "fast": {
+          "duration_ticks": 240,
+          "cost": 65,
+          "stimulus": 60
+        }
+      }
+    },
+    {
+      "id": "rhythm_hiccup",
+      "name": "节拍打嗝症",
+      "room_kind": "pharmacy",
+      "income": 140,
+      "modes": {},
+      "care_steps": [
+        "pharmacy"
+      ]
+    },
+    {
+      "id": "pillow_dependency",
+      "name": "枕头依赖症",
+      "room_kind": "general_exam",
+      "income": 220,
+      "modes": {},
+      "care_steps": [
+        "general_exam",
+        "ward"
+      ]
+    },
+    {
+      "id": "warmwind_sneeze",
+      "name": "暖风喷嚏症",
+      "room_kind": "general_exam",
+      "income": 420,
+      "modes": {},
+      "care_steps": [
+        "general_exam",
+        "pharmacy",
+        "ward"
+      ]
+    }
+  ]
+}

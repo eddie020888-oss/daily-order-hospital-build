@@ -1,0 +1,119 @@
+{
+  "version": 2,
+  "layout": "direction-pages",
+  "canonical_asset_id": "patient-01",
+  "artwork_source_id": "P01",
+  "source_blend": "E:\\CODEX\\2026-10-19\\医院诊室可玩样板\\work\\patient-consult-04\\patient-consult-editable.blend",
+  "source_blend_sha256": "43630f9904c46e608921dd6e94fa9287ec3b434a90145a6d1785a880256aa56d",
+  "source_bones": 20,
+  "independent_geometry": true,
+  "frame_size": [
+    384,
+    512
+  ],
+  "directions": 8,
+  "camera_offset": [
+    8.5,
+    19,
+    23
+  ],
+  "ortho_height": 2.0,
+  "center_height": 0.7295,
+  "pixel_size": 0.00390625,
+  "portrait": "portrait.png",
+  "clips": {
+    "Idle": {
+      "frames": 4,
+      "duration": 2.0,
+      "loop": true,
+      "chair_included": false,
+      "columns": 4,
+      "rows_per_direction": 1,
+      "directions_per_page": 4,
+      "pages": [
+        "idle-0.png",
+        "idle-1.png"
+      ],
+      "texture": "idle-0.png",
+      "atlas_size": [
+        1536,
+        2048
+      ]
+    },
+    "Walk": {
+      "frames": 8,
+      "duration": 1.0666666666666667,
+      "loop": true,
+      "chair_included": false,
+      "columns": 4,
+      "rows_per_direction": 2,
+      "directions_per_page": 2,
+      "pages": [
+        "walk-0.png",
+        "walk-1.png",
+        "walk-2.png",
+        "walk-3.png"
+      ],
+      "texture": "walk-0.png",
+      "atlas_size": [
+        1536,
+        2048
+      ]
+    },
+    "Examine": {
+      "frames": 8,
+      "duration": 2.4,
+      "loop": true,
+      "chair_included": false,
+      "columns": 4,
+      "rows_per_direction": 2,
+      "directions_per_page": 2,
+      "pages": [
+        "examine-0.png",
+        "examine-1.png",
+        "examine-2.png",
+        "examine-3.png"
+      ],
+      "texture": "examine-0.png",
+      "atlas_size": [
+        1536,
+        2048
+      ]
+    },
+    "Consult": {
+      "frames": 16,
+      "duration": 8.0,
+      "loop": false,
+      "chair_included": true,
+      "columns": 4,
+      "rows_per_direction": 4,
+      "directions_per_page": 1,
+      "pages": [
+        "consult-0.png",
+        "consult-1.png",
+        "consult-2.png",
+        "consult-3.png",
+        "consult-4.png",
+        "consult-5.png",
+        "consult-6.png",
+        "consult-7.png"
+      ],
+      "texture": "consult-0.png",
+      "atlas_size": [
+        1536,
+        2048
+      ]
+    }
+  },
+  "status": "Playable clinic pilot; NOT ART APPROVED",
+  "overall_art_accepted": false,
+  "render_settings": {
+    "engine": "Cycles",
+    "samples": 48,
+    "look": "AgX - Medium High Contrast",
+    "transparent": true
+  },
+  "camera_center_height": 0.75,
+  "source_sole_min_z": 0.0205,
+  "sprite_floor_correction_m": -0.0205
+}

@@ -1,0 +1,63 @@
+{
+  "gameName": "日常秩序医院",
+  "publicationAuthorizedByProjectOwner": true,
+  "authorization": "Owner explicitly allowed public game source and art in this conversation.",
+  "verifiedPriorCandidateCommit": "9dae0754c3a83908684af743e746d66193f4bc7b",
+  "gameFileCount": 4671,
+  "gameBytes": 1059040422,
+  "gameManifestSha256": "77e8195bb0e3064dda6b67dc697863d2a58c95e461aac3d61d6a9f2cd11fd798",
+  "localVerification": {
+    "native-regression-all-02.log.output.txt": {
+      "sha256": "ea3a9e07fcef029bccdceba241fdf6a679289e014a866cdd9e4699e7dda68335",
+      "result": [
+        "TEST RESULT: failed=0 passed=2421"
+      ]
+    },
+    "native-test_ui_flow_pages-01.log.output.txt": {
+      "sha256": "3691f0b5cf99ad2350f4e88749853352621f1d4713be0fb95f5080e3ba1e8656",
+      "result": [
+        "PAGES RESULT: passed=27 failed=0"
+      ]
+    },
+    "native-test_ui_alignment-02.log.output.txt": {
+      "sha256": "2352b42ea7789a1c473e98d34046b1a20bee51746ab9c440fe3db8781f7b836c",
+      "result": [
+        "ALIGN RESULT: passed=39 failed=0"
+      ]
+    },
+    "native-test_ui_original_structures-02.log.output.txt": {
+      "sha256": "a0451e0b0f79177fdd6af61c50a877fd067a63ceda3f39a464458b98efd4f3e4",
+      "result": [
+        "ORIGINAL RESULT: passed=57 failed=0"
+      ]
+    },
+    "native-test_build_readability-02.log.output.txt": {
+      "sha256": "47c5ad2c59686d9899fc1b05496f76bff61a3592e035a23ca7c9c50bfe7059e2",
+      "result": [
+        "READABILITY RESULT: passed=45 failed=0"
+      ]
+    },
+    "native-test_scene_framing-02.log.output.txt": {
+      "sha256": "569140a119642a63857c3fe697c632184ff49ad2c785671d8346439b6d500d3b",
+      "result": [
+        "SCENE FRAMING RESULT: passed=17 failed=0"
+      ]
+    },
+    "native-test_ui_icon_density-02.log.output.txt": {
+      "sha256": "accbbc24eeb78819eb737b9d024fd14ef6f40dc75c3f044b0f0889cf18541bdb",
+      "result": [
+        "ICON DENSITY RESULT: passed=85 failed=0"
+      ]
+    },
+    "native-capture-03.log.output.txt": {
+      "sha256": "7f42814087054efa3ff007c2156e390597d98390eccdb6042540acb319656af8",
+      "result": [
+        "A2 NATIVE RESULT: failed=0 captures=8 layout_findings=0 output=E:/CODEX/2026-10-27/医院TestFlight发布准备/outputs/native-a2-03"
+      ]
+    }
+  },
+  "publicRunnerSmokeRun": 40607322226,
+  "signingCredentialsIncluded": false,
+  "packageArtifactsRetained": false,
+  "appleAppRecordPending": true
+}

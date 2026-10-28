@@ -1,0 +1,201 @@
+{
+  "status": "INTERNAL CANDIDATE; visual review and game verification required",
+  "art_accepted": false,
+  "kind": "patient",
+  "canonical_asset_id": "patient-01",
+  "source": "E:\\CODEX\\2026-10-19\\医院诊室可玩样板\\work\\patient-consult-04\\patient-consult-editable.blend",
+  "source_sha256": "43630f9904c46e608921dd6e94fa9287ec3b434a90145a6d1785a880256aa56d",
+  "source_unchanged": true,
+  "new_independent_geometry": true,
+  "reused_old_body_vertices": 0,
+  "reused_identity_skeleton_and_actions_only": true,
+  "source_rig_name": "P01_Rig",
+  "source_rig_matrix_world": [
+    [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "coordinate_contract": "new vertices authored in own rig REST local space; identity body basis and parent inverse",
+  "rest_local_bounds": {
+    "min": [
+      -0.44913047552108765,
+      -0.22599999606609344,
+      0.0
+    ],
+    "max": [
+      0.44913047552108765,
+      0.1816200166940689,
+      1.5789716243743896
+    ]
+  },
+  "bone_names": [
+    "root",
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm.L",
+    "forearm.L",
+    "hand.L",
+    "upper_arm.R",
+    "forearm.R",
+    "hand.R",
+    "thigh.L",
+    "shin.L",
+    "foot.L",
+    "toe.L",
+    "thigh.R",
+    "shin.R",
+    "foot.R",
+    "toe.R"
+  ],
+  "bone_count": 20,
+  "clips": {
+    "Idle": {
+      "frames": [
+        1,
+        61
+      ],
+      "fps": 30,
+      "loop": true
+    },
+    "Walk": {
+      "frames": [
+        1,
+        33
+      ],
+      "fps": 30,
+      "loop": true
+    },
+    "Examine": {
+      "frames": [
+        1,
+        73
+      ],
+      "fps": 30,
+      "loop": false
+    },
+    "Consult": {
+      "frames": [
+        1,
+        241
+      ],
+      "fps": 30,
+      "loop": false
+    }
+  },
+  "exported_clip_names": [
+    "Consult",
+    "Examine",
+    "Idle",
+    "Walk"
+  ],
+  "export_anim_slide_to_zero": true,
+  "exported_clip_time_audit": {
+    "Consult": {
+      "expected_duration_seconds": 8.0,
+      "accessors": [
+        {
+          "input_accessor": 37,
+          "min": 0,
+          "max": 8
+        },
+        {
+          "input_accessor": 41,
+          "min": 0,
+          "max": 8
+        }
+      ]
+    },
+    "Examine": {
+      "expected_duration_seconds": 2.4,
+      "accessors": [
+        {
+          "input_accessor": 86,
+          "min": 0,
+          "max": 2.4
+        },
+        {
+          "input_accessor": 88,
+          "min": 0,
+          "max": 2.4
+        }
+      ]
+    },
+    "Idle": {
+      "expected_duration_seconds": 2.0,
+      "accessors": [
+        {
+          "input_accessor": 124,
+          "min": 0,
+          "max": 2
+        },
+        {
+          "input_accessor": 125,
+          "min": 0,
+          "max": 2
+        }
+      ]
+    },
+    "Walk": {
+      "expected_duration_seconds": 1.0666666666666667,
+      "accessors": [
+        {
+          "input_accessor": 136,
+          "min": 0,
+          "max": 1.0666666666666667
+        },
+        {
+          "input_accessor": 137,
+          "min": 0,
+          "max": 1.0666666666666667
+        }
+      ]
+    }
+  },
+  "vertices": 4086,
+  "triangles": 7966,
+  "material_count": 6,
+  "max_skin_influences": 2,
+  "zero_weight_vertices": 0,
+  "max_weight_error": 2.9802322387695312e-08,
+  "rest_local_bottom_z": 0.0,
+  "embedded_chair": false,
+  "props": 0,
+  "textures": 0,
+  "glb": "E:\\CODEX\\2026-10-19\\医院简洁Q版诊室\\work\\patient-03\\P01-simple-rigged.glb",
+  "glb_sha256": "c6158d7443ba8681569aea021b245a09a598db2e449b211584c7cf5bf73f0b8e",
+  "editable_blend": "E:\\CODEX\\2026-10-19\\医院简洁Q版诊室\\work\\patient-03\\P01-simple-editable.blend",
+  "previews": [
+    "E:\\CODEX\\2026-10-19\\医院简洁Q版诊室\\work\\patient-03\\standing.png",
+    "E:\\CODEX\\2026-10-19\\医院简洁Q版诊室\\work\\patient-03\\consult.png"
+  ],
+  "portrait": "E:\\CODEX\\2026-10-19\\医院简洁Q版诊室\\work\\patient-03\\portrait.png",
+  "limitations": [
+    "Two identities only; no claim that 124 characters have been rebuilt",
+    "Existing authored motion retained; no new finger, face or equipment-contact animation",
+    "Art and target-device smoothness require actual game review"
+  ]
+}

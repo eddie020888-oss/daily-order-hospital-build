@@ -1,0 +1,8 @@
+{"cases":[
+  {"name":"missing_field","file":"rooms","target":"echo","field":"cost","remove":true,"error":"missing_field"},
+  {"name":"fractional_money","file":"rooms","target":"echo","field":"cost","value":1.5,"error":"invalid_integer"},
+  {"name":"negative_money","file":"rooms","target":"echo","field":"cost","value":-1,"error":"invalid_integer"},
+  {"name":"string_money","file":"rooms","target":"echo","field":"cost","value":"1","error":"invalid_field_type"},
+  {"name":"fractional_hire_money","file":"staff","target":"doctor","field":"hire_cost","value":300.5,"error":"invalid_integer"},
+  {"name":"unknown_role","file":"rooms","target":"echo","field":"staff_role","value":"wizard","error":"unknown_staff_role"}
+]}

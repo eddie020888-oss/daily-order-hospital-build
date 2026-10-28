@@ -1,0 +1,101 @@
+{
+  "version": "0.1.0",
+  "items": [
+    {
+      "id": "reception",
+      "name": "接待处",
+      "width": 3,
+      "height": 3,
+      "cost": 400,
+      "staff_role": "receptionist",
+      "service_ticks": 40,
+      "capacity": 1
+    },
+    {
+      "id": "diagnosis",
+      "name": "诊断室",
+      "width": 4,
+      "height": 4,
+      "cost": 800,
+      "staff_role": "doctor",
+      "service_ticks": 80,
+      "capacity": 1
+    },
+    {
+      "id": "echo",
+      "name": "声环治疗室",
+      "width": 4,
+      "height": 4,
+      "cost": 1000,
+      "staff_role": "technician",
+      "service_ticks": 0,
+      "capacity": 1
+    },
+    {
+      "id": "motion",
+      "name": "动作治疗室",
+      "width": 4,
+      "height": 4,
+      "cost": 1200,
+      "staff_role": "technician",
+      "service_ticks": 0,
+      "capacity": 1
+    },
+    {
+      "id": "sensory",
+      "name": "感官治疗室",
+      "width": 4,
+      "height": 4,
+      "cost": 1400,
+      "staff_role": "technician",
+      "service_ticks": 0,
+      "capacity": 1
+    },
+    {
+      "id": "recovery",
+      "name": "恢复区",
+      "width": 3,
+      "height": 3,
+      "cost": 600,
+      "staff_role": "",
+      "service_ticks": 400,
+      "capacity": 1,
+      "upgrade_cost": 400,
+      "upgraded_capacity": 2,
+      "consumable_cost": 10
+    },
+    {
+      "id": "general_exam",
+      "name": "综合检查室",
+      "width": 4,
+      "height": 4,
+      "cost": 900,
+      "staff_role": "doctor",
+      "service_ticks": 160,
+      "capacity": 1,
+      "consumable_cost": 0
+    },
+    {
+      "id": "pharmacy",
+      "name": "药房",
+      "width": 4,
+      "height": 4,
+      "cost": 1000,
+      "staff_role": "nurse",
+      "service_ticks": 120,
+      "capacity": 1,
+      "consumable_cost": 15
+    },
+    {
+      "id": "ward",
+      "name": "留观病房",
+      "width": 5,
+      "height": 5,
+      "cost": 1800,
+      "staff_role": "nurse",
+      "service_ticks": 300,
+      "capacity": 2,
+      "consumable_cost": 30
+    }
+  ]
+}

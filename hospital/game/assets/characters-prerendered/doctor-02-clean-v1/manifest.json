@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "canonical_asset_id": "doctor-02",
+  "artwork_source_id": "D01",
+  "status": "COLOR REPAIR PILOT; not full artwork acceptance",
+  "source_blend": "E:\\CODEX\\2026-10-19\\医院画面原稿对齐\\work\\D01-clean-02\\D01-clean-detailed-high.blend",
+  "source_blend_sha256": "ca8e62dfbcebd24ceb7ef766341a675985cbb3b5431eee7fcef9678033c87cb0",
+  "source_sculpt_triangles": 664757,
+  "source_bones": 20,
+  "source_method": "Actual retained independent high sculpt, cleaned cloth materials and added geometry accessories, existing own rig clips; Blender Cycles",
+  "body_rgb_projection": false,
+  "source_rgb_front_image_used_on_body": false,
+  "teal_category_mask_from_original_uv": true,
+  "face_method": "Retained original face material on authored head; not accepted as final face likeness",
+  "frame_size": [
+    192,
+    256
+  ],
+  "directions": 8,
+  "camera_offset": [
+    8.5,
+    19,
+    23
+  ],
+  "ortho_height": 2.0,
+  "center_height": 0.75,
+  "pixel_size": 0.0078125,
+  "frames": 160,
+  "clips": {
+    "Idle": {
+      "texture": "idle.png",
+      "frames": 4,
+      "duration": 2.0,
+      "loop": true,
+      "atlas_size": [
+        768,
+        2048
+      ],
+      "nonempty_frames": 32,
+      "sha256": "bd6b2785305d9c6be869574df9c0270a1fe7f8fdc7b6c4f18e6644e71eaccf86",
+      "rgba8_bytes_without_mipmaps": 6291456
+    },
+    "Walk": {
+      "texture": "walk.png",
+      "frames": 8,
+      "duration": 1.0666666666666667,
+      "loop": true,
+      "atlas_size": [
+        1536,
+        2048
+      ],
+      "nonempty_frames": 64,
+      "sha256": "5443587f3ebf0d11621a5265b3929571df29cc3525a121a4e8b8f00c44c3b940",
+      "rgba8_bytes_without_mipmaps": 12582912
+    },
+    "Examine": {
+      "texture": "examine.png",
+      "frames": 8,
+      "duration": 2.4,
+      "loop": true,
+      "atlas_size": [
+        1536,
+        2048
+      ],
+      "nonempty_frames": 64,
+      "sha256": "d68789702bda859195e409aef6a7b1a0142a239bad289a9034f7b75dfa883bcf",
+      "rgba8_bytes_without_mipmaps": 12582912
+    }
+  },
+  "heading_rule": "same world-yaw rows 0..7, actual geometry views without mirroring",
+  "elapsed_seconds": 43.69715118408203,
+  "portrait": "portrait.png",
+  "portrait_sha256": "777b010c79d7fd989ebd5de253f207b8dc300e33e16903c8572b97f05a0b241a",
+  "sitting_clip_completed": false,
+  "equipment_contact_completed": false,
+  "overall_art_accepted": false,
+  "edge_clipped_frames": [],
+  "empty_frames": []
+}

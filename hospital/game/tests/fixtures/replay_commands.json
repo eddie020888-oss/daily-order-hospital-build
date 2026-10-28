@@ -1,0 +1,27 @@
+{
+  "version": "0.1.0",
+  "scenario": "level_01",
+  "commands": [
+    {"tick":0,"id":"replay_build_reception","type":"build_room","payload":{"kind":"reception","origin_cell":121,"rotation":0}},
+    {"tick":0,"id":"replay_build_reception","type":"build_room","payload":{"kind":"reception","origin_cell":121,"rotation":0}},
+    {"tick":0,"id":"replay_build_diagnosis","type":"build_room","payload":{"kind":"diagnosis","origin_cell":100,"rotation":0}},
+    {"tick":0,"id":"replay_build_echo","type":"build_room","payload":{"kind":"echo","origin_cell":104,"rotation":0}},
+    {"tick":0,"id":"replay_build_recovery","type":"build_room","payload":{"kind":"recovery","origin_cell":140,"rotation":0}},
+    {"tick":0,"id":"replay_hire_reception","type":"hire_staff","payload":{"role":"receptionist"}},
+    {"tick":0,"id":"replay_assign_reception","type":"assign_staff","payload":{"staff_id":"staff_001","room_id":"room_001"}},
+    {"tick":0,"id":"replay_hire_doctor","type":"hire_staff","payload":{"role":"doctor"}},
+    {"tick":0,"id":"replay_assign_doctor","type":"assign_staff","payload":{"staff_id":"staff_002","room_id":"room_002"}},
+    {"tick":0,"id":"replay_hire_echo","type":"hire_staff","payload":{"role":"technician"}},
+    {"tick":0,"id":"replay_assign_echo","type":"assign_staff","payload":{"staff_id":"staff_003","room_id":"room_003"}},
+    {"tick":0,"id":"replay_route","type":"set_auto_route","payload":{"enabled":true}},
+    {"tick":0,"id":"replay_start","type":"set_paused","payload":{"paused":false}},
+    {"tick":2400,"id":"replay_build_motion","type":"build_room","payload":{"kind":"motion","origin_cell":108,"rotation":0}},
+    {"tick":2400,"id":"replay_hire_motion","type":"hire_staff","payload":{"role":"technician"}},
+    {"tick":2400,"id":"replay_assign_motion","type":"assign_staff","payload":{"staff_id":"staff_004","room_id":"room_005"}},
+    {"tick":2400,"id":"replay_resume_motion","type":"set_paused","payload":{"paused":false}},
+    {"tick":4800,"id":"replay_build_sensory","type":"build_room","payload":{"kind":"sensory","origin_cell":112,"rotation":0}},
+    {"tick":4800,"id":"replay_hire_sensory","type":"hire_staff","payload":{"role":"technician"}},
+    {"tick":4800,"id":"replay_assign_sensory","type":"assign_staff","payload":{"staff_id":"staff_005","room_id":"room_006"}},
+    {"tick":4800,"id":"replay_resume_sensory","type":"set_paused","payload":{"paused":false}}
+  ]
+}

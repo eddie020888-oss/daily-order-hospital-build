@@ -1,0 +1,80 @@
+{
+  "adapter": "NVIDIA GeForce RTX 5080",
+  "artwork_source_id": "D01",
+  "camera_offset": [
+    8.5,
+    19,
+    23
+  ],
+  "canonical_asset_id": "doctor-02",
+  "center_height": 0.75,
+  "clips": {
+    "Examine": {
+      "atlas_size": [
+        1536,
+        2048
+      ],
+      "duration": 2.43333339691162,
+      "frames": 8,
+      "loop": true,
+      "nonempty_frames": 64,
+      "rgba8_bytes_without_mipmaps": 12582912,
+      "sha256": "a0285975645074d9c9e6886862ebb3ea184adb2eae0240d41d32700c16837ddd",
+      "texture": "examine.png"
+    },
+    "Idle": {
+      "atlas_size": [
+        768,
+        2048
+      ],
+      "duration": 2.03333330154419,
+      "frames": 4,
+      "loop": true,
+      "nonempty_frames": 32,
+      "rgba8_bytes_without_mipmaps": 6291456,
+      "sha256": "91cd5d8ff9f0141638270bca056c1859b5828a2bef72a49e24d910663150c990",
+      "texture": "idle.png"
+    },
+    "Walk": {
+      "atlas_size": [
+        1536,
+        2048
+      ],
+      "duration": 1.10000002384186,
+      "frames": 8,
+      "loop": true,
+      "nonempty_frames": 64,
+      "rgba8_bytes_without_mipmaps": 12582912,
+      "sha256": "c35c8bc994d599337bc7e59d0374afe9e8db183b1270d24f8d32323a15b81bda",
+      "texture": "walk.png"
+    }
+  },
+  "directions": 8,
+  "edge_clipped_frames": 0,
+  "elapsed_seconds": 3.18,
+  "engine": {
+    "build": "official",
+    "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "hex": 263938,
+    "major": 4,
+    "minor": 7,
+    "patch": 2,
+    "status": "stable",
+    "string": "4.7.2-stable (official)",
+    "timestamp": 0
+  },
+  "frame_size": [
+    192,
+    256
+  ],
+  "frames": 160,
+  "heading_rule": "row = round(world_yaw / (TAU/8)) mod 8; authored front +Z; no mirror",
+  "ortho_height": 2.0,
+  "pixel_size": 0.0078125,
+  "recorded_at_utc": "2026-10-19T22:08:20",
+  "renderer": "gl_compatibility",
+  "source_glb": "res://assets/models/characters-v2/doctor-02.glb",
+  "source_sha256": "f4b41dcc130c5c0cbebf5fa01196c5fbeec99197467f278c187722f70303c110",
+  "status": "TECHNICAL PILOT; overall artwork not accepted; no sitting or equipment-contact clips",
+  "version": 1
+}

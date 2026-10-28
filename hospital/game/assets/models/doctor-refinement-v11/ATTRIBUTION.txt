@@ -1,0 +1,10 @@
+Rain Rig (CC) Blender Foundation | studio.blender.org
+Original: https://studio.blender.org/characters/rain/v3/
+License: Creative Commons Attribution 4.0, https://creativecommons.org/licenses/by/4.0/
+Modified: evaluated head/hair and facial parts; baked unlit material colours into standard PBR textures; fitted to original doctor body, glasses and uniform; neck weights/collar and tied hair adapted.
+
+Base body: Quaternius Universal Base Characters Standard, CC0.
+Source: https://quaternius.com/packs/universalbasecharacters.html
+Original medical uniform, fitting, glasses and animation integration: this hospital project.
+
+Version11 changes: source-UV roughness maps for skin/hair; restrained iris and brow colour layering; original clinic coat pockets, ID badge and fitted cuffs. Existing artist facial shape, body, 65-bone rig and four actions preserved.

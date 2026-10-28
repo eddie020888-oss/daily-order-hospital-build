@@ -1,0 +1,131 @@
+{
+  "version": 2,
+  "canonical_asset_id": "doctor-02",
+  "artwork_source_id": "D01",
+  "status": "COLOR REPAIR PILOT; not full artwork acceptance",
+  "source_blend": "E:\\CODEX\\2026-10-19\\医院画面原稿对齐\\work\\D01-clean-02\\D01-clean-detailed-high.blend",
+  "source_blend_sha256": "ca8e62dfbcebd24ceb7ef766341a675985cbb3b5431eee7fcef9678033c87cb0",
+  "source_sculpt_triangles": 664757,
+  "source_bones": 20,
+  "source_method": "Actual retained independent high sculpt, cleaned cloth materials and added geometry accessories, existing own rig clips; Blender Cycles",
+  "body_rgb_projection": false,
+  "teal_category_mask_from_original_uv": true,
+  "face_method": "Retained original face material on authored head; not accepted as final face likeness",
+  "frame_size": [
+    384,
+    512
+  ],
+  "directions": 8,
+  "camera_offset": [
+    8.5,
+    19,
+    23
+  ],
+  "ortho_height": 2.0,
+  "center_height": 0.75,
+  "pixel_size": 0.00390625,
+  "frames": 160,
+  "clips": {
+    "Idle": {
+      "texture": "idle-0.png",
+      "frames": 4,
+      "duration": 2.0,
+      "loop": true,
+      "atlas_size": [
+        1536,
+        2048
+      ],
+      "nonempty_frames": 32,
+      "pages": [
+        "idle-0.png",
+        "idle-1.png"
+      ],
+      "columns": 4,
+      "rows_per_direction": 1,
+      "directions_per_page": 4,
+      "page_sha256": {
+        "idle-0.png": "df5e7dfd66a2fcc5c2538e6106fd34ea3d37eb9641a1b517384af310f4c4e25c",
+        "idle-1.png": "aab864d8981ebde392e2c8feacf21771adbe2d89416617030aeb0a05429aff18"
+      },
+      "rgba8_page_bytes_without_mipmaps": 12582912
+    },
+    "Walk": {
+      "texture": "walk-0.png",
+      "frames": 8,
+      "duration": 1.0666666666666667,
+      "loop": true,
+      "atlas_size": [
+        1536,
+        2048
+      ],
+      "nonempty_frames": 64,
+      "pages": [
+        "walk-0.png",
+        "walk-1.png",
+        "walk-2.png",
+        "walk-3.png"
+      ],
+      "columns": 4,
+      "rows_per_direction": 2,
+      "directions_per_page": 2,
+      "page_sha256": {
+        "walk-0.png": "4c1785ca5d9fd64e15e3a7055811a5fd40da2d5a791d9a16679cc5caf9a6e9af",
+        "walk-1.png": "1c4e17f62a1f0b84863e7a369d35d85f5d2edc75c35f8c01c91db3c929d09828",
+        "walk-2.png": "748f3d327e3fbb7a01bdcf7ef6797bea40a108beb0f6081b9f59753a98d622bd",
+        "walk-3.png": "efa9a61be74768a0030577a41c595f2d0ffaa65df7cd953cded2923a0a30bee0"
+      },
+      "rgba8_page_bytes_without_mipmaps": 12582912
+    },
+    "Examine": {
+      "texture": "examine-0.png",
+      "frames": 8,
+      "duration": 2.4,
+      "loop": true,
+      "atlas_size": [
+        1536,
+        2048
+      ],
+      "nonempty_frames": 64,
+      "pages": [
+        "examine-0.png",
+        "examine-1.png",
+        "examine-2.png",
+        "examine-3.png"
+      ],
+      "columns": 4,
+      "rows_per_direction": 2,
+      "directions_per_page": 2,
+      "page_sha256": {
+        "examine-0.png": "5dd2d5036dc52272ca4bc8cfb94ccc7baa541ad2e7d8f88b5c9082c02f090ce3",
+        "examine-1.png": "86dcdf66da0e4a6bef98302ec726e50848a1d0635ed18d1b11950794a341369e",
+        "examine-2.png": "778cd6ba73dea9dff791245876ebf7e72ee3ecf34e50227ac908b30fdcd93df6",
+        "examine-3.png": "8fc9286922cf4590abf3cb638a4b1c9a66cc79c3fbeb8aa1c5e34d5a9a81bb6b"
+      },
+      "rgba8_page_bytes_without_mipmaps": 12582912
+    }
+  },
+  "heading_rule": "same world-yaw rows 0..7, actual geometry views without mirroring",
+  "elapsed_seconds": 133.49721217155457,
+  "portrait": "portrait.png",
+  "portrait_sha256": "b0cd89958bb053f4561246d661b676c97b5515d01a1f73decb8b17fd2655fe39",
+  "sitting_clip_completed": false,
+  "equipment_contact_completed": false,
+  "overall_art_accepted": false,
+  "layout": "direction-pages",
+  "edge_clipped_frames": [],
+  "empty_frames": [],
+  "memory_scope": "Only active heading page is strongly referenced at runtime; each 1536x2048 page can use ~4 MiB BC3/BC7/ETC2 RGBA with mipmaps. Actual device measurement pending.",
+  "body_front_projection_albedo_used": false,
+  "body_reference_use": "Restricted teal category mask from original UV only; no original RGB applied directly as body albedo.",
+  "render_settings": {
+    "samples": 64,
+    "film_transparent": true,
+    "look": "AgX - Medium High Contrast",
+    "engine": "Blender Cycles",
+    "frame_resolution": [
+      384,
+      512
+    ],
+    "view_transform": "AgX"
+  }
+}

@@ -1,0 +1,7 @@
+Rain Rig (CC) Blender Foundation | studio.blender.org
+Snow Rig (CC) Blender Foundation | studio.blender.org
+Sources: https://studio.blender.org/characters/rain/v3/ and https://studio.blender.org/characters/snow/v4/
+License: CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+Modified: head-only evaluated geometry and unlit color bake, per-character proportions/features/skin palette, fitted to existing original game bodies/hair and rigs; no original control rig shipped.
+Doctor01 retained v11 also uses Quaternius Universal Base Characters Standard, CC0; see earlier original attribution.
+All other bodies, costume designs, identity profiles and animations are existing owned hospital assets.

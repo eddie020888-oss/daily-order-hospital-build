@@ -1,0 +1,359 @@
+{
+  "version": 3,
+  "layout": "direction-pages",
+  "canonical_asset_id": "patient-01",
+  "artwork_source_id": "P04-high-pilot-v3",
+  "source_blend": "E:\\CODEX\\2026-10-21\\医院自有人物二次精修\\work\\patient-owned-refined-03\\patient-owned-refined.blend",
+  "source_blend_sha256": "84b8bec6e7f8e07980f27b9c307b96276dda9a75d3c69b1ef5c3219168bee4a7",
+  "source_bones": 20,
+  "frame_size": [
+    384,
+    512
+  ],
+  "directions": 8,
+  "camera_offset": [
+    18,
+    18,
+    18
+  ],
+  "ortho_height": 2.4,
+  "center_height": 1.0,
+  "pixel_size": 0.0046875,
+  "walk_source_speed": 0.8331766881123517,
+  "portrait": "portrait.png",
+  "embedded_chair": false,
+  "clips": {
+    "Idle": {
+      "frames": 4,
+      "duration": 2.0,
+      "loop": true,
+      "chair_included": false,
+      "columns": 4,
+      "rows_per_direction": 1,
+      "directions_per_page": 4,
+      "pages": [
+        "idle-00.png",
+        "idle-01.png"
+      ],
+      "texture": "idle-00.png",
+      "atlas_size": [
+        1536,
+        2048
+      ],
+      "source_action": "Idle",
+      "source_frames": [
+        1.0,
+        61.0
+      ],
+      "source_fps": 30
+    },
+    "Walk": {
+      "frames": 16,
+      "duration": 0.8,
+      "loop": true,
+      "chair_included": false,
+      "columns": 4,
+      "rows_per_direction": 4,
+      "directions_per_page": 1,
+      "pages": [
+        "walk-00.png",
+        "walk-01.png",
+        "walk-02.png",
+        "walk-03.png",
+        "walk-04.png",
+        "walk-05.png",
+        "walk-06.png",
+        "walk-07.png"
+      ],
+      "texture": "walk-00.png",
+      "atlas_size": [
+        1536,
+        2048
+      ],
+      "source_action": "Walk",
+      "source_frames": [
+        1.0,
+        25.0
+      ],
+      "source_fps": 30
+    },
+    "Examine": {
+      "frames": 8,
+      "duration": 2.4,
+      "loop": true,
+      "chair_included": false,
+      "columns": 4,
+      "rows_per_direction": 2,
+      "directions_per_page": 2,
+      "pages": [
+        "examine-00.png",
+        "examine-01.png",
+        "examine-02.png",
+        "examine-03.png"
+      ],
+      "texture": "examine-00.png",
+      "atlas_size": [
+        1536,
+        2048
+      ],
+      "source_action": "Examine",
+      "source_frames": [
+        1.0,
+        73.0
+      ],
+      "source_fps": 30
+    },
+    "Consult": {
+      "frames": 64,
+      "duration": 8.0,
+      "loop": false,
+      "chair_included": false,
+      "columns": 4,
+      "rows_per_direction": 4,
+      "directions_per_page": 1,
+      "pages": [
+        "consult-00.png",
+        "consult-01.png",
+        "consult-02.png",
+        "consult-03.png",
+        "consult-04.png",
+        "consult-05.png",
+        "consult-06.png",
+        "consult-07.png",
+        "consult-08.png",
+        "consult-09.png",
+        "consult-10.png",
+        "consult-11.png",
+        "consult-12.png",
+        "consult-13.png",
+        "consult-14.png",
+        "consult-15.png",
+        "consult-16.png",
+        "consult-17.png",
+        "consult-18.png",
+        "consult-19.png",
+        "consult-20.png",
+        "consult-21.png",
+        "consult-22.png",
+        "consult-23.png",
+        "consult-24.png",
+        "consult-25.png",
+        "consult-26.png",
+        "consult-27.png",
+        "consult-28.png",
+        "consult-29.png",
+        "consult-30.png",
+        "consult-31.png"
+      ],
+      "texture": "consult-00.png",
+      "atlas_size": [
+        1536,
+        2048
+      ],
+      "source_action": "Consult",
+      "source_frames": [
+        1.0,
+        241.0
+      ],
+      "source_fps": 30,
+      "frames_per_page": 16,
+      "pages_per_direction": 4
+    }
+  },
+  "actual_frames": 736,
+  "atlas_pages": 46,
+  "art_accepted": false,
+  "overall_art_accepted": false,
+  "status": "Actual full high source frames packed and mechanically verified; user visual acceptance pending",
+  "render_settings": {
+    "engine": "Cycles",
+    "samples": 48,
+    "denoise": true,
+    "device": "GPU",
+    "backend": "OPTIX",
+    "devices": [
+      {
+        "name": "NVIDIA GeForce RTX 5080",
+        "type": "OPTIX",
+        "id": "CUDA_NVIDIA GeForce RTX 5080_0000:02:00_OptiX"
+      }
+    ],
+    "view_transform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "transparent": true,
+    "output": "RGBA8 PNG",
+    "seed": 17,
+    "no_background_composite": true
+  },
+  "animated_source_metadata_sha256": "8869fafb9e2ba05b0035c6b76717fd78af63bfb19c9975f99fbb28580605b694",
+  "actual_skinned_sole_audit": {
+    "L": {
+      "measured_speed": 0.8332007211200627,
+      "fit_max_residual_m": 1.5873018474825418e-05,
+      "min_sole_z": -0.0003420277207624167,
+      "max_sole_z": 0.0009361576521769166,
+      "samples": [
+        {
+          "min_z": -0.00015514102415181696,
+          "max_z": 0.0009361576521769166,
+          "center": [
+            0.10022523999214172,
+            -0.16876894235610962,
+            0.0007115609478205442
+          ],
+          "seconds": 0.096
+        },
+        {
+          "min_z": -0.00016714863886591047,
+          "max_z": 0.0009245638502761722,
+          "center": [
+            0.10022841393947601,
+            -0.11542270332574844,
+            0.0006995538133196533
+          ],
+          "seconds": 0.16000000000000003
+        },
+        {
+          "min_z": -0.0001827848464017734,
+          "max_z": 0.0009091870160773396,
+          "center": [
+            0.10023168474435806,
+            -0.062100425362586975,
+            0.0006839174893684685
+          ],
+          "seconds": 0.22400000000000003
+        },
+        {
+          "min_z": -0.0002075744851026684,
+          "max_z": 0.0008844725089147687,
+          "center": [
+            0.10023469477891922,
+            -0.008791168220341206,
+            0.0006591271958313882
+          ],
+          "seconds": 0.288
+        },
+        {
+          "min_z": -0.00025081736384890974,
+          "max_z": 0.0008410379523411393,
+          "center": [
+            0.10023730993270874,
+            0.044524043798446655,
+            0.0006158830947242677
+          ],
+          "seconds": 0.35200000000000004
+        },
+        {
+          "min_z": -0.0003420277207624167,
+          "max_z": 0.000749229802750051,
+          "center": [
+            0.10023947805166245,
+            0.09787508100271225,
+            0.0005246744258329272
+          ],
+          "seconds": 0.41600000000000004
+        }
+      ]
+    },
+    "R": {
+      "measured_speed": 0.8331526551046408,
+      "fit_max_residual_m": 1.3571232557296753e-05,
+      "min_sole_z": -0.0002507954486645758,
+      "max_sole_z": 0.0009362209821119905,
+      "samples": [
+        {
+          "min_z": -0.00015508227807004005,
+          "max_z": 0.0009362209821119905,
+          "center": [
+            -0.10022518783807755,
+            -0.1687690019607544,
+            0.0007116202614270151
+          ],
+          "seconds": 0.496
+        },
+        {
+          "min_z": -0.00016714533558115363,
+          "max_z": 0.0009245697874575853,
+          "center": [
+            -0.1002284362912178,
+            -0.115422822535038,
+            0.0006995563162490726
+          ],
+          "seconds": 0.5599999999999999
+        },
+        {
+          "min_z": -0.00018279763753525913,
+          "max_z": 0.0009091750252991915,
+          "center": [
+            -0.10023166984319687,
+            -0.062100477516651154,
+            0.0006839038105681539
+          ],
+          "seconds": 0.6240000000000001
+        },
+        {
+          "min_z": -0.00020754692377522588,
+          "max_z": 0.0008845013799145818,
+          "center": [
+            -0.10023470222949982,
+            -0.008791177533566952,
+            0.000659154902677983
+          ],
+          "seconds": 0.6880000000000001
+        },
+        {
+          "min_z": -0.0002507954486645758,
+          "max_z": 0.0008410593727603555,
+          "center": [
+            -0.10023728758096695,
+            0.04452402517199516,
+            0.0006159065524116158
+          ],
+          "seconds": 0.752
+        }
+      ]
+    }
+  },
+  "source_provenance": {
+    "prepared_source": "E:\\CODEX\\2026-10-21\\医院人物适度精修\\work\\patient-refined-01\\patient-moderate-refined.blend",
+    "prepared_source_sha256": "ad4e67c7d6e711945d1fdf96a6a8ac3f0f7db7a6cb3a3286a4d0b68bb1729db4",
+    "raw_render_manifest": "E:\\CODEX\\2026-10-21\\医院自有人物二次精修\\work\\patient-bake-03\\raw-render.json",
+    "raw_render_manifest_sha256": "b17572000622fde841eaccee0968d9250ba75c90d64344c0291733b6b6f74236"
+  },
+  "alpha_border_check": {
+    "minimum_pixels": 4,
+    "frames_checked": 736,
+    "failed": 0
+  },
+  "source_unchanged": true,
+  "android_hardware_tested": false,
+  "mobile_readability": {},
+  "moderate_refinement": {
+    "schema": "refined-source-2",
+    "audit": "E:\\CODEX\\2026-10-21\\医院自有人物二次精修\\work\\patient-owned-refined-03\\refined-source-audit.json",
+    "audit_sha256": "3ce27bb8a9b6129f109a72e4c6b37e016bfb5069ebdbe870e05f4c4010f6a2bd",
+    "base_geometry_uv_weights_rig_actions_images_preserved": false,
+    "base_topology_uv_weights_rig_actions_images_preserved": true,
+    "topology_uv_weights_rig_actions_images_preserved": true,
+    "added_overlay_count": 0,
+    "geometry_repair_count": 1,
+    "original_action_durations_preserved": true
+  },
+  "parent_moderate_refinement": {
+    "audit": "E:\\CODEX\\2026-10-21\\医院人物适度精修\\work\\patient-refined-01\\refined-source-audit.json",
+    "audit_sha256": "002d3be8cab73a32af1b638af30da9756a6e64d58ff42b4651c74ace719dc7be",
+    "base_geometry_uv_weights_rig_actions_images_preserved": true,
+    "added_overlay_count": 0,
+    "original_action_durations_preserved": true
+  },
+  "parent_mobile_readability": {
+    "audit": "E:\\CODEX\\2026-10-21\\医院手机清爽画风\\work\\patient-mobile-clean-01\\mobile-clean-audit.json",
+    "audit_sha256": "0e22eaa0d915e18439a4d076f53d144731008736b89d237e7fde701d76d81f02",
+    "geometry_uv_skin_rig_actions_images_identical": true,
+    "source_action_durations_unchanged": true,
+    "walk_speed_inherited_from_unchanged_geometry_and_actions": true
+  },
+  "source_audit_schema": "refined-source-2",
+  "base_geometry_uv_weights_rig_actions_images_preserved": false,
+  "topology_uv_weights_rig_actions_images_preserved": true
+}

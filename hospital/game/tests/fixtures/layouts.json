@@ -1,0 +1,10 @@
+{
+  "standard": [
+    {"kind":"reception","origin_cell":121,"rotation":0},
+    {"kind":"diagnosis","origin_cell":100,"rotation":0},
+    {"kind":"echo","origin_cell":104,"rotation":0},
+    {"kind":"motion","origin_cell":108,"rotation":0},
+    {"kind":"sensory","origin_cell":112,"rotation":0},
+    {"kind":"recovery","origin_cell":140,"rotation":0}
+  ]
+}

@@ -1,0 +1,19 @@
+name: Hospital public macOS check
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  environment:
+    if: github.repository == 'eddie020888-oss/daily-order-hospital-build' && github.event.repository.private == false && github.actor == github.repository_owner && github.ref == 'refs/heads/main'
+    runs-on: macos-26
+    timeout-minutes: 5
+    steps:
+      - name: Verify standard macOS and iPhone SDK environment
+        env:
+          DEVELOPER_DIR: /Applications/Xcode_26.6.app/Contents/Developer
+        run: |
+          set -euo pipefail
+          sw_vers -productVersion
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version

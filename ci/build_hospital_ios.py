@@ -440,6 +440,21 @@ def run_formal_gameplay_checks(godot, engine_env):
                   secret=False, env=engine_env, timeout=timeout).decode(errors="replace")
         results = re.findall(r"(?m)^" + re.escape(marker) +
                              r" passed=([0-9]+) failed=([0-9]+)[ \t]*\r?$", log)
+        # Counts and fixed diagnostic categories only. Raw logs and save data
+        # remain on the ephemeral runner; release checks below stay unchanged.
+        diagnostics = {name: bool(re.search(pattern, log)) for name, pattern in {
+            "scriptError": r"(?i)SCRIPT\s+ERROR",
+            "parseError": r"(?i)Parse\s+Error",
+            "engineError": r"(?im)^\s*(?:ERROR|FATAL)\b",
+            "objectLeak": r"(?i)ObjectDB instances were leaked",
+            "resourceLeak": r"(?i)resources? still in use at exit",
+        }.items()}
+        print("HOSPITAL_FORMAL_RESULT: " + json.dumps({
+            "tag": tag, "completionCount": len(results),
+            "passed": int(results[0][0]) if len(results) == 1 else None,
+            "failed": int(results[0][1]) if len(results) == 1 else None,
+            "diagnostics": diagnostics,
+        }, separators=(",", ":")), flush=True)
         if (len(results) != 1 or int(results[0][0]) <= 0 or results[0][1] != "0" or
                 re.search(r"(?im)(SCRIPT\s+ERROR|Parse\s+Error|^\s*(?:ERROR|FATAL)\b|ObjectDB instances were leaked|resources? still in use at exit)", log)):
             raise RuntimeError(stage + " did not complete cleanly")

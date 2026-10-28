@@ -1,0 +1,31 @@
+name: Hospital isolated UI diagnostic
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: hospital-ui-diagnostic
+  cancel-in-progress: false
+jobs:
+  diagnose:
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.event.repository.private == false &&
+      github.repository == 'eddie020888-oss/daily-order-hospital-build' &&
+      github.repository == vars.HOSPITAL_EXPECTED_REPOSITORY &&
+      github.actor == 'eddie020888-oss' && github.ref == 'refs/heads/main'
+    runs-on: macos-26
+    timeout-minutes: 20
+    env:
+      HOSPITAL_REPOSITORY_VISIBILITY: public
+      HOSPITAL_EXPECTED_REPOSITORY: ${{ vars.HOSPITAL_EXPECTED_REPOSITORY }}
+    steps:
+      - name: Checkout approved public main source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install exact official engine using existing installer
+        run: bash ci/install-godot.sh
+      - name: Diagnose actual formal HUD in isolated storage
+        run: python3 ci/diagnose-hospital-ui.py
+      # No signing, upload, secrets, artifacts, release or cache steps.

@@ -151,6 +151,20 @@ func _settle_scroll_top(serial:int) -> void:
     await get_tree().process_frame
     if serial==_scroll_reset_serial and is_instance_valid(scroll):scroll.scroll_vertical=0
 
+func show_clinical_policy() -> void:
+    if session==null or not CampaignClinicalDecisions.enabled(session.presentation_snapshot()):return
+    show_section("cases")
+    _focus_clinical_policy.call_deferred(session.sim,_scroll_reset_serial)
+
+func _focus_clinical_policy(owner:Simulation,serial:int) -> void:
+    if not is_inside_tree():return
+    await get_tree().process_frame
+    if session.sim!=owner or not visible or section!="cases" or serial!=_scroll_reset_serial:return
+    var control:Control=controls.get("clinical_policy")
+    if is_instance_valid(control):
+        scroll.ensure_control_visible(control)
+        control.grab_focus()
+
 func close() -> void:
     picking_origin=false
     if world!=null:world.clear_campaign_preview()
@@ -189,6 +203,7 @@ func _render() -> void:
         _guidance_origin.clear()
         _scroll_reset_serial+=1
     _snapshot=session.presentation_snapshot()
+    _prune_assignment_drafts()
     _clear(body)
     _facility_grid=null
     _clear(footer)
@@ -230,7 +245,16 @@ func _render() -> void:
     _sync_phone_footer()
 
 func _sync_phone_footer() -> void:
-    if footer!=null:footer.visible=not is_full_page() or section not in ["patients","staff","finance","operations","resource"]
+    if footer==null:return
+    var compact:bool=is_full_page()
+    # Case actions remain reachable inside the scroll on a short display.
+    # Keeping them fixed would leave only 13px for the actual policy form.
+    if section=="cases":
+        for control:Variant in controls.values():
+            if is_instance_valid(control) and control is Button and control.get_meta("case_action",false):
+                var destination:Node=body if compact else footer
+                if control.get_parent()!=destination:control.reparent(destination)
+    footer.visible=not compact or section not in ["patients","staff","finance","operations","resource","cases"]
 
 func _text(parent:Node,copy:String,size_value:int=16,color:Color=HospitalUiStyle.INK) -> Label:
     var label:=HospitalUiStyle.text(copy,size_value,color)
@@ -252,6 +276,7 @@ func _button(parent:Node,key:String,copy:String,action:Callable,primary:bool=fal
         HospitalA2Skin.button(button,"primary" if primary else "paper",16)
     elif primary:HospitalUiStyle.primary(button)
     parent.add_child(button)
+    if parent==footer and section=="cases":button.set_meta("case_action",true)
     controls[key]=button
     button.pressed.connect(action)
     return button
@@ -301,6 +326,7 @@ func _issue(type:String,payload:Dictionary={}) -> Dictionary:
         elif type=="set_procurement_policy":_policy_drafts.erase("procurement_policy")
         elif type=="set_price":_policy_drafts.erase("price_percent")
         elif type=="set_operation_auto":_policy_drafts.erase("auto_target:"+str(payload.get("facility_kind","")))
+        elif type in ["assign","unassign","dismiss"]:_policy_drafts.erase("assign_facility:"+str(payload.get("staff_id","")))
     _feedback="已完成："+command_name(type) if result.get("ok",false) else "操作未完成："+reason_text(result,_content(),_snapshot)
     if result.get("ok",false) and type=="continue_hospital":_feedback+="。本院已保留，返回医院点播放继续营业。"
     _signature=""
@@ -751,6 +777,8 @@ func _has_facility(kind:String) -> bool:
 
 func _patients_page() -> void:
     _heading("在院病例与诊疗路线")
+    if CampaignClinicalDecisions.enabled(_snapshot):
+        _button(body,"clinical_policy_entry","诊疗策略",show_clinical_policy)
     _autonomy_controls("patient")
     var active:=0
     var patients:Array=_snapshot.patients.values()
@@ -776,7 +804,13 @@ func _patients_page() -> void:
         var description:=VBoxContainer.new()
         description.size_flags_horizontal=Control.SIZE_EXPAND_FILL
         identity.add_child(description)
-        _text(description,"患者"+str(patient.id).get_slice("_",1)+" · "+str(_content().diseases.get(patient.disease_id,{}).get("name",patient.disease_id)),19)
+        var identity_copy:String="患者"+str(patient.id).get_slice("_",1)
+        var disease_name:String=str(_content().diseases.get(patient.disease_id,{}).get("name",patient.disease_id))
+        if CampaignClinicalDecisions.enabled(_snapshot):
+            var confidence:int=int(CampaignClinicalDecisions.preview(_snapshot,session.catalog,str(patient.id)).get("confidence",-1))
+            identity_copy+=" · 等待首诊" if confidence<0 else " · 疑似："+disease_name
+        else:identity_copy+=" · "+disease_name
+        _text(description,identity_copy,19)
         _text(description,"当前："+phase_name(str(patient.phase))+" · 累计等候%.1f秒"%(patient.get("wait_ticks",0)/10.0),16,HospitalUiStyle.MUTED)
         _clinical_patient_controls(patient)
         _patient_need_controls(patient)
@@ -861,7 +895,11 @@ func _staff_page() -> void:
         if employee.get("role","") in definition.get("roles",[]) or employee.get("role","")==definition.get("role",""):
             facilities.append({"id":facility.id,"name":str(definition.name)+" · "+_room_name(_snapshot.rooms[facility.room_id])})
     if not facilities.is_empty():
-        _choice("assign_facility","可匹配设备岗位",facilities,str(employee.get("facility_id","")),func(_value:String)->void:pass)
+        var assignment_key:String="assign_facility:"+str(employee.id)
+        var assignment_owner:Simulation=session.sim
+        var assignment_target:String=str(_policy_drafts.get(assignment_key,employee.get("facility_id","")))
+        _choice("assign_facility","可匹配设备岗位",facilities,assignment_target,func(value:String)->void:
+            if session.sim==assignment_owner:_policy_drafts[assignment_key]=value)
         var assign_button:Button=_button(body,"assign","派往所选设施",func()->void:_issue("assign",{"staff_id":_selected("assign_staff"),"facility_id":_selected("assign_facility")}),true)
         assign_button.disabled=CampaignCommands._staff_busy(employee) or bool(StaffingInsights.relief(_snapshot,str(employee.id)).registered) or StaffRelief.assignment_locked(_snapshot,employee)
     else:_copy("尚无该岗位匹配的已建设施，请先建设或选择另一岗位。")
@@ -872,6 +910,18 @@ func _staff_page() -> void:
     unassign_button.disabled=locked;dismiss_button.disabled=locked
     _button(footer,"staff_growth","培训与成长",func()->void:show_section("growth"))
     _button(footer,"staff_facilities","设施目录",func()->void:show_section("facilities"))
+
+func _prune_assignment_drafts() -> void:
+    for key:String in _policy_drafts.keys():
+        if not key.begins_with("assign_facility:"):continue
+        var employee:Dictionary=_snapshot.get("staff",{}).get(key.trim_prefix("assign_facility:"),{})
+        var facility:Dictionary=_snapshot.get("facilities",{}).get(str(_policy_drafts[key]),{})
+        if employee.is_empty() or facility.is_empty():
+            _policy_drafts.erase(key)
+            continue
+        var definition:Dictionary=_content().get("facilities",{}).get(str(facility.get("kind","")),{})
+        var role:String=str(employee.get("role",""))
+        if role not in definition.get("roles",[]) and role!=str(definition.get("role","")):_policy_drafts.erase(key)
 
 func _staff_relief_controls(employee:Dictionary) -> void:
     if not CampaignPeople.autonomy_enabled(_snapshot):return

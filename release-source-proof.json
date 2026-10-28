@@ -200,5 +200,186 @@
     "physicalIphoneVerified": false,
     "sourceManifestSha256": "5cf387f6efbcfeb784f9ce1cde11563dbe65c032a3d0277834d6ac385c4e452c",
     "gestureContract": "Default single-finger room drawing; two-finger pan and pinch; stage0 explicit single-finger view mode; held contacts cannot cross mode ownership."
+  },
+  "build7GameplayReview": {
+    "basedOnDeliveredBuild6Commit": "bd2f817ae3449fa6b028ae912be4000f4ca1037c",
+    "scope": "Support capacity and qualified crew routing; employee selection drafts; earned diagnosis information; explicit clinical delegation navigation; short-screen case actions.",
+    "productionFileCount": 3,
+    "scopedFileCount": 19,
+    "files": [
+      {
+        "file": "hospital/game/campaign/campaign_operations.gd",
+        "normalizedSha256": "664e9c3ae51d05c0871a2be576149bae5c7316e90f16d28658b6d11095a097e1",
+        "publicFileSha256": "664e9c3ae51d05c0871a2be576149bae5c7316e90f16d28658b6d11095a097e1"
+      },
+      {
+        "file": "hospital/game/ui/campaign_hospital_panel.gd",
+        "normalizedSha256": "ba7dd3859e58e6c54fa36d4042ef8fc792e865d57f2f6e8e1b5530804bab4d04",
+        "publicFileSha256": "677e21fac3b1e4f7a62764519f6628b6d40a934f487b90b344cfc47c466642ad"
+      },
+      {
+        "file": "hospital/game/ui/campaign_patient_card.gd",
+        "normalizedSha256": "ec287bcf24b73eb57b97ad98ef0650588e6816f0e948e3e0cfbc9dc3c6ee7179",
+        "publicFileSha256": "ec287bcf24b73eb57b97ad98ef0650588e6816f0e948e3e0cfbc9dc3c6ee7179"
+      },
+      {
+        "file": "hospital/game/tests/test_campaign_support_capacity.gd",
+        "normalizedSha256": "c5d2a64eddd950415c925a2d9c340e0fc82c3aa39dcf677e4b04b34f4bf1bfd0",
+        "publicFileSha256": "67c133a0b9ee9ae13a8bf4b9a6a11d73934cb5adbba55bbb8dc7ca4f8e9d4243"
+      },
+      {
+        "file": "hospital/game/tests/test_campaign_support_capacity.gd.uid",
+        "normalizedSha256": "60c8093c4a72b0f1daafdc904a17c9b1b4ffdb940f206e0be609fc2bb8cc64e5",
+        "publicFileSha256": "60c8093c4a72b0f1daafdc904a17c9b1b4ffdb940f206e0be609fc2bb8cc64e5"
+      },
+      {
+        "file": "hospital/game/tests/test_campaign_staff_choice.gd",
+        "normalizedSha256": "ee2756c5bea5d6e6dada9f20dbdfaadd1da0fda7ef921a1e88b7e7e903f43006",
+        "publicFileSha256": "ee2756c5bea5d6e6dada9f20dbdfaadd1da0fda7ef921a1e88b7e7e903f43006"
+      },
+      {
+        "file": "hospital/game/tests/test_campaign_staff_choice.gd.uid",
+        "normalizedSha256": "618efbeaddb27f7b06ef55601709efae42f050a96258f0bc7f2a6ad6e713b79a",
+        "publicFileSha256": "618efbeaddb27f7b06ef55601709efae42f050a96258f0bc7f2a6ad6e713b79a"
+      },
+      {
+        "file": "hospital/game/tests/test_campaign_assignment_drafts.gd",
+        "normalizedSha256": "d8ce01615684405c5e4097efd1c8ad08bfab7b0ec226962d935a8c552ab5b6b9",
+        "publicFileSha256": "d8ce01615684405c5e4097efd1c8ad08bfab7b0ec226962d935a8c552ab5b6b9"
+      },
+      {
+        "file": "hospital/game/tests/test_campaign_assignment_drafts.gd.uid",
+        "normalizedSha256": "8aae2b661740c117956f1ab9db58695f969faf2e9bc49700faec3dbe2bd98851",
+        "publicFileSha256": "8aae2b661740c117956f1ab9db58695f969faf2e9bc49700faec3dbe2bd98851"
+      },
+      {
+        "file": "hospital/game/tests/test_campaign_diagnosis_information.gd",
+        "normalizedSha256": "9078779ff77fdde48abd1a0267f30030ef58a8a00d315dd32b4cded8762a1164",
+        "publicFileSha256": "9078779ff77fdde48abd1a0267f30030ef58a8a00d315dd32b4cded8762a1164"
+      },
+      {
+        "file": "hospital/game/tests/test_campaign_diagnosis_information.gd.uid",
+        "normalizedSha256": "ebd38967e49064012fc391e75c1f14a173bb8e163b49dd3dd212516e6dc021ab",
+        "publicFileSha256": "ebd38967e49064012fc391e75c1f14a173bb8e163b49dd3dd212516e6dc021ab"
+      },
+      {
+        "file": "hospital/game/tests/test_campaign_policy_workflow.gd",
+        "normalizedSha256": "453f6e640223aa9fa922b306c40d840fe250d70d5dd1c21a7ad8bb73060c795d",
+        "publicFileSha256": "0e8ff8f8a76be7f7fdf80a71c8ec359d1e635aa320e59587b021dd67efcfc22e"
+      },
+      {
+        "file": "hospital/game/tests/test_campaign_policy_workflow.gd.uid",
+        "normalizedSha256": "e4ca5aaf91e63222ea9f470ed1911680c43619058da07a2e5decf993d4ba2e24",
+        "publicFileSha256": "e4ca5aaf91e63222ea9f470ed1911680c43619058da07a2e5decf993d4ba2e24"
+      },
+      {
+        "file": "hospital/game/tests/test_campaign_patient_geometry.gd",
+        "normalizedSha256": "94fd417ccc5d4d408ada2d90116132f19ce3a4a93fb73c8239c7a54313e5380a",
+        "publicFileSha256": "e38c2db918fe92a1ada5cf15347039840fc01ae88fa755993376a5513dd46364"
+      },
+      {
+        "file": "hospital/game/tests/test_campaign_patient_geometry.gd.uid",
+        "normalizedSha256": "541ad8d2a9a94365826f1c8603dc5b6627964e92059367da866cce8b07d58e4b",
+        "publicFileSha256": "541ad8d2a9a94365826f1c8603dc5b6627964e92059367da866cce8b07d58e4b"
+      },
+      {
+        "file": "hospital/game/tests/test_campaign_case_actions.gd",
+        "normalizedSha256": "b9d15c4b03977e3d86b0638f20882ea2fca68f738857bc727a3cf395c5fc494a",
+        "publicFileSha256": "0e9f6ff6b800515bd774065213b8e9c0d2d8b939b60dec2b3d45ff4c0da1b149"
+      },
+      {
+        "file": "hospital/game/tests/test_campaign_case_actions.gd.uid",
+        "normalizedSha256": "f17fdde02104121744b95f59b44a832994794db0727ad8ff94d6ac1a13edf3bb",
+        "publicFileSha256": "f17fdde02104121744b95f59b44a832994794db0727ad8ff94d6ac1a13edf3bb"
+      },
+      {
+        "file": "hospital/game/tests/support/gameplay_review_paths.gd",
+        "normalizedSha256": "d873ea50a93083387a80eaa0d99dddbe74fa7bc101ae981c3903b467a1cd9a67",
+        "publicFileSha256": "d873ea50a93083387a80eaa0d99dddbe74fa7bc101ae981c3903b467a1cd9a67"
+      },
+      {
+        "file": "hospital/game/tests/support/gameplay_review_paths.gd.uid",
+        "normalizedSha256": "e69a1b568c85d2a720bfeaca578954c330f8a87278143080e124219e76aef321",
+        "publicFileSha256": "e69a1b568c85d2a720bfeaca578954c330f8a87278143080e124219e76aef321"
+      }
+    ],
+    "localRegression": {
+      "passed": 2456,
+      "failed": 0,
+      "logSha256": "c3018ac5711dce5bcadcb6852f8d5cf2982b63887873359733c436f7f4050aa7"
+    },
+    "focusedChecks": {
+      "support-capacity": {
+        "passed": 109,
+        "failed": 0,
+        "reportSha256": "2d84bdcadc1a0f35d9e8f8fb855abcce8a617ee81c049d45fe2e622a4acef1f1",
+        "logSha256": "89dd17a63e57604db9993183e484d9b8659d156e8203a98fd9df469dd97c2c5d"
+      },
+      "staff-choice": {
+        "passed": 17,
+        "failed": 0,
+        "reportSha256": "6c67d32f0374f9368b998cd9a316219fb34d677926ef4e61aba22d2f243cda1e",
+        "logSha256": "50b250b7fd97fec844ce9811cc3a0a619019af49dbc01fa746d47a69b1f2c5b1"
+      },
+      "assignment-drafts": {
+        "passed": 37,
+        "failed": 0,
+        "reportSha256": "2a4c81e7e48a38d24d48831427d7ba1b6bf26307aa4b9418da8bf49dd4591f93",
+        "logSha256": "6af6155514a4cd4746c3afbc9e9d1968ba4a68d7b0a89e3fab5b4a6c053a3585"
+      },
+      "diagnosis-info": {
+        "passed": 58,
+        "failed": 0,
+        "reportSha256": "5d63bc0bd04d461b585083dc4c45ccb61c287000fb74b5541a4230bc55e7e92b",
+        "logSha256": "d580dc2254e835d346526e30c2b87e80cdf7e47c0c3cf21e9170411e6756c95f"
+      },
+      "policy-workflow": {
+        "passed": 79,
+        "failed": 0,
+        "reportSha256": "6e8e73db843718e6fd4bb31f798f824c222dae7db26b1228210148ebbb471918",
+        "logSha256": "525ce4978aabaa3b29cd9891d0ffe6ad0b5f2823e20632e3d70dfdfbee980547"
+      },
+      "patient-geometry": {
+        "passed": 56,
+        "failed": 0,
+        "reportSha256": "76572bbd1ee1285dcdf6bbd4b4a018e24dc9650120862798e79ad7cdaeea6b7f",
+        "logSha256": "9332f29d24020dd6c6f12c7813328d70f6b327eda4da18a69e814e5a65b96b3a"
+      },
+      "case-actions": {
+        "passed": 140,
+        "failed": 0,
+        "reportSha256": "f8a28e328927faa7b4a9dadb15ab66b5859bbfa181d3c199bcb1dc07faf4c2b3",
+        "logSha256": "d8a4e17fafd0fdab3cf7990374ccd6f1b8599b1c731bf7f96f82aabc1babb760"
+      }
+    },
+    "mandatoryStandaloneCiChecks": 19,
+    "nativePolicyWorkflow": {
+      "passed": 85,
+      "failed": 0,
+      "actualViewportCaptures": 3,
+      "reportSha256": "9ca2cdda419f41bbf712d126e94eec6412ba25170f3b2b73aa1f87b88767b29d",
+      "patientCost": 42,
+      "deliveredConsumed": 3,
+      "patientIncome": 240,
+      "scope": "Prepared real Main fixture and ScreenTouch controls; not a human enjoyment or physical phone test."
+    },
+    "wholeCampaignVerified": false,
+    "humanFunVerified": false,
+    "physicalIPhoneVerified": false,
+    "remainingDesignLimits": [
+      "diagnosis-only case templates",
+      "fixed repeated evidence decisions",
+      "long continuous-day gates",
+      "shallow effects for several management events"
+    ],
+    "status": "local-verified-awaiting-final-mac-build-and-apple-processing"
+  },
+  "nextBuild7": {
+    "version": "0.3.0",
+    "build": "7",
+    "mode": "testflight",
+    "publicStandardMacRunner": true,
+    "uploadDispatched": false,
+    "appleProcessingVerified": false
   }
 }

@@ -405,6 +405,13 @@ def run_formal_gameplay_checks(godot, engine_env):
         ("patient-card", "test_campaign_patient_card.gd", "PATIENT CARD RESULT", 180),
         ("resource-screen", "test_resource_short_screen.gd", "RESOURCE SCREEN RESULT:", 180),
         ("build-navigation", "test_campaign_build_navigation.gd", "BUILD NAV RESULT:", 180),
+        ('support-capacity', 'test_campaign_support_capacity.gd', 'PARALLEL REFERRAL RESULT:', 420),
+        ('staff-choice', 'test_campaign_staff_choice.gd', 'PLAYER FLOW RESULT:', 180),
+        ('assignment-drafts', 'test_campaign_assignment_drafts.gd', 'ASSIGNMENT BOUNDARY RESULT:', 180),
+        ('diagnosis-info', 'test_campaign_diagnosis_information.gd', 'PLAYER INFO RESULT:', 180),
+        ('policy-workflow', 'test_campaign_policy_workflow.gd', 'POLICY APPLY RESULT:', 180),
+        ('patient-geometry', 'test_campaign_patient_geometry.gd', 'CARD GEOMETRY RESULT:', 180),
+        ('case-actions', 'test_campaign_case_actions.gd', 'CASE ACTIONS RESULT:', 180),
     ]
     for tag, script, marker, timeout in cases:
         # Do not create this parent here, including for the runner log. The

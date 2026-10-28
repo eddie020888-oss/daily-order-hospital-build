@@ -91,6 +91,10 @@ func _build()->void:
 	controls.prepare=prepare
 	var all:=_button(_footer,"all_patients","完整名单",func()->void:all_patients_requested.emit(),"paper",14)
 	all.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	var policy:=_button(_footer,"clinical_policy","诊疗策略",func()->void:
+		preparation_requested.emit({"action":"goals","section":"cases","control":"clinical_policy"}),"paper",13)
+	policy.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	policy.tooltip_text="设置全院常规诊疗：由医生按策略处理，或继续手动决定。"
 	prepare.hide()
 
 func _label(parent:Node,copy:String,font_size:int,color:Color,weight:int=400,wrap:bool=true)->Label:
@@ -147,6 +151,8 @@ func present(snapshot:Dictionary={})->void:
 	var patient:Dictionary=_snapshot.get("patients",{}).get(patient_id,{})
 	if patient.is_empty():close();return
 	_decision=CampaignClinicalDecisions.preview(_snapshot,_session.catalog,patient_id)
+	controls.clinical_policy.visible=bool(_decision.get("enabled",false))
+	controls.clinical_policy.disabled=_session.storage_blocked
 	var name:String=str(patient.get("display_name",""))
 	if name.strip_edges()=="":name="门诊号 "+patient_id.trim_prefix("patient_")
 	controls.name.text=name

@@ -31,19 +31,57 @@ static func _long_staffed(d:Dictionary,f:Dictionary,catalog:ContentCatalog)->boo
 		if d.staff.has(sid) and d.staff[sid].role in roles:roles.erase(d.staff[sid].role)
 	return roles.is_empty()
 
+static func _crew_after_paid_work(d:Dictionary,f:Dictionary,roles:Array,allow_relief:bool)->bool:
+	# Read-only availability projection: only an already paid working job can
+	# finish without missing inputs or a new employee. No live owner is cleared.
+	var projected:Dictionary=d.duplicate()
+	projected.staff=d.staff.duplicate()
+	var changed:bool=false
+	for order_id:String in d.campaign.active_order_ids:
+		var order:Dictionary=d.work_orders[order_id]
+		if order.facility_id!=f.id or order.status!="working" or int(order.started_tick)<0:continue
+		for sid:String in order.staff_ids:
+			if not d.staff.has(sid) or d.staff[sid].get("work_order_id","")!=order_id:continue
+			var worker:Dictionary=d.staff[sid].duplicate()
+			worker.work_order_id=""
+			worker.fatigue=mini(100,int(worker.get("fatigue",0))+8)
+			if CampaignPeople.enabled(d):worker.morale=maxi(0,int(worker.get("morale",70))-1)
+			if order.handler=="roster" and CampaignPeople.enabled(d):
+				worker.fatigue=maxi(0,int(worker.fatigue)-25)
+				worker.morale=mini(100,int(worker.morale)+5)
+			projected.staff[sid]=worker
+			changed=true
+	return changed and _workers(projected,f,roles,allow_relief).size()==roles.size()
+
 static func request(state: ClinicState, catalog: ContentCatalog, facility_kind: String, handler: String="", patient_id: String="") -> String:
 	var d: Dictionary=state.data
 	if not catalog.campaign.facilities.has(facility_kind): return ""
+	var definition: Dictionary=catalog.campaign.facilities[facility_kind]
 	var facility_id:=""
 	var facility_ids:Array=d.facilities.keys()
-	if LongCampaign.is_long(d):facility_ids.sort()
+	var long_hospital:bool=LongCampaign.is_long(d)
+	var selected_load:int=2147483647
+	var selected_crew_rank:int=3
+	# Match the existing scheduling policy when inspecting temporary cover.
+	# This is an ephemeral candidate only; it never becomes a persisted order.
+	var candidate_order:Dictionary={"facility_kind":facility_kind,"handler":handler if handler!="" else definition.handler,"patient_id":patient_id,"step_id":"","status":"queued"}
+	if long_hospital:facility_ids.sort()
 	for candidate_id:String in facility_ids:
 		var f:Dictionary=d.facilities[candidate_id]
 		if f.kind!=facility_kind or f.status!="open":continue
-		if LongCampaign.is_long(d) and (not _long_operable(f,catalog) or not _long_staffed(d,f,catalog)):continue
-		facility_id=f.id;break
+		if not long_hospital:
+			facility_id=f.id;break
+		if not _long_operable(f,catalog) or not _long_staffed(d,f,catalog):continue
+		var pending_load:int=1 if f.get("busy_patient_id","")!="" else 0
+		for order_id:String in d.campaign.active_order_ids:
+			var existing:Dictionary=d.work_orders[order_id]
+			if existing.facility_id==f.id and existing.status!="done":pending_load+=1
+		var allow_relief:bool=CampaignStaffRelief.order_eligible(d,catalog,candidate_order)
+		var available:bool=_workers(d,f,definition.roles,allow_relief).size()==definition.roles.size()
+		var crew_rank:int=0 if available else 1 if _crew_after_paid_work(d,f,definition.roles,allow_relief) else 2
+		if facility_id=="" or crew_rank<selected_crew_rank or (crew_rank==selected_crew_rank and pending_load<selected_load):
+			facility_id=f.id;selected_load=pending_load;selected_crew_rank=crew_rank
 	if facility_id=="": return ""
-	var definition: Dictionary=catalog.campaign.facilities[facility_kind]
 	var step: Dictionary={}
 	if patient_id!="" and d.patients.has(patient_id):
 		var patient: Dictionary=d.patients[patient_id]

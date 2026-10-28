@@ -108,7 +108,7 @@
     "rootCause": "Fresh Mac test harness did not create reports/implementation parent; preserve all test assertions and prepare isolated output parent."
   },
   "nextMode": "testflight",
-  "nextBuild": "5",
+  "nextBuild": "6",
   "openingLoopCandidate20261028": {
     "version": "0.3.0",
     "build": "5",
@@ -167,5 +167,38 @@
       },
       "postRunUiChanges": "Resource footer layout, preliminary disease label, unpaid-order navigation and readable staff labels received focused checks after the native run; the simulation was unchanged."
     }
+  },
+  "build6NavigationFix": {
+    "priorReleasedCommit": "4cba9a6196a5627d2602a176a1fb765c581e30b9",
+    "scope": "Construction camera input only; no simulation or save format changes",
+    "red": {
+      "passed": 6,
+      "failed": 2,
+      "source": "Actual Main touch: missing stage0 pan and navigation mode"
+    },
+    "focused": {
+      "passed": 19,
+      "failed": 0,
+      "report_sha256": "22ea3dd4154d830c961a19a52044e6c111ca26977b9b700a95b815b5a4e154e4",
+      "scope": "Actual Main input at 932x430; isolated fixture, not physical phone"
+    },
+    "native": {
+      "passed": 22,
+      "failed": 0,
+      "report_sha256": "4e08d93867ef31b5035f2f26b1dcff338a4c9ea8fbaf2ef5a0460c595d337bc2",
+      "scope": "Actual rendered viewport and three screenshots; isolated fixture, not physical phone"
+    },
+    "existingRegression": {
+      "touch": 99,
+      "confirmRelease": 30,
+      "sceneBuild": 41,
+      "formalHud": 25,
+      "campaignUi": 43,
+      "failed": 0
+    },
+    "ciStandaloneGates": 12,
+    "physicalIphoneVerified": false,
+    "sourceManifestSha256": "5cf387f6efbcfeb784f9ce1cde11563dbe65c032a3d0277834d6ac385c4e452c",
+    "gestureContract": "Default single-finger room drawing; two-finger pan and pinch; stage0 explicit single-finger view mode; held contacts cannot cross mode ownership."
   }
 }

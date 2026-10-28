@@ -17,6 +17,7 @@ var _generation:=0
 var _pending_confirm:Dictionary={}
 var _pending_advance:Dictionary={}
 var _manual_openings:=false
+var _navigation_mode:=false
 var _snapshot:Dictionary={}
 var _projection:Dictionary={}
 var _owner_sim:Simulation
@@ -26,6 +27,8 @@ var _blocked:Dictionary={}
 var _gesture_generation:Dictionary={}
 var _dragged:=false
 var _multitouch:=false
+var _pinch_start_distance:=0.0
+var _pinch_start_zoom:=0.0
 var _mouse_down:=false
 var _draw_backup:Dictionary={}
 var _draw_first:=-1
@@ -69,7 +72,7 @@ func cancel() -> void:
 	_drop_confirm_request()
 	var was_active:=active
 	draft=null;_receipt="";_submitting=false;_projection={};_preview_signature=""
-	_manual_openings=false
+	_manual_openings=false;_navigation_mode=false
 	_reset_pointers()
 	if was_active:
 		preview_changed.emit({},{"ok":false,"code":"cancelled","data":{}})
@@ -80,7 +83,22 @@ func reset_input() -> void:
 
 func _reset_pointers() -> void:
 	_fingers.clear();_start.clear();_blocked.clear();_gesture_generation.clear();_dragged=false;_multitouch=false;_mouse_down=false
+	_pinch_start_distance=0.0;_pinch_start_zoom=0.0
 	_draw_backup={};_draw_first=-1;_draw_last=-1;_draw_move=false
+
+func _stop_pointer_gesture() -> void:
+	if not _draw_backup.is_empty() and active:draft.restore_state(_draw_backup)
+	_draw_backup={};_draw_first=-1;_draw_last=-1;_draw_move=false
+	_pinch_start_distance=0.0;_pinch_start_zoom=0.0
+	# Keep held contacts owned until their real release; they cannot cross modes.
+	for index:Variant in _fingers:_blocked[index]=true
+	_gesture_generation.clear()
+
+func set_navigation_mode(enabled:bool) -> void:
+	if not active or draft.step!=0 or enabled==_navigation_mode:return
+	_drop_confirm_request()
+	_stop_pointer_gesture()
+	_navigation_mode=enabled;present()
 
 func choose_cell(cell:int) -> void:
 	if not active:return
@@ -129,6 +147,7 @@ func rotate() -> void:
 func back() -> void:
 	if not active:return
 	_drop_confirm_request()
+	_stop_pointer_gesture();_navigation_mode=false
 	draft.step=maxi(2 if draft.mode=="install" else 0,draft.step-1)
 	if draft.step==1:_manual_openings=true
 	present()
@@ -136,6 +155,7 @@ func back() -> void:
 func advance() -> bool:
 	if not active:return false
 	_drop_confirm_request()
+	_stop_pointer_gesture();_navigation_mode=false
 	present()
 	if not bool(_projection.get("can_advance",false)):return false
 	draft.step+=1;present();return true
@@ -149,12 +169,12 @@ func _estimate(_snapshot_value:Dictionary) -> int:
 	return cost
 
 func present(snapshot:Dictionary={}) -> Dictionary:
-	if not active:return {"active":false}
+	if not active:return {"active":false,"navigation_mode":false}
 	if _submitting:return _projection
 	if session.sim!=_owner_sim or session.storage_blocked:cancel();return {"active":false}
 	_snapshot=snapshot if not snapshot.is_empty() else session.sim.snapshot()
 	var proposal:Dictionary=draft.proposal()
-	var signature:String=JSON.stringify([proposal,draft.step,draft.selected_index,draft.selected_kind,draft.opening_tool,draft.selected_opening,draft.bounds_issue,_generation,_pending_confirm.is_empty(),_snapshot.tick,_snapshot.get("command_sequence",0)])
+	var signature:String=JSON.stringify([proposal,draft.step,draft.selected_index,draft.selected_kind,draft.opening_tool,draft.selected_opening,draft.bounds_issue,_navigation_mode,_generation,_pending_confirm.is_empty(),_snapshot.tick,_snapshot.get("command_sequence",0)])
 	if signature==_preview_signature:return _projection
 	_preview_signature=signature
 	var preview:Dictionary=FacilityLayout.preview(_snapshot,proposal)
@@ -185,7 +205,7 @@ func present(snapshot:Dictionary={}) -> Dictionary:
 			_option_cache.append({"id":kind,"name":str(item.name),"cost":int(item.cost)})
 	var options:Array=_option_cache
 
-	_projection={"active":true,"mode":draft.mode,"step":draft.step,"kind":draft.kind,"name":str(names.get(draft.kind,{}).get("name","科室")),"unit_id":draft.unit_id,"room_id":draft.room_id,"proposal":proposal,"preview":preview,"bounds_error":bounds_error,"bounds_issue":draft.bounds_issue,"queued_confirm":not _pending_confirm.is_empty(),"can_advance":can_advance,"can_confirm":draft.step==3 and ready and preview.get("ok",false) and not _submitting and _pending_confirm.is_empty(),"quote":quote,"cash":int(_snapshot.cash),"balance":int(_snapshot.cash)-quote,"opening_tool":draft.opening_tool,"selected_index":draft.selected_index,"selected_kind":draft.selected_kind,"options":options}
+	_projection={"active":true,"mode":draft.mode,"step":draft.step,"navigation_mode":_navigation_mode and draft.step==0,"kind":draft.kind,"name":str(names.get(draft.kind,{}).get("name","科室")),"unit_id":draft.unit_id,"room_id":draft.room_id,"proposal":proposal,"preview":preview,"bounds_error":bounds_error,"bounds_issue":draft.bounds_issue,"queued_confirm":not _pending_confirm.is_empty(),"can_advance":can_advance,"can_confirm":draft.step==3 and ready and preview.get("ok",false) and not _submitting and _pending_confirm.is_empty(),"quote":quote,"cash":int(_snapshot.cash),"balance":int(_snapshot.cash)-quote,"opening_tool":draft.opening_tool,"selected_index":draft.selected_index,"selected_kind":draft.selected_kind,"options":options}
 	changed.emit(_projection.duplicate(true));preview_changed.emit(proposal.duplicate(true),preview.duplicate(true))
 	return _projection
 
@@ -284,11 +304,18 @@ func _pointer(index:int,pressed:bool,point:Vector2) -> void:
 		if pending:present()
 		_fingers[index]=point;_start[index]=point;_blocked[index]=_hits_gui(point)
 		_gesture_generation[index]=_generation
-		if _fingers.size()==1:_dragged=false;_multitouch=false
+		if _fingers.size()==1:
+			_dragged=false;_multitouch=false;_pinch_start_distance=0.0;_pinch_start_zoom=0.0
 		else:
 			_multitouch=true
 			if not _draw_backup.is_empty() and active:
 				draft.restore_state(_draw_backup);_draw_backup={};_draw_first=-1;_draw_last=-1;present()
+			_pinch_start_distance=0.0;_pinch_start_zoom=0.0
+			if _fingers.size()==2 and world!=null:
+				var keys:Array=_fingers.keys()
+				if not _blocked[keys[0]] and not _blocked[keys[1]]:
+					_pinch_start_distance=Vector2(_fingers[keys[0]]).distance_to(_fingers[keys[1]])
+					_pinch_start_zoom=world.camera_rig.zoom_size
 		return
 	if not _fingers.has(index):return
 	var tap:bool=not _multitouch and not _dragged and not _blocked[index] and not _hits_gui(point) and int(_gesture_generation.get(index,-1))==_generation
@@ -299,6 +326,7 @@ func _pointer(index:int,pressed:bool,point:Vector2) -> void:
 		else:_update_draw(point)
 		_draw_backup={};_draw_first=-1;_draw_last=-1;present()
 	_fingers.erase(index);_start.erase(index);_blocked.erase(index);_gesture_generation.erase(index)
+	if _fingers.size()<2:_pinch_start_distance=0.0;_pinch_start_zoom=0.0
 	if _fingers.is_empty() and not _pending_confirm.is_empty():
 		_flush_requested_confirm.call_deferred(str(_pending_confirm.receipt),int(_pending_confirm.generation))
 	if tap and active:
@@ -310,13 +338,18 @@ func _motion(index:int,point:Vector2) -> void:
 	var before:Vector2=_fingers[index]
 	if _fingers.size()>=2:
 		var keys:Array=_fingers.keys();var other:int=keys[1] if keys[0]==index else keys[0]
-		if not _blocked[index] and not _blocked[other]:
-			var previous:float=before.distance_to(_fingers[other]);var current:float=point.distance_to(_fingers[other])
-			if previous>1 and current>1:world.camera_rig.set_zoom(world.camera_rig.zoom_size*previous/current)
+		if _fingers.size()==2 and _pinch_start_distance>1 and not _blocked[index] and not _blocked[other]:
+			var other_point:Vector2=_fingers[other]
+			var current:float=point.distance_to(other_point)
+			if current>1:
+				var anchor:Vector3=_floor_point((before+other_point)*0.5)
+				# Absolute gesture zoom avoids clamp drift during same-distance pan.
+				world.camera_rig.set_zoom(_pinch_start_zoom*_pinch_start_distance/current)
+				world.camera_rig.pan(anchor-_floor_point((point+other_point)*0.5))
 	elif not _blocked[index] and not _multitouch:
 		if point.distance_to(_start[index])>10:_dragged=true
 		if _dragged:
-			if draft.step==0:
+			if draft.step==0 and not _navigation_mode:
 				if _draw_backup.is_empty():
 					_draw_backup=draft.capture_state();_draw_first=world.camera_rig.screen_to_cell(_start[index]);_draw_last=_draw_first;_draw_move=false
 					var local:=Vector2i(_draw_first%24-draft.origin_cell%24,int(_draw_first/24)-int(draft.origin_cell/24))
@@ -352,6 +385,7 @@ func _floor_point(point:Vector2) -> Vector3:
 
 func _tap(point:Vector2) -> bool:
 	if not active or world==null:return false
+	if draft.step==0 and _navigation_mode:return false
 	if draft.step==1:
 		var wall:Dictionary=world.camera_rig.screen_to_wall(point,draft.origin_cell,int(draft.layout.width),int(draft.layout.height))
 		if wall.is_empty():return false

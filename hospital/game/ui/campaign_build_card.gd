@@ -57,6 +57,7 @@ func initialize(owner:CampaignBuildController) -> void:
 	_button(_footer,"back","上一步",controller.back)
 	_button(_footer,"rotate","旋转",controller.rotate)
 	_button(_footer,"remove","移除",func()->void:controller.remove_selected())
+	_button(_footer,"pan_view","移视角",func()->void:controller.set_navigation_mode(not bool(controller.view().get("navigation_mode",false))))
 	var proceed:Callable=func()->void:
 		if controller.draft!=null and controller.draft.step==3:controller.request_confirm()
 		else:controller.advance()
@@ -80,9 +81,12 @@ func present(view:Dictionary) -> void:
 	visible=bool(view.get("active",false))
 	if not visible:return
 	var step:int=view.step
+	var navigating:bool=bool(view.get("navigation_mode",false))
 	var layout:Dictionary=view.proposal.layout
 	_title.text="%s · %d/4"%[str(view.name),step+1]
-	_instruction.text=["拖框划房，或点两个对角；双指缩放。","点墙放门；可设多个入口，窗户可选。","点地面摆设备，旋转沿格线。","选配套后点添加，再点地面；也可完成。"][step]
+	if navigating:_title.text+=" · 移视角"
+	_instruction.text=["单指划房；双指移动、缩放视角。","点墙放门窗；拖动画面，双指缩放。","点地面摆设备；拖动画面，双指缩放。","添加配套后点地面；拖动画面可移视角。"][step]
+	if navigating:_instruction.text="单指拖动画面；点“继续划房”返回。"
 	_quote.text="当前草稿 %s 币 · 可用 %s 币"%[HospitalHud.grouped_number(int(view.quote)),HospitalHud.grouped_number(int(view.cash))]
 	var valid:bool=bool(view.preview.get("ok",false))
 	if step==0:
@@ -97,7 +101,10 @@ func present(view:Dictionary) -> void:
 		_status.text=CampaignHospitalPanel.reason_text(view.preview,controller.session.catalog.campaign,controller.session.sim.snapshot())
 		_status.add_theme_color_override("font_color",Color("ae4935"))
 	else:_status.add_theme_color_override("font_color",HospitalA2Skin.INK)
-	_bounds.visible=step==0;_openings.visible=step==1;_extras.visible=step==3
+	_bounds.visible=step==0 and not navigating;_openings.visible=step==1;_extras.visible=step==3
+	controls.pan_view.visible=step==0
+	controls.pan_view.text="继续划房" if navigating else "移视角"
+	HospitalA2Skin.button(controls.pan_view,"selected" if navigating else "paper",17)
 	controls.back.visible=step>(2 if view.mode=="install" else 0)
 	controls.rotate.visible=step in [1,2,3]
 	controls.remove.visible=step==3

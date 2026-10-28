@@ -11,15 +11,21 @@ var _summary_copy: Label
 var _kind:=""
 signal furniture_selected(kind:String)
 signal opening_tool_selected(kind:String)
+signal bounds_adjusted(size_delta:Vector2i,offset:Vector2i)
 var furniture_buttons:Dictionary={}
 var opening_buttons:Dictionary={}
+var bounds_buttons:Dictionary={}
 var _legacy:VBoxContainer
 var pinned_header:MarginContainer
 var _step_chips:Array[Label]=[]
 var _free_body:VBoxContainer
 var _free_picture:TextureRect
+var _free_hero:PanelContainer
 var _free_name:Label
 var _free_size:Label
+var _bounds_tools:GridContainer
+var _bounds_feedback_panel:PanelContainer
+var _bounds_feedback:Label
 var _quote:Label
 var _quote_title:Label
 var _quote_amount:=""
@@ -128,12 +134,12 @@ func _build_free_header() -> void:
 		chip.custom_minimum_size.y=30
 		chip.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 		steps.add_child(chip);_step_chips.append(chip)
-	var hero_panel:=PanelContainer.new()
-	HospitalA2Skin.panel(hero_panel,"paper")
-	column.add_child(hero_panel)
+	_free_hero=PanelContainer.new()
+	HospitalA2Skin.panel(_free_hero,"paper")
+	column.add_child(_free_hero)
 	var hero:=HBoxContainer.new()
 	hero.add_theme_constant_override("separation",8)
-	hero_panel.add_child(hero)
+	_free_hero.add_child(hero)
 	_free_picture=HospitalUiStyle.picture(null,Vector2(56,46),0)
 	_free_picture.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	hero.add_child(_free_picture)
@@ -144,6 +150,7 @@ func _build_free_header() -> void:
 	_free_name=HospitalUiStyle.text("",18,HospitalUiStyle.INK,700)
 	details.add_child(_free_name)
 	_free_size=HospitalUiStyle.text("",13,HospitalUiStyle.MUTED)
+	_free_size.name="BuildBoundsSize"
 	details.add_child(_free_size)
 	var price:=VBoxContainer.new()
 	price.add_theme_constant_override("separation",0)
@@ -154,6 +161,7 @@ func _build_free_header() -> void:
 	_quote=HospitalUiStyle.text("",18,Color("ae4935"),750)
 	_quote.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT
 	price.add_child(_quote)
+	_build_bounds_tools(column)
 	_opening_tools=GridContainer.new()
 	_opening_tools.columns=2
 	_opening_tools.add_theme_constant_override("h_separation",6)
@@ -176,13 +184,59 @@ func _build_free_header() -> void:
 	column.add_child(_opening_status)
 	_opening_tools.hide();_opening_status.hide()
 
+func _build_bounds_tools(column:VBoxContainer) -> void:
+	_bounds_feedback_panel=PanelContainer.new()
+	HospitalA2Skin.panel(_bounds_feedback_panel,"paper")
+	column.add_child(_bounds_feedback_panel)
+	_bounds_feedback=HospitalUiStyle.text("先画一框，再逐格调整。",13,HospitalA2Skin.INK,500)
+	_bounds_feedback.name="BuildBoundsFeedback"
+	_bounds_feedback.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	_bounds_feedback.max_lines_visible=2
+	_bounds_feedback.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
+	_bounds_feedback.custom_minimum_size.y=22
+	_bounds_feedback.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	_bounds_feedback_panel.add_child(_bounds_feedback)
+	_bounds_tools=GridContainer.new()
+	_bounds_tools.columns=4
+	_bounds_tools.add_theme_constant_override("h_separation",6)
+	_bounds_tools.add_theme_constant_override("v_separation",6)
+	column.add_child(_bounds_tools)
+	for row in [
+		["width_less","宽−",Vector2i(-1,0),Vector2i.ZERO,"宽度减少1格"],
+		["width_more","宽＋",Vector2i(1,0),Vector2i.ZERO,"宽度增加1格"],
+		["height_less","高−",Vector2i(0,-1),Vector2i.ZERO,"高度减少1格"],
+		["height_more","高＋",Vector2i(0,1),Vector2i.ZERO,"高度增加1格"],
+		["move_nw","↖左上",Vector2i.ZERO,Vector2i(-1,0),"沿地砖向左上移动1格"],
+		["move_ne","↗右上",Vector2i.ZERO,Vector2i(0,-1),"沿地砖向右上移动1格"],
+		["move_sw","↙左下",Vector2i.ZERO,Vector2i(0,1),"沿地砖向左下移动1格"],
+		["move_se","↘右下",Vector2i.ZERO,Vector2i(1,0),"沿地砖向右下移动1格"]
+	]:
+		var key:String=row[0]
+		var button:=BuildPalette.button(row[1])
+		button.custom_minimum_size=Vector2(60,48)
+		HospitalA2Skin.button(button,"paper",15)
+		button.tooltip_text=row[4]
+		button.disabled=true
+		_bounds_tools.add_child(button)
+		bounds_buttons[key]=button
+		button.pressed.connect(_request_bounds_adjustment.bind(key,row[2],row[3]))
+	_bounds_feedback_panel.hide()
+	_bounds_tools.hide()
+
+func _request_bounds_adjustment(key:String,size_delta:Vector2i,offset:Vector2i) -> void:
+	if _step!=0 or not _bounds_tools.is_visible_in_tree() or bounds_buttons[key].disabled:return
+	bounds_adjusted.emit(size_delta,offset)
+
 func configure_short_landscape(value:bool) -> void:
 	_short_landscape=value
 	for side in ["left","right"]:pinned_header.add_theme_constant_override("margin_"+side,16 if value else 22)
 	for side in ["top","bottom"]:pinned_header.add_theme_constant_override("margin_"+side,2 if value else 8)
 	pinned_header.get_child(0).add_theme_constant_override("separation",0 if value else 8)
 	_free_picture.visible=not value
-	_free_size.visible=not value
+	_free_size.visible=not value or _step==0
+	_free_hero.add_theme_stylebox_override("panel",HospitalA2Skin.style("paper",4 if value and _step==0 else 8))
+	_bounds_feedback_panel.add_theme_stylebox_override("panel",HospitalA2Skin.style("paper",3 if value else 5))
+	_bounds_tools.add_theme_constant_override("v_separation",4 if value else 6)
 	_quote_title.visible=not value
 	_free_name.add_theme_font_size_override("font_size",16 if value else 18)
 	_quote.add_theme_font_size_override("font_size",16 if value else 18)
@@ -209,7 +263,7 @@ func configure_short_landscape(value:bool) -> void:
 		_furniture_names[kind].add_theme_font_size_override("font_size",14 if value else 17)
 		_furniture_prices[kind].add_theme_font_size_override("font_size",12 if value else 13)
 	_furniture.add_theme_constant_override("v_separation",6 if value else 8)
-	_instruction_panel.visible=not value or _step!=3 or _warning
+	_instruction_panel.visible=(not value or _step!=3 or _warning) and not (value and _step==0)
 	_ending.visible=not value
 
 func _gap(height: int) -> void:
@@ -236,6 +290,7 @@ func _line(key: String, copy: String) -> void:
 func present(snapshot: Dictionary, proposal: Dictionary, result: Dictionary) -> void:
 	if proposal.is_empty(): return
 	_legacy.show();_free_body.hide();pinned_header.hide()
+	_bounds_tools.hide();_bounds_feedback_panel.hide()
 	_help.text="点选场景调整位置；旋转后再次检查门口。"
 	var definition: Dictionary=_catalog.rooms[proposal.kind]
 	if _kind!=proposal.kind:
@@ -259,13 +314,19 @@ func present(snapshot: Dictionary, proposal: Dictionary, result: Dictionary) -> 
 		style.border_color=Color("ae4935")
 	_summary.add_theme_stylebox_override("panel",style)
 
-func present_free(snapshot:Dictionary,proposal:Dictionary,result:Dictionary,step:int,selected_furniture:String,opening_tool:String="door",selected_opening:Dictionary={}) -> void:
+func present_free(snapshot:Dictionary,proposal:Dictionary,result:Dictionary,step:int,selected_furniture:String,opening_tool:String="door",selected_opening:Dictionary={},bounds_issue:String="",bounds_actions:Dictionary={}) -> void:
 	present(snapshot,proposal,result)
 	_legacy.hide();_free_body.show();pinned_header.show()
 	_step=step
 	var layout:Dictionary=proposal.get("layout",{})
 	var width:int=layout.get("width",0)
 	var height:int=layout.get("height",0)
+	_bounds_tools.visible=step==0
+	_bounds_feedback_panel.visible=step==0
+	_bounds_feedback.text=bounds_issue if bounds_issue!="" else "先画一框，再逐格调整。" if width<=0 or height<=0 else "框内拖动可平移，按钮每次调整1格。"
+	_bounds_feedback.tooltip_text=_bounds_feedback.text
+	for key:String in bounds_buttons:
+		bounds_buttons[key].disabled=step!=0 or width<=0 or height<=0 or not bool(bounds_actions.get(key,false))
 	var footprint_version:int=layout.get("footprint_version",1)
 	var body:Vector2i=EquipmentFootprints.profile(proposal.kind).body_size if footprint_version==2 else Vector2i(2,1)
 	var equipment_rotation:int=layout.get("equipment",{}).get("rotation",0)
@@ -306,6 +367,7 @@ func present_free(snapshot:Dictionary,proposal:Dictionary,result:Dictionary,step
 	_free_picture.texture=HospitalA2Skin.equipment_texture(proposal.kind)
 	_free_name.text=_catalog.rooms[proposal.kind].name
 	_free_size.text=("房间 %d×%d"%[width,height] if width>0 else "待划定大小")+(" · 两席共 %d 格"%body_count if upgraded else " · 本体 %d×%d"%[body.x,body.y] if footprint_version==2 else " · 旧版本体 %d 格"%body_count)
+	if step==0:_free_size.text="房间 %d×%d 格"%[width,height] if width>0 and height>0 else "待划定大小"
 	_free_name.tooltip_text=_summary_copy.text
 	_free_size.tooltip_text=_summary_copy.text
 	_quote_title.text=values.cost.get_parent().get_child(0).text

@@ -76,6 +76,53 @@ func set_bounds(first_cell: int, last_cell: int) -> void:
 	layout.height=height
 	if changed: _clear_items()
 
+func has_completed_bounds() -> bool:
+	return not _awaiting_corner and _origin_cell()>=0 and int(layout.width)>0 and int(layout.height)>0
+
+func adjusted_bounds(size_delta:Vector2i,offset:Vector2i=Vector2i.ZERO) -> Dictionary:
+	var adjusted:=_adjusted_rectangle(size_delta,offset)
+	return adjusted if not adjusted.is_empty() and bounds_adjustment_issue(size_delta,offset)=="" else {}
+
+func _adjusted_rectangle(size_delta:Vector2i,offset:Vector2i) -> Dictionary:
+	if step!=0 or _origin_cell()<0:return {}
+	var width:int=int(layout.width)+size_delta.x
+	var height:int=int(layout.height)+size_delta.y
+	var x:int=_origin_cell()%GRID_WIDTH+offset.x
+	var y:int=_origin_cell()/GRID_WIDTH+offset.y
+	if width<1 or height<1 or x<0 or y<0 or x+width>GRID_WIDTH or y+height>GRID_HEIGHT:return {}
+	return {"origin_cell":y*GRID_WIDTH+x,"width":width,"height":height}
+
+func bounds_adjustment_issue(size_delta:Vector2i,offset:Vector2i=Vector2i.ZERO) -> String:
+	var adjusted:=_adjusted_rectangle(size_delta,offset)
+	if adjusted.is_empty():return "bounds_unavailable"
+	if size_delta.x>=0 and size_delta.y>=0:return ""
+	# Cropped openings/furniture cannot be selected on a smaller wall/floor.
+	# Refuse that shrink, preserving them, and let the HUD explain how to move
+	# them first. Workstations can always be re-anchored in their normal step.
+	var primary:Dictionary=layout.get("door",{})
+	var openings:Array=layout.get("doors",[primary] if not primary.is_empty() else [])+layout.get("windows",[])
+	for opening:Dictionary in openings:
+		var length:int=adjusted.width if opening.get("side","") in ["north","south"] else adjusted.height
+		if int(opening.get("offset",-1))>=length:return "cropped_opening"
+	for item:Dictionary in layout.get("furniture",[]):
+		var cells:Array=EquipmentFootprints.furniture_cells(item) if layout.get("footprint_version",1)==2 else [[item.x,item.y]]
+		for cell:Array in cells:
+			if int(cell[0])>=int(adjusted.width) or int(cell[1])>=int(adjusted.height):return "cropped_furniture"
+	return ""
+
+func adjust_bounds(size_delta:Vector2i,offset:Vector2i=Vector2i.ZERO) -> bool:
+	var adjusted:=adjusted_bounds(size_delta,offset)
+	if adjusted.is_empty():return false
+	if adjusted.origin_cell==_origin_cell() and adjusted.width==int(layout.width) and adjusted.height==int(layout.height):return false
+	# These are adjustments of the same draft. Keep relative contents and the
+	# legacy footprint version; normal door/equipment rules validate them later.
+	anchor=adjusted.origin_cell
+	end=anchor+int(adjusted.width)-1+(int(adjusted.height)-1)*GRID_WIDTH
+	layout.width=adjusted.width
+	layout.height=adjusted.height
+	_awaiting_corner=false
+	return true
+
 func can_advance() -> bool:
 	if not _size_valid(): return false
 	if step==0: return true

@@ -1,6 +1,6 @@
 extends SceneTree
 
-const SUITES = {"FinalFix":"res://tests/suites/test_final_fix.gd", "Bootstrap": "res://tests/suites/test_bootstrap.gd", "Map": "res://tests/suites/test_map.gd", "Commands": "res://tests/suites/test_commands.gd", "Clinic": "res://tests/suites/test_clinic.gd", "Challenge":"res://tests/suites/test_challenge.gd", "Save":"res://tests/suites/test_save.gd", "Presentation":"res://tests/suites/test_presentation.gd", "Input":"res://tests/suites/test_input.gd", "Integration":"res://tests/suites/test_integration.gd"}
+const SUITES = {"FinalFix":"res://tests/suites/test_final_fix.gd", "Bootstrap": "res://tests/suites/test_bootstrap.gd", "Map": "res://tests/suites/test_map.gd", "Commands": "res://tests/suites/test_commands.gd", "Clinic": "res://tests/suites/test_clinic.gd", "Challenge":"res://tests/suites/test_challenge.gd", "Save":"res://tests/suites/test_save.gd", "Presentation":"res://tests/suites/test_presentation.gd", "Input":"res://tests/suites/test_input.gd", "Integration":"res://tests/suites/test_integration.gd", "BuildPrecision":"res://tests/suites/test_build_precision.gd"}
 
 func _initialize() -> void:
 	_run.call_deferred()

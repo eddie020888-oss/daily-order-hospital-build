@@ -437,6 +437,12 @@ def export_project(config):
     tests = run([godot, "--headless", "--path", COPY, "--script", "res://tests/run_all.gd", "--", "suite=All"], "godot-tests", env=engine_env).decode(errors="replace")
     if "TEST RESULT: failed=0" not in tests or re.search(r"(?m)(SCRIPT ERROR:|Parse Error:|^ERROR:)", tests):
         raise RuntimeError("Real hospital regression tests failed")
+    precision_ui = run([godot, "--headless", "--path", COPY, "--script", "res://tests/test_build_precision_ui.gd"],
+                       "godot-build-precision-ui", secret=False, env=engine_env, timeout=180).decode(errors="replace")
+    precision_results = re.findall(r"(?m)^BUILD PRECISION UI RESULT: passed=([0-9]+) failed=([0-9]+)[ \t]*\r?$", precision_ui)
+    if (len(precision_results) != 1 or precision_results[0][1] != "0" or
+            re.search(r"(?m)(SCRIPT ERROR|Parse Error|^ERROR)", precision_ui)):
+        raise RuntimeError("Real hospital build-precision UI checks failed")
     logs = run([godot, "--headless", "--path", COPY, "--export-release", "Hospital iOS", XCODE / (NAME + ".xcodeproj")], "godot-export", env=engine_env).decode(errors="replace")
     if re.search(r"(?m)(SCRIPT ERROR:|Parse Error:|^ERROR:)", logs):
         raise RuntimeError("Godot export reported an error")

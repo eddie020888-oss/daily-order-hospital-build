@@ -327,6 +327,8 @@ func initialize(owner_session: GameSession, controller: TouchController, view: H
 	preview_column.move_child(placement_details.pinned_header,2)
 	placement_details.furniture_selected.connect(touch.select_furniture)
 	placement_details.opening_tool_selected.connect(touch.select_opening_tool)
+	placement_details.bounds_adjusted.connect(touch.adjust_build_bounds)
+	for key in placement_details.bounds_buttons:controls["bounds_"+key]=placement_details.bounds_buttons[key]
 	for kind in placement_details.furniture_buttons:controls["furn_"+kind]=placement_details.furniture_buttons[kind]
 	for kind in placement_details.opening_buttons:controls["opening_"+kind]=placement_details.opening_buttons[kind]
 	_preview_footer=PanelContainer.new()
@@ -343,7 +345,7 @@ func initialize(owner_session: GameSession, controller: TouchController, view: H
 	_placement_tools.add_theme_stylebox_override("panel",HospitalA2Skin.style("enamel",4))
 	var tools_row:=HBoxContainer.new()
 	_placement_tools.add_child(tools_row)
-	HospitalA2Skin.button(_add_button(tools_row,"rotate","旋转",touch.rotate),"paper",15,"rotate")
+	HospitalA2Skin.button(_add_button(tools_row,"rotate","旋转",_use_placement_tool),"paper",15,"rotate")
 	HospitalA2Skin.button(_add_button(tools_row,"reposition","换个位置",touch.reposition),"paper",15)
 	_placement_badge=_panel()
 	_placement_badge.add_theme_stylebox_override("panel",HospitalA2Skin.style("paper",8))
@@ -629,6 +631,9 @@ func _sync_drawer_layout() -> void:
 	if placement_details!=null:
 		placement_details.configure_short_landscape(short_landscape)
 		if placement_details.pinned_header.visible:
+			var header_index:int=1 if touch.free_build!=null and touch.free_build.step==0 else 2
+			var preview_column:Node=_preview_panel.get_child(0)
+			if placement_details.pinned_header.get_index()!=header_index:preview_column.move_child(placement_details.pinned_header,header_index)
 			var preview_scroll:ScrollContainer=placement_details.get_parent()
 			var body_inset:StyleBoxEmpty=preview_scroll.get_theme_stylebox("panel").duplicate()
 			body_inset.content_margin_top=0 if short_landscape else 10
@@ -1220,9 +1225,15 @@ func _confirm_placement() -> void:
 		if frame_bounds:_frame_build_room()
 	else:touch.confirm()
 
-func _frame_build_room() -> void:
-	if touch.free_build==null or not _free_bounds_valid(_proposal(),session.sim.snapshot()):return
+func _use_placement_tool() -> void:
+	if touch.free_build!=null and touch.free_build.step==0:_frame_build_room(false)
+	else:touch.rotate()
+
+func _frame_build_room(require_valid:bool=true) -> void:
+	if touch.free_build==null:return
 	var p:=_proposal()
+	if p.get("origin_cell",-1)<0 or int(p.layout.get("width",0))<=0 or int(p.layout.get("height",0))<=0:return
+	if require_valid and not _free_bounds_valid(p,session.sim.snapshot()):return
 	var cells:Array=[]
 	for y in range(int(p.layout.get("height",0))):
 		for x in range(int(p.layout.get("width",0))):cells.append(p.origin_cell+y*24+x)
@@ -1307,12 +1318,20 @@ func _present_placement_details(snapshot: Dictionary, p: Dictionary, result: Dic
 			valid=valid and (cost<=old_cost or cost-old_cost<=snapshot.cash)
 		controls.confirm.disabled=not valid
 		controls.confirm.text="完成改造" if draft.step==3 and p.has("room_id") else "完成建造" if draft.step==3 else "下一步"
-		controls.rotate.disabled=draft.step==0 or (draft.step==1 and draft.selected_opening.is_empty())
-		controls.rotate.text="换墙面" if draft.step==1 else "旋转"
-		controls.rotate.tooltip_text="仅切换选中门窗的墙面" if draft.step==1 else "旋转家具" if draft.step==3 else "旋转必需工作站"
+		controls.rotate.disabled=p.origin_cell<0 if draft.step==0 else (draft.step==1 and draft.selected_opening.is_empty())
+		controls.rotate.text="放大选区" if draft.step==0 else "换墙面" if draft.step==1 else "旋转"
+		controls.rotate.tooltip_text="放大并居中当前房间；双指仍可缩放。" if draft.step==0 else "仅切换选中门窗的墙面" if draft.step==1 else "旋转家具" if draft.step==3 else "旋转必需工作站"
 		controls.reposition.text="重画房间"
-		placement_details.present_free(snapshot,p,result,draft.step,draft.furniture_kind,draft.opening_tool,draft.selected_opening)
-		_hint.text=["拖框划房间 · 或点两个对角","选门窗工具 · 点墙面定位","点地面放设备 · 可旋转","选家具点地面放置 · 再点移除"][draft.step]
+		var bounds_issue:=_free_bounds_issue(p,snapshot)
+		if draft.step==0 and bounds_issue=="" and not draft.can_advance():
+			var minimum:Vector2i=EquipmentFootprints.minimum_room(p.kind) if p.layout.has("footprint_version") else Vector2i(3,3) if p.kind in ["reception","recovery"] else Vector2i(4,4)
+			bounds_issue="尺寸不足，至少 %d×%d 格（可换向），请调整宽高。"%[minimum.x,minimum.y]
+		if draft.step==0 and bounds_issue=="":
+			var shrink_issues:Array=[draft.bounds_adjustment_issue(Vector2i(-1,0)),draft.bounds_adjustment_issue(Vector2i(0,-1))]
+			if "cropped_opening" in shrink_issues:bounds_issue="边缘有门窗：先在门窗步骤移开，再缩小。"
+			elif "cropped_furniture" in shrink_issues:bounds_issue="边缘有家具：先在家具步骤移开，再缩小。"
+		placement_details.present_free(snapshot,p,result,draft.step,draft.furniture_kind,draft.opening_tool,draft.selected_opening,bounds_issue,_bounds_adjustment_actions(draft))
+		_hint.text=["点两角或拖框选房 · 框内拖动移动 · 按钮逐格微调","选门窗工具 · 点墙面定位","点地面放设备 · 可旋转","选家具点地面放置 · 再点移除"][draft.step]
 		_sync_drawer_layout()
 		_preview.text=["划定大小","自由设置门窗","点地面摆设备","家具自选"][draft.step]+(" · %d×%d"%[p.layout.width,p.layout.height] if int(p.layout.get("width",0))>0 else "")
 		if draft.step>=2 and not result.ok:_preview.text=SelectionPanel.reason(result.code)
@@ -1327,16 +1346,31 @@ func _present_placement_details(snapshot: Dictionary, p: Dictionary, result: Dic
 	_position_placement_badge()
 
 func _free_bounds_valid(p:Dictionary,snapshot:Dictionary) -> bool:
-	if p.get("origin_cell",-1)<0:return false
+	return _free_bounds_issue(p,snapshot)==""
+
+func _bounds_adjustment_actions(draft:FreeBuildDraft) -> Dictionary:
+	var changes:Dictionary={
+		"width_less":[Vector2i(-1,0),Vector2i.ZERO],"width_more":[Vector2i(1,0),Vector2i.ZERO],
+		"height_less":[Vector2i(0,-1),Vector2i.ZERO],"height_more":[Vector2i(0,1),Vector2i.ZERO],
+		"move_nw":[Vector2i.ZERO,Vector2i(-1,0)],"move_ne":[Vector2i.ZERO,Vector2i(0,-1)],
+		"move_sw":[Vector2i.ZERO,Vector2i(0,1)],"move_se":[Vector2i.ZERO,Vector2i(1,0)]}
+	var actions:Dictionary={}
+	for key in changes:actions[key]=not draft.adjusted_bounds(changes[key][0],changes[key][1]).is_empty()
+	return actions
+
+func _free_bounds_issue(p:Dictionary,snapshot:Dictionary) -> String:
+	if p.get("origin_cell",-1)<0:return "请先拖框，或点两个对角划定房间。"
 	var layout:Dictionary=p.get("layout",{})
+	if int(layout.get("width",0))<=0 or int(layout.get("height",0))<=0:return "请先划出房间，再调整宽高。"
 	for y in range(int(layout.get("height",0))):
 		for x in range(int(layout.get("width",0))):
 			var gx:int=p.origin_cell%24+x
 			var gy:int=p.origin_cell/24+y
-			if gx<=0 or gx>=23 or gy<=0 or gy>=17 or gy in [8,9]:return false
+			if gx<=0 or gx>=23 or gy<=0 or gy>=17:return "房间超出可建区域，请移动或缩小。"
+			if gy in [8,9]:return "房间跨越中央通道，请移到通道一侧。"
 			for id in snapshot.rooms:
-				if id!=p.get("room_id","") and gy*24+gx in snapshot.rooms[id].cells:return false
-	return true
+				if id!=p.get("room_id","") and gy*24+gx in snapshot.rooms[id].cells:return "与已有房间重叠，请移动或缩小。"
+	return ""
 
 func _draw_free_preview(p:Dictionary,result:Dictionary) -> void:
 	var layout:Dictionary=p.layout

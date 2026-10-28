@@ -20,6 +20,11 @@ var _free_id:=""
 var _draw_backup: Dictionary={}
 var _drawing_rectangle:=false
 var _draw_first:=-1
+var _draw_last:=-1
+var _draw_mode:="draw"
+# A small fraction of a tile absorbs sub-pixel release jitter without changing
+# the shared camera projection or the actual integer room footprint.
+const BUILD_SNAP_MARGIN:=0.15
 
 func _init(view: HospitalWorld=null, gui_hit: Callable=Callable(), reserve_id: Callable=Callable()) -> void:
 	world=view
@@ -68,6 +73,13 @@ func advance_build_step() -> bool:
 	var changed:=free_build.next_step()
 	if changed: _sync_free_build()
 	return changed
+
+func adjust_build_bounds(size_delta:Vector2i,offset:Vector2i=Vector2i.ZERO) -> bool:
+	if free_build==null:return false
+	if not free_build.adjust_bounds(size_delta,offset):return false
+	_clear_drawing()
+	_sync_free_build()
+	return true
 
 func back_build_step() -> void:
 	if free_build==null: return
@@ -142,6 +154,8 @@ func _clear_drawing() -> void:
 	_draw_backup={}
 	_drawing_rectangle=false
 	_draw_first=-1
+	_draw_last=-1
+	_draw_mode="draw"
 
 func _abandon_drawing() -> void:
 	if free_build!=null and not _draw_backup.is_empty():
@@ -187,8 +201,7 @@ func _pointer(index: int, pressed: bool, point: Vector2) -> void:
 			if _hits_gui(point) or _multitouch or world.camera_rig.screen_to_cell(point)<0:
 				_abandon_drawing()
 			else:
-				free_build.set_bounds(_draw_first,world.camera_rig.screen_to_cell(point))
-				_sync_free_build()
+				_update_rectangle(point)
 				_clear_drawing()
 		_fingers.erase(index)
 		_start.erase(index)
@@ -212,16 +225,44 @@ func _motion(index: int, point: Vector2) -> void:
 				if not _drawing_rectangle:
 					_draw_backup=free_build.capture_state()
 					_draw_first=world.camera_rig.screen_to_cell(_start[index])
+					_draw_last=_draw_first
+					var proposal:=free_build.proposal()
+					var origin:int=proposal.get("origin_cell",-1)
+					var local:=Vector2i(_draw_first%GridService.WIDTH-origin%GridService.WIDTH,_draw_first/GridService.WIDTH-origin/GridService.WIDTH)
+					if free_build.has_completed_bounds() and _draw_first>=0 and local.x>=0 and local.y>=0 and local.x<int(free_build.layout.width) and local.y<int(free_build.layout.height):_draw_mode="move"
 					_drawing_rectangle=true
 				if not _hits_gui(point):
-					free_build.set_bounds(_draw_first,world.camera_rig.screen_to_cell(point))
-					_sync_free_build()
+					_update_rectangle(point)
 			elif placement.is_empty():
 				var rig:=world.camera_rig
 				var from:=_floor_point(before)
 				var to:=_floor_point(point)
 				rig.pan(from-to)
 	_fingers[index]=point
+
+func _construction_cell(point:Vector2) -> int:
+	var picked:=world.camera_rig.screen_to_cell(point)
+	if picked<0 or _draw_last<0:return picked
+	var at:=_floor_point(point)
+	var x:int=picked%GridService.WIDTH
+	var y:int=picked/GridService.WIDTH
+	var old_x:int=_draw_last%GridService.WIDTH
+	var old_y:int=_draw_last/GridService.WIDTH
+	if absf(at.x-float(old_x))<=0.5+BUILD_SNAP_MARGIN:x=old_x
+	if absf(at.z-float(old_y))<=0.5+BUILD_SNAP_MARGIN:y=old_y
+	if (x==0 or x==GridService.WIDTH-1 or y==0 or y==GridService.HEIGHT-1) and not (x==0 and y==9):return picked
+	return y*GridService.WIDTH+x
+
+func _update_rectangle(point:Vector2) -> void:
+	var cell:=_construction_cell(point)
+	if cell<0 or _draw_first<0:return
+	_draw_last=cell
+	if _draw_mode=="move":
+		free_build.restore_state(_draw_backup)
+		var offset:=Vector2i(cell%GridService.WIDTH-_draw_first%GridService.WIDTH,cell/GridService.WIDTH-_draw_first/GridService.WIDTH)
+		free_build.adjust_bounds(Vector2i.ZERO,offset)
+	else:free_build.set_bounds(_draw_first,cell)
+	_sync_free_build()
 
 func _floor_point(point: Vector2) -> Vector3:
 	var camera:=world.camera_rig.camera
@@ -232,6 +273,7 @@ func _floor_point(point: Vector2) -> Vector3:
 func _tap(point: Vector2) -> void:
 	if world==null: return
 	if not placement.is_empty():
+		if free_build!=null and free_build.step==0 and free_build.has_completed_bounds():return
 		if free_build!=null and free_build.step==1:
 			var wall:Dictionary=world.camera_rig.screen_to_wall(point,int(placement.origin_cell),int(free_build.layout.width),int(free_build.layout.height))
 			if not wall.is_empty():

@@ -4,9 +4,13 @@
   "authorization": "Owner explicitly allowed public game source and art in this conversation.",
   "verifiedPriorCandidateCommit": "9dae0754c3a83908684af743e746d66193f4bc7b",
   "gameFileCount": 4671,
-  "gameBytes": 1059040422,
-  "gameManifestSha256": "77e8195bb0e3064dda6b67dc697863d2a58c95e461aac3d61d6a9f2cd11fd798",
-  "localVerification": {
+  "gameBytes": 1059040496,
+  "gameManifestSha256": "2b69fd0b8edc038e26336b8a4c189fbad01186539aaa6357eb2e6f7ee06c2ae4",
+  "publicRunnerSmokeRun": 40607322226,
+  "signingCredentialsIncluded": false,
+  "packageArtifactsRetained": false,
+  "appleAppRecordPending": true,
+  "baselineLocalVerification": {
     "native-regression-all-02.log.output.txt": {
       "sha256": "ea3a9e07fcef029bccdceba241fdf6a679289e014a866cdd9e4699e7dda68335",
       "result": [
@@ -56,8 +60,39 @@
       ]
     }
   },
-  "publicRunnerSmokeRun": 40607322226,
-  "signingCredentialsIncluded": false,
-  "packageArtifactsRetained": false,
-  "appleAppRecordPending": true
+  "changesAfterPriorCandidate": [
+    "Imported equipment texture validation now uses ResourceLoader to work in exported PCK."
+  ],
+  "newVerification": {
+    "packedBefore": {
+      "failed": 1,
+      "passed": 7,
+      "catalogError": "campaign_missing_view:U01-E1"
+    },
+    "packedAfter": {
+      "failed": 0,
+      "passed": 11,
+      "missingViewAndWrongQuarterStillRejected": true
+    },
+    "bootstrapWindowsAfterFix": {
+      "failed": 0,
+      "passed": 136
+    },
+    "publicCiContracts": {
+      "failed": 0,
+      "passed": 10
+    },
+    "publicDiagnosticTests": {
+      "failed": 0,
+      "passed": 6
+    }
+  },
+  "firstMacRun": {
+    "id": 40608610106,
+    "result": "failure",
+    "failed": 3,
+    "passed": 2419,
+    "exactFailuresPendingDiagnosticRerun": true
+  },
+  "packedStartupGateAdded": true
 }

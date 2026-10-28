@@ -37,7 +37,8 @@ static func load_into(catalog: ContentCatalog, root: String) -> String:
 			if not full.roles.has(role): return "campaign_unknown_role:"+str(role)
 		for q in range(4):
 			var view: Dictionary=f.views[q]
-			if view.get("quarter",-1)!=q or not FileAccess.file_exists(view.get("path","")): return "campaign_missing_view:"+id
+			var view_path: Variant=view.get("path","")
+			if view.get("quarter",-1)!=q or not view_path is String or not ResourceLoader.exists(view_path,"Texture2D"): return "campaign_missing_view:"+id
 	for id in full.cases:
 		var c: Dictionary=full.cases[id]
 		if c.get("id")!=id or not full.diseases.has(c.get("disease_id","")) or not full.units.has(c.get("unit_id","")): return "campaign_case_id:"+id

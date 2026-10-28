@@ -37,13 +37,65 @@ def need(name, pattern=None):
     return value
 
 
-def run(args, name, secret=False, env=None):
+def run(args, name, secret=False, env=None, cwd=None, timeout=None):
     OUT.mkdir(parents=True, exist_ok=True)
-    result = subprocess.run([str(x) for x in args], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env)
+    stage = name if isinstance(name, str) and re.fullmatch(r"[a-z][a-z0-9-]{0,63}", name) else "command"
+    print("HOSPITAL_STAGE_START: " + stage, flush=True)
+    try:
+        result = subprocess.run([str(x) for x in args], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env, cwd=cwd, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        print("HOSPITAL_STAGE_END: " + stage + " deadline-exceeded", flush=True)
+        raise RuntimeError(stage + " exceeded its bounded runtime; raw partial output withheld") from None
+    except OSError:
+        print("HOSPITAL_STAGE_END: " + stage + " launch-failed", flush=True)
+        raise RuntimeError(stage + " could not start; command arguments and raw errors withheld") from None
     if not secret:
-        (OUT / (name + ".log")).write_bytes(result.stdout)
+        (OUT / (stage + ".log")).write_bytes(result.stdout)
+    print("HOSPITAL_STAGE_END: " + stage + (" success" if result.returncode == 0 else " failed (%d)" % result.returncode), flush=True)
     if result.returncode:
-        raise RuntimeError(f"{name} failed ({result.returncode}); raw diagnostics withheld from public output")
+        if not secret:
+            # These are controlled stage errors only, never whole commands/logs.
+            # Retain no public artifact. Redact both the parent and child env values.
+            sensitive_keys = ("ASC_ISSUER_ID", "ASC_KEY_ID", "ASC_KEY_P8", "HOSPITAL_DISTRIBUTION_P12_B64",
+                              "HOSPITAL_P12_PASSWORD", "HOSPITAL_PROFILE_B64")
+            sensitive_values = set()
+            for source_env in (os.environ, env or {}):
+                for key in sensitive_keys:
+                    value = source_env.get(key, "")
+                    if isinstance(value, str) and value:
+                        sensitive_values.add(value)
+                        sensitive_values.add(value.replace("\n", "\\n"))
+                        sensitive_values.update(part for part in value.splitlines() if part)
+            sensitive_values = sorted(sensitive_values, key=len, reverse=True)
+            errors = re.compile(r"(?:SCRIPT\s+ERROR\s*:|Parse\s+Error\s*:|FAIL\s*:|\berror\s*:|\bfatal\s+(?:error\s*)?:)", re.IGNORECASE)
+            jwt = re.compile(r"[A-Za-z0-9_-]{16,}\.[A-Za-z0-9_-]{16,}\.[A-Za-z0-9_-]{16,}")
+            pem_begin = re.compile(r"-----BEGIN [A-Z0-9 ]+-----")
+            pem_end = re.compile(r"-----END [A-Z0-9 ]+-----")
+            inside_pem = False
+            printed = 0
+            prefix = "HOSPITAL_DIAGNOSTIC: "
+            for raw_line in result.stdout.decode(errors="replace").splitlines():
+                if pem_begin.search(raw_line):
+                    inside_pem = not bool(pem_end.search(raw_line))
+                    continue
+                if inside_pem:
+                    if pem_end.search(raw_line):
+                        inside_pem = False
+                    continue
+                if pem_end.search(raw_line) or jwt.search(raw_line) or not errors.search(raw_line):
+                    continue
+                line = re.sub(r"\x1b\[[0-?]*[ -/]*[@-~]", "", raw_line)
+                line = "".join(char for char in line if char == "\t" or ord(char) >= 32)
+                for value in sensitive_values:
+                    line = line.replace(value, "[REDACTED]")
+                limit = 300 - len(prefix)
+                if len(line) > limit:
+                    line = line[:limit - 3] + "..."
+                print(prefix + line, flush=True)
+                printed += 1
+                if printed == 12:
+                    break
+        raise RuntimeError(f"{stage} failed ({result.returncode}); only bounded sanitized diagnostics may be public")
     return result.stdout
 
 
@@ -296,6 +348,9 @@ def export_project(config):
     XCODE.mkdir(parents=True)
     godot = Path(need("GODOT_BIN"))
     engine_env = engine_environment()
+    runtime_probe = run([godot, "--headless", "--path", COPY, "--script", ROOT / "ci/mac_runtime_probe.gd"], "godot-runtime-probe", env=engine_env).decode(errors="replace")
+    if "MAC_RUNTIME_PROBE_RESULT: failed=0" not in runtime_probe:
+        raise RuntimeError("Mac runtime isolation probe failed before project import")
     ios_icon = render_ios_icon(godot, engine_env)
     quote = lambda value: json.dumps(value, ensure_ascii=False)
     preset = '\n'.join([
@@ -320,6 +375,9 @@ def export_project(config):
     imported = run([godot, "--headless", "--path", COPY, "--editor", "--import"], "godot-import", env=engine_env).decode(errors="replace")
     if re.search(r"(?m)(SCRIPT ERROR:|Parse Error:|^ERROR:)", imported):
         raise RuntimeError("Godot import reported an error")
+    bootstrap = run([godot, "--headless", "--path", COPY, "--script", "res://tests/run_all.gd", "--", "suite=Bootstrap"], "godot-bootstrap", env=engine_env).decode(errors="replace")
+    if "TEST RESULT: failed=0" not in bootstrap or re.search(r"(?m)(SCRIPT ERROR:|Parse Error:|^ERROR:)", bootstrap):
+        raise RuntimeError("Mac runtime/bootstrap regression checks failed")
     tests = run([godot, "--headless", "--path", COPY, "--script", "res://tests/run_all.gd", "--", "suite=All"], "godot-tests", env=engine_env).decode(errors="replace")
     if "TEST RESULT: failed=0" not in tests or re.search(r"(?m)(SCRIPT ERROR:|Parse Error:|^ERROR:)", tests):
         raise RuntimeError("Real hospital regression tests failed")
@@ -328,6 +386,16 @@ def export_project(config):
         raise RuntimeError("Godot export reported an error")
     if not (XCODE / (NAME + ".xcodeproj")).is_dir():
         raise RuntimeError("Godot did not produce the expected Xcode project")
+    packs = [path for path in XCODE.rglob(NAME + ".pck") if path.is_file()]
+    if len(packs) != 1:
+        raise RuntimeError("Need exactly one actual hospital game pack for startup validation")
+    empty = SCRATCH / "packed-smoke-empty"
+    empty.mkdir(parents=True, exist_ok=False)
+    packed = run([godot, "--headless", "--path", empty, "--main-pack", packs[0], "--script",
+                  ROOT / "ci/packed_hospital_probe.gd"], "godot-packed-smoke", env=engine_env,
+                 cwd=empty, timeout=180).decode(errors="replace")
+    if "HOSPITAL_PACKED_RESULT: failed=0" not in packed or re.search(r"(?m)(SCRIPT ERROR:|Parse Error:|^ERROR:)", packed):
+        raise RuntimeError("Actual exported hospital pack failed isolated resource/startup validation")
     if source_manifest() != baseline:
         raise RuntimeError("Approved candidate source changed during copy/export")
 

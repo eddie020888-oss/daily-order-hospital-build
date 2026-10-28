@@ -135,7 +135,7 @@
       "logSha256": "080a9539c3d6f2bdd3a9ee0dfe38d52937497248e8f6617901576e61d95f211e"
     },
     "sourceFileCount": 42,
-    "normalizedSourceManifestSha256": "6f1368f2b369b53dd65575a39d2c6e6a03fd3c3851110e7548f672adf35d46fa",
+    "normalizedSourceManifestSha256": "18da4f03bfb3626c05565bdb39ee27f7e6de35f5f96382a1217f8893411329a9",
     "ciStandaloneGates": 11,
     "native20MinutesComplete": true,
     "physicalIphoneVerified": false,
@@ -165,7 +165,7 @@
         "result": "RESOURCE SCREEN RESULT: passed=13 failed=0",
         "logSha256": "080a9539c3d6f2bdd3a9ee0dfe38d52937497248e8f6617901576e61d95f211e"
       },
-      "postRunUiChanges": "Resource footer layout, preliminary disease label and unavailable unpaid-order navigation received focused tests after the native run; the simulation was unchanged."
+      "postRunUiChanges": "Resource footer layout, preliminary disease label, unpaid-order navigation and readable staff labels received focused checks after the native run; the simulation was unchanged."
     }
   }
 }

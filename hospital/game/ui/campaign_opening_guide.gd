@@ -112,7 +112,9 @@ static func _staff_rest_card(d:Dictionary,catalog:ContentCatalog,stage:Dictionar
 	if tired.is_empty():return {}
 	tired.sort_custom(func(a:Dictionary,b:Dictionary)->bool:return int(a.fatigue)>int(b.fatigue) if a.fatigue!=b.fatigue else str(a.id)<str(b.id))
 	var worker:Dictionary=tired[0]
-	var prefix:String="员工%s疲劳%d。"%[str(worker.id),int(worker.fatigue)]
+	var worker_name:String=str(worker.get("display_name","")).strip_edges()
+	if worker_name=="":worker_name=str(catalog.campaign.roles.get(str(worker.get("role","")),{}).get("name","员工"))
+	var prefix:String="%s疲劳%d。"%[worker_name,int(worker.fatigue)]
 	var existing:Array=[]
 	var empty:Dictionary={}
 	var blocked:Dictionary={}

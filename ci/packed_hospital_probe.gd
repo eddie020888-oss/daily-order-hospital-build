@@ -153,9 +153,12 @@ func _check_main(catalog: Variant) -> void:
 	host.set_process(false)
 	root.add_child(host)
 	host.set_process(false)
-	# No frame_post_draw in a headless probe and no wall-time/simulation advance.
-	await process_frame
-	await process_frame
+	# The real menu starts a deferred two-frame layout. Let that callback finish
+	# before inspecting or freeing Main; otherwise the probe destroys its owner
+	# while it is still awaiting a process_frame (a teardown-only engine error).
+	# No frame_post_draw, wall-time sleep or simulation advance.
+	for frame: int in range(4):
+		await process_frame
 	if not _check(host.session == injected and host.session.save_root == _save_root, "real Main uses only the injected isolated session/save path"): return
 	var snapshot: Dictionary = host.session.sim.snapshot()
 	_check(int(snapshot.tick) == 0 and bool(snapshot.paused) and snapshot.rooms.is_empty() and snapshot.staff.is_empty() and snapshot.patients.is_empty(), "real packed Main starts paused at tick zero without gameplay commands")

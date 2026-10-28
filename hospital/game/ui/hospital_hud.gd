@@ -75,6 +75,13 @@ var _long_goals_signature:=""
 var _long_goals_cache:Dictionary={}
 var _experience_tutorial:HospitalExperienceTutorial
 var _experience_button:Button
+var _build_task_title:Label
+var _build_footer_actions:HFlowContainer
+var _placement_tools_row:HBoxContainer
+var _wizard_generation:=0
+var _wizard_pending:Dictionary={}
+var _wizard_auto_queued:=false
+var _wizard_return_to_decor:=false
 
 func set_experience_tutorial(tracker:HospitalExperienceTutorial) -> void:
 	_experience_tutorial=tracker
@@ -316,7 +323,7 @@ func initialize(owner_session: GameSession, controller: TouchController, view: H
 	var preview_column:=VBoxContainer.new()
 	preview_column.add_theme_constant_override("separation",0)
 	_preview_panel.add_child(preview_column)
-	_drawer_header(preview_column,"放置预览","close_preview",touch.cancel)
+	_build_task_title=_drawer_header(preview_column,"放置预览","close_preview",touch.cancel)
 	var preview_scroll:=_scroll(preview_column)
 	preview_scroll.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	placement_details=HospitalPlacementPanel.new()
@@ -328,6 +335,8 @@ func initialize(owner_session: GameSession, controller: TouchController, view: H
 	placement_details.furniture_selected.connect(touch.select_furniture)
 	placement_details.opening_tool_selected.connect(touch.select_opening_tool)
 	placement_details.bounds_adjusted.connect(touch.adjust_build_bounds)
+	placement_details.task_layout_changed.connect(_wizard_ui_changed)
+	touch.placement_interaction_finished.connect(_placement_interaction_finished)
 	for key in placement_details.bounds_buttons:controls["bounds_"+key]=placement_details.bounds_buttons[key]
 	for kind in placement_details.furniture_buttons:controls["furn_"+kind]=placement_details.furniture_buttons[kind]
 	for kind in placement_details.opening_buttons:controls["opening_"+kind]=placement_details.opening_buttons[kind]
@@ -335,18 +344,28 @@ func initialize(owner_session: GameSession, controller: TouchController, view: H
 	_preview_footer.add_theme_stylebox_override("panel",_footer_style(false))
 	preview_column.add_child(_preview_footer)
 	var preview_actions:=HFlowContainer.new()
+	_build_footer_actions=preview_actions
 	preview_actions.add_theme_constant_override("h_separation",9)
 	_preview_footer.add_child(preview_actions)
 	HospitalA2Skin.button(_add_button(preview_actions,"cancel","取消",touch.cancel),"paper",15)
-	HospitalA2Skin.button(_add_button(preview_actions,"build_back","上一步",touch.back_build_step),"paper",15)
+	HospitalA2Skin.button(_add_button(preview_actions,"build_back","返回",_back_placement_step),"paper",15)
 	controls.build_back.hide()
+	var header_row:Node=_build_task_title.get_parent()
+	controls.build_back.reparent(header_row)
+	header_row.move_child(controls.build_back,0)
 	HospitalA2Skin.button(_add_button(preview_actions,"confirm","确认建造",_confirm_placement),"primary",15)
 	_placement_tools=_panel()
 	_placement_tools.add_theme_stylebox_override("panel",HospitalA2Skin.style("enamel",4))
 	var tools_row:=HBoxContainer.new()
+	_placement_tools_row=tools_row
 	_placement_tools.add_child(tools_row)
 	HospitalA2Skin.button(_add_button(tools_row,"rotate","旋转",_use_placement_tool),"paper",15,"rotate")
 	HospitalA2Skin.button(_add_button(tools_row,"reposition","换个位置",touch.reposition),"paper",15)
+	for key:String in placement_details.wizard_buttons:
+		var button:Button=placement_details.wizard_buttons[key]
+		button.reparent(preview_actions)
+		controls["wizard_"+key]=button
+	placement_details.wizard_buttons.decor_openings.pressed.connect(_edit_build_openings)
 	_placement_badge=_panel()
 	_placement_badge.add_theme_stylebox_override("panel",HospitalA2Skin.style("paper",8))
 	_preview=_label("",17)
@@ -598,8 +617,12 @@ func _sync_drawer_layout() -> void:
 	# object detail/legacy relocation retain their existing right drawer.
 	var free_preview:bool=_preview_panel.visible and touch.free_build!=null
 	if free_preview:
-		_preview_panel.size.x=minf(330,bounds.size.x)
+		_preview_panel.size.x=minf(310,bounds.size.x)
+		_preview_panel.add_theme_stylebox_override("panel",HospitalA2Skin.style("paper",2))
+		var task_height:float=minf(height,maxf(placement_details.preferred_task_height(),_preview_panel.get_combined_minimum_size().y))
+		_preview_panel.size.y=task_height
 		_preview_panel.position.x=bounds.position.x
+		_preview_panel.position.y=bounds.end.y-task_height
 	else:
 		_preview_panel.position.x=_right.position.x
 		_preview_panel.size.x=_right.size.x
@@ -631,7 +654,7 @@ func _sync_drawer_layout() -> void:
 	if placement_details!=null:
 		placement_details.configure_short_landscape(short_landscape)
 		if placement_details.pinned_header.visible:
-			var header_index:int=1 if touch.free_build!=null and touch.free_build.step==0 else 2
+			var header_index:int=1 if touch.free_build!=null else 2
 			var preview_column:Node=_preview_panel.get_child(0)
 			if placement_details.pinned_header.get_index()!=header_index:preview_column.move_child(placement_details.pinned_header,header_index)
 			var preview_scroll:ScrollContainer=placement_details.get_parent()
@@ -1180,6 +1203,7 @@ func _locate_notice() -> void:
 
 func _begin_build(kind: String) -> void:
 	if session.storage_blocked: return
+	_reset_build_task()
 	touch.reset_input()
 	if session.notice!="": session.dismiss_notice()
 	_close_drawers()
@@ -1191,6 +1215,7 @@ func _begin_build(kind: String) -> void:
 
 func _begin_move(kind: String, room_id: String) -> void:
 	if session.storage_blocked: return
+	_reset_build_task()
 	touch.reset_input()
 	if session.notice!="": session.dismiss_notice()
 	_close_drawers()
@@ -1212,6 +1237,7 @@ func _begin_layout_edit(kind:String,room_id:String) -> void:
 	# cancelling the draft must leave historical templates and receipts intact.
 	var layout:Dictionary=room.layout.duplicate(true) if room.has("layout") else FreeRoomLayout.from_template(kind,int(room.get("rotation",0)))
 	if layout.is_empty():return
+	_reset_build_task()
 	touch.reset_input();_close_drawers()
 	session.issue("set_paused",{"paused":true})
 	touch.begin_free_build(kind,room_id,layout,room.origin_cell)
@@ -1221,9 +1247,100 @@ func _begin_layout_edit(kind:String,room_id:String) -> void:
 func _confirm_placement() -> void:
 	if touch.free_build!=null and touch.free_build.step<3:
 		var frame_bounds:bool=touch.free_build.step==0
-		touch.advance_build_step()
+		var return_decor:bool=_wizard_return_to_decor and touch.free_build.step==1
+		if not touch.advance_build_step():return
+		if return_decor:
+			_wizard_return_to_decor=false
+			if touch.free_build.can_advance() and session.preview(_proposal()).ok:touch.advance_build_step()
 		if frame_bounds:_frame_build_room()
 	else:touch.confirm()
+
+func _back_placement_step() -> void:
+	_wizard_return_to_decor=false
+	touch.back_build_step()
+
+func _reset_build_task() -> void:
+	_wizard_generation+=1
+	_wizard_pending={}
+	_wizard_return_to_decor=false
+	placement_details.reset_task_expansion()
+
+func _wizard_ui_changed() -> void:
+	_wizard_generation+=1
+	_wizard_pending={}
+	if touch!=null and touch.free_build!=null and not touch.placement.is_empty():
+		_update_preview_visibility()
+		var proposal:=_proposal()
+		_present_placement_details(session.sim.snapshot(),proposal,session.preview(proposal))
+	_sync_drawer_layout()
+
+func _edit_build_openings() -> void:
+	if touch.free_build==null or touch.free_build.step!=3:return
+	_wizard_pending={}
+	_wizard_return_to_decor=true
+	touch.back_build_step()
+	touch.back_build_step()
+	placement_details.set_opening_options_expanded(true)
+
+func _placement_interaction_finished(step:int,receipt:String) -> void:
+	if touch.free_build==null or step not in [1,2] or touch.free_build.step!=step:return
+	if touch.placement.get("id","")!=receipt:return
+	_wizard_pending={"step":step,"receipt":receipt,"generation":_wizard_generation}
+	if not _wizard_auto_queued:
+		_wizard_auto_queued=true
+		_advance_wizard_interaction.call_deferred()
+
+func _advance_wizard_interaction() -> void:
+	_wizard_auto_queued=false
+	var pending:=_wizard_pending
+	_wizard_pending={}
+	if not is_inside_tree() or pending.is_empty() or touch.free_build==null or session.storage_blocked:return
+	# A following press still belongs to this task. Its release can schedule the
+	# latest completion; an earlier idle callback must not change its meaning.
+	if touch.has_active_pointers():return
+	if int(pending.generation)!=_wizard_generation or touch.placement.get("id","")!=pending.receipt:return
+	var step:int=pending.step
+	if touch.free_build.step!=step or step not in [1,2] or not touch.free_build.can_advance():return
+	var proposal:=_proposal()
+	if not _free_bounds_valid(proposal,session.sim.snapshot()):return
+	if step==1:
+		if placement_details.opening_options_expanded or touch.free_build.opening_tool!="door":return
+	elif not session.preview(proposal).ok:return
+	# This path can only advance to equipment/furniture. It never purchases.
+	touch.advance_build_step()
+
+func _present_task_controls() -> void:
+	var free:bool=touch.free_build!=null
+	controls.close_preview.visible=not free
+	if not free:
+		_build_task_title.text="放置预览"
+		controls.confirm.show()
+		for button:Button in placement_details.wizard_buttons.values():button.hide()
+		if controls.rotate.get_parent()!=_placement_tools_row:controls.rotate.reparent(_placement_tools_row)
+		controls.rotate.show();controls.reposition.show()
+		return
+	var step:int=touch.free_build.step
+	_build_task_title.text=placement_details.current_task_title()
+	controls.wizard_precision.visible=step==0
+	controls.wizard_opening_options.visible=step==1
+	controls.wizard_decor_openings.visible=step==3
+	var header_row:Node=_build_task_title.get_parent()
+	if controls.wizard_decor_openings.get_parent()!=header_row:controls.wizard_decor_openings.reparent(header_row)
+	var footer_rotate:bool=step==2 or (step==3 and touch.free_build.furniture_kind!="")
+	var destination:Node=_build_footer_actions if footer_rotate else _placement_tools_row
+	if controls.rotate.get_parent()!=destination:controls.rotate.reparent(destination)
+	controls.rotate.visible=footer_rotate or (step==0 and placement_details.precision_expanded)
+	controls.reposition.visible=step==0 and placement_details.precision_expanded
+	for key:String in ["cancel","confirm","rotate","wizard_precision","wizard_opening_options","wizard_decor_openings"]:
+		var button:Button=controls[key]
+		button.set_meta("minimum_size",Vector2(84,48))
+		button.custom_minimum_size=Vector2(maxf(84,_target),maxf(48,_target))
+	controls.build_back.set_meta("minimum_size",Vector2(60,48))
+	controls.build_back.custom_minimum_size=Vector2(maxf(60,_target),maxf(48,_target))
+	_build_footer_actions.add_theme_constant_override("h_separation",6)
+	_build_footer_actions.move_child(controls.confirm,_build_footer_actions.get_child_count()-1)
+	controls.confirm.text=["确定大小","门窗完成" if placement_details.opening_options_expanded else "沿用入口","设备就位","完成改造" if touch.free_build.room_id!="" else "建好房间"][step]
+	controls.confirm.visible=step==0 or step==3 or (step==1 and placement_details.opening_options_expanded) or not controls.confirm.disabled
 
 func _use_placement_tool() -> void:
 	if touch.free_build!=null and touch.free_build.step==0:_frame_build_room(false)
@@ -1270,6 +1387,7 @@ func _exit_tree() -> void:
 	_preview_signature=""
 
 func _placement_changed() -> void:
+	_wizard_generation+=1
 	_sync_editing_room_visibility()
 	if is_instance_valid(world):world.set_build_grid_visible(not touch.placement.is_empty())
 	if is_instance_valid(_preview_root):
@@ -1331,6 +1449,7 @@ func _present_placement_details(snapshot: Dictionary, p: Dictionary, result: Dic
 			if "cropped_opening" in shrink_issues:bounds_issue="边缘有门窗：先在门窗步骤移开，再缩小。"
 			elif "cropped_furniture" in shrink_issues:bounds_issue="边缘有家具：先在家具步骤移开，再缩小。"
 		placement_details.present_free(snapshot,p,result,draft.step,draft.furniture_kind,draft.opening_tool,draft.selected_opening,bounds_issue,_bounds_adjustment_actions(draft))
+		_present_task_controls()
 		_hint.text=["点两角或拖框选房 · 框内拖动移动 · 按钮逐格微调","选门窗工具 · 点墙面定位","点地面放设备 · 可旋转","选家具点地面放置 · 再点移除"][draft.step]
 		_sync_drawer_layout()
 		_preview.text=["划定大小","自由设置门窗","点地面摆设备","家具自选"][draft.step]+(" · %d×%d"%[p.layout.width,p.layout.height] if int(p.layout.get("width",0))>0 else "")
@@ -1342,6 +1461,7 @@ func _present_placement_details(snapshot: Dictionary, p: Dictionary, result: Dic
 	controls.rotate.text="旋转"
 	controls.confirm.disabled=not result.ok
 	placement_details.present(snapshot,p,result)
+	_present_task_controls()
 	_preview.text=("✓ 位置可建" if result.ok else "请点选地面位置" if p.origin_cell<0 else "这里不能建造")+" · "+session.catalog.rooms[p.kind].name
 	_position_placement_badge()
 
@@ -1452,7 +1572,7 @@ func _update_preview_visibility() -> void:
 	_preview_panel.visible=not touch.placement.is_empty() and not session.storage_blocked
 	if _preview_panel.visible and _notice_panel.visible and _notice_panel.get_global_rect().intersects(_preview_panel.get_global_rect()):
 		_preview_panel.hide()
-	_placement_tools.visible=_preview_panel.visible
+	_placement_tools.visible=_preview_panel.visible and (touch.free_build==null or (touch.free_build.step==0 and placement_details.precision_expanded))
 	_placement_badge.visible=_preview_panel.visible and touch.free_build==null and _safe.size.y>=430
 	_sync_drawer_layout()
 

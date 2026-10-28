@@ -44,7 +44,15 @@ func _api_ready(panel: HospitalPlacementPanel) -> bool:
 	var supports_feedback := false
 	for method: Dictionary in panel.get_method_list():
 		if str(method.name) == "present_free": supports_feedback = method.args.size() >= 9
-	return check(supports_feedback,"present_free accepts explicit bounds issue and action permissions") and ready
+	ready = check(supports_feedback,"present_free accepts explicit bounds issue and action permissions") and ready
+	for method: String in ["set_precision_expanded","set_opening_options_expanded"]:
+		ready = check(panel.has_method(method),"wizard supports explicit advanced disclosure via "+method) and ready
+	return check(_has_property(panel,"precision_expanded"),"precision disclosure state is explicit") and ready
+
+func _expand_precision(panel: HospitalPlacementPanel) -> void:
+	# Build3 deliberately hides these tools until the player asks for them.
+	panel.call("set_precision_expanded",true)
+	check(panel.get("precision_expanded") == true,"precision regression explicitly opens the optional adjustment tools")
 
 func _visible_inside(control: Control, safe: Rect2) -> bool:
 	if not is_instance_valid(control) or not control.is_visible_in_tree(): return false
@@ -100,6 +108,7 @@ func _shrink_protection(h: HospitalHud, panel: HospitalPlacementPanel, initial: 
 		}
 		host.touch.begin_free_build("diagnosis","",layout,54)
 		h._present_placement_details(initial,h._proposal(),host.session.preview(h._proposal()))
+		_expand_precision(panel)
 		await _settle()
 		var name_value := "%s %s" % [str(viewport_size),fixture.name]
 		var button: Button = panel.get("bounds_buttons")[fixture.button]
@@ -153,6 +162,8 @@ func _run() -> void:
 	host.touch.choose_cell(129) # A real 4x4 local draft with room for all eight corrections.
 	await _settle()
 	var panel: HospitalPlacementPanel = h.placement_details
+	check(panel.get("precision_expanded") == false,"new room task starts with optional precision tools collapsed")
+	for key: String in BOUNDS_KEYS: check(not panel.get("bounds_buttons")[key].is_visible_in_tree(),"default room task does not show unrelated "+key+" controls")
 	panel.connect("bounds_adjusted",func(size_delta: Vector2i, offset: Vector2i) -> void: _events.append([size_delta,offset]))
 	var initial: Dictionary = host.session.sim.snapshot()
 	var receipt: String = str(host.touch.placement.id)
@@ -173,6 +184,7 @@ func _run() -> void:
 		host.touch.choose_cell(54)
 		host.touch.choose_cell(54)
 		h._present_placement_details(initial,h._proposal(),host.session.preview(h._proposal()))
+		_expand_precision(panel)
 		await _settle()
 		var actual_issue := panel.pinned_header.find_child("BuildBoundsFeedback",true,false) as Label
 		var actual_size := panel.pinned_header.find_child("BuildBoundsSize",true,false) as Label
@@ -186,6 +198,7 @@ func _run() -> void:
 		host.touch.choose_cell(54)
 		host.touch.choose_cell(129)
 		h._present_placement_details(initial,h._proposal(),host.session.preview(h._proposal()))
+		_expand_precision(panel)
 		await _settle()
 		var proposal: Dictionary = h._proposal()
 		_project_bounds(panel,initial,proposal,ISSUE,_all_permissions())
@@ -265,6 +278,9 @@ func _run() -> void:
 	check(host.touch.free_build.step == 1,"valid room size still advances to the original door stage")
 	check(h.controls.rotate.text == "换墙面","step1 keeps the original selected-opening wall tool")
 	for key: String in BOUNDS_KEYS: check(not panel.get("bounds_buttons")[key].is_visible_in_tree(),"door stage hides step0 "+key)
+	for button: Button in panel.opening_buttons.values(): check(not button.is_visible_in_tree(),"ordinary door task keeps multi-opening tools collapsed")
+	panel.call("set_opening_options_expanded",true)
+	await _settle()
 	for button: Button in panel.opening_buttons.values(): check(button.is_visible_in_tree(),"door-stage tools remain available")
 	await _finish()
 

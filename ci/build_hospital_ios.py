@@ -443,6 +443,12 @@ def export_project(config):
     if (len(precision_results) != 1 or precision_results[0][1] != "0" or
             re.search(r"(?m)(SCRIPT ERROR|Parse Error|^ERROR)", precision_ui)):
         raise RuntimeError("Real hospital build-precision UI checks failed")
+    wizard_ui = run([godot, "--headless", "--path", COPY, "--script", "res://tests/test_build_wizard_ui.gd"],
+                    "godot-build-wizard-ui", secret=False, env=engine_env, timeout=180).decode(errors="replace")
+    wizard_results = re.findall(r"(?m)^BUILD WIZARD UI RESULT: passed=([0-9]+) failed=([0-9]+)[ \t]*\r?$", wizard_ui)
+    if (len(wizard_results) != 1 or int(wizard_results[0][0]) <= 0 or wizard_results[0][1] != "0" or
+            re.search(r"(?im)(SCRIPT\s+ERROR|Parse\s+Error|^\s*(?:ERROR|FATAL)\b)", wizard_ui)):
+        raise RuntimeError("Real hospital build-wizard UI checks failed")
     logs = run([godot, "--headless", "--path", COPY, "--export-release", "Hospital iOS", XCODE / (NAME + ".xcodeproj")], "godot-export", env=engine_env).decode(errors="replace")
     if re.search(r"(?m)(SCRIPT ERROR:|Parse Error:|^ERROR:)", logs):
         raise RuntimeError("Godot export reported an error")

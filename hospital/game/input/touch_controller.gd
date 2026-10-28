@@ -4,6 +4,7 @@ extends RefCounted
 signal command_requested(command: Dictionary)
 signal placement_changed
 signal selection_requested(id: String, group: String)
+signal placement_interaction_finished(step:int,receipt:String)
 
 var placement: Dictionary={}
 var free_build: FreeBuildDraft
@@ -131,6 +132,9 @@ func reset_input() -> void:
 	_mouse_down=false
 	cancel()
 
+func has_active_pointers() -> bool:
+	return not _fingers.is_empty()
+
 func confirm() -> void:
 	if placement.is_empty() or placement.origin_cell<0 or placement.id=="": return
 	if free_build!=null and (free_build.step!=3 or not free_build.can_advance()): return
@@ -206,7 +210,12 @@ func _pointer(index: int, pressed: bool, point: Vector2) -> void:
 		_fingers.erase(index)
 		_start.erase(index)
 		_blocked.erase(index)
-		if tap: _tap(point)
+		if tap:
+			var finished_step:int=free_build.step if free_build!=null else -1
+			var receipt:String=placement.get("id","")
+			var placed:=_tap(point)
+			if placed and free_build!=null and free_build.step==finished_step and finished_step in [1,2]:
+				placement_interaction_finished.emit(finished_step,receipt)
 
 func _motion(index: int, point: Vector2) -> void:
 	if not _fingers.has(index): return
@@ -270,19 +279,25 @@ func _floor_point(point: Vector2) -> Vector3:
 	var direction:=camera.project_ray_normal(point)
 	return origin-direction*(origin.y/direction.y)
 
-func _tap(point: Vector2) -> void:
-	if world==null: return
+func _tap(point: Vector2) -> bool:
+	if world==null:return false
 	if not placement.is_empty():
-		if free_build!=null and free_build.step==0 and free_build.has_completed_bounds():return
+		if free_build!=null and free_build.step==0 and free_build.has_completed_bounds():return false
 		if free_build!=null and free_build.step==1:
 			var wall:Dictionary=world.camera_rig.screen_to_wall(point,int(placement.origin_cell),int(free_build.layout.width),int(free_build.layout.height))
 			if not wall.is_empty():
 				choose_wall(wall.side,int(wall.offset))
-				return
+				return true
+			return false
 		var cell:=world.camera_rig.screen_to_cell(point)
-		if free_build!=null and cell<0:return
+		if free_build!=null:
+			if cell<0:return false
+			if free_build.step>=2:
+				var origin:int=placement.origin_cell
+				var local:=Vector2i(cell%24-origin%24,cell/24-origin/24)
+				if local.x<0 or local.y<0 or local.x>=int(free_build.layout.width) or local.y>=int(free_build.layout.height):return false
 		choose_cell(cell)
-		return
+		return true
 	# Pick the rendered body/head, not only the tiny floor cell under its head.
 	var nearest:=""
 	var distance:=34.0
@@ -299,7 +314,8 @@ func _tap(point: Vector2) -> void:
 			nearest=id
 	if nearest!="":
 		selection_requested.emit(nearest,"staff" if nearest.begins_with("staff_") else "patients")
-		return
+		return false
 	var cell:=world.camera_rig.screen_to_cell(point)
 	var room_id:=world.room_at_cell(cell)
 	if room_id!="": selection_requested.emit(room_id,"rooms")
+	return false

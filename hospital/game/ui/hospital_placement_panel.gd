@@ -12,12 +12,20 @@ var _kind:=""
 signal furniture_selected(kind:String)
 signal opening_tool_selected(kind:String)
 signal bounds_adjusted(size_delta:Vector2i,offset:Vector2i)
+signal task_layout_changed
 var furniture_buttons:Dictionary={}
 var opening_buttons:Dictionary={}
 var bounds_buttons:Dictionary={}
+var wizard_buttons:Dictionary={}
+var precision_expanded:=false
+var opening_options_expanded:=false
 var _legacy:VBoxContainer
 var pinned_header:MarginContainer
 var _step_chips:Array[Label]=[]
+var _step_row:HBoxContainer
+var _wizard_actions:HBoxContainer
+var _free_active:=false
+var _task_prompt:=""
 var _free_body:VBoxContainer
 var _free_picture:TextureRect
 var _free_hero:PanelContainer
@@ -117,6 +125,7 @@ func initialize(content: ContentCatalog) -> void:
 	_free_body.add_child(_ending)
 	_free_body.hide()
 	pinned_header.hide()
+	_build_wizard_actions()
 
 func _build_free_header() -> void:
 	pinned_header=MarginContainer.new()
@@ -125,6 +134,8 @@ func _build_free_header() -> void:
 	column.add_theme_constant_override("separation",8)
 	pinned_header.add_child(column)
 	var steps:=HBoxContainer.new()
+	_step_row=steps
+	steps.name="BuildStageChips"
 	steps.add_theme_constant_override("separation",5)
 	column.add_child(steps)
 	for copy in ["1 房间","2 门窗","3 设备","4 家具"]:
@@ -134,6 +145,7 @@ func _build_free_header() -> void:
 		chip.custom_minimum_size.y=30
 		chip.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 		steps.add_child(chip);_step_chips.append(chip)
+	steps.hide()
 	_free_hero=PanelContainer.new()
 	HospitalA2Skin.panel(_free_hero,"paper")
 	column.add_child(_free_hero)
@@ -223,18 +235,86 @@ func _build_bounds_tools(column:VBoxContainer) -> void:
 	_bounds_feedback_panel.hide()
 	_bounds_tools.hide()
 
+func _build_wizard_actions() -> void:
+	# Owned here until the real HUD adopts each action into its fixed footer.
+	# Keeping a parent also makes API-only fixtures safe to release.
+	_wizard_actions=HBoxContainer.new()
+	_wizard_actions.name="BuildWizardActionsForAdoption"
+	add_child(_wizard_actions)
+	_wizard_actions.hide()
+	for row in [["precision","精细调整"],["opening_options","门窗选项"],["decor_openings","门窗"]]:
+		var key:String=row[0]
+		var button:=BuildPalette.button(row[1])
+		HospitalA2Skin.button(button,"paper",15)
+		_wizard_actions.add_child(button)
+		wizard_buttons[key]=button
+	wizard_buttons.precision.pressed.connect(func() -> void:set_precision_expanded(not precision_expanded))
+	wizard_buttons.opening_options.pressed.connect(func() -> void:set_opening_options_expanded(not opening_options_expanded))
+	_apply_task_visibility()
+
+func set_precision_expanded(expanded:bool) -> void:
+	if precision_expanded==expanded:return
+	precision_expanded=expanded
+	_apply_task_visibility()
+	task_layout_changed.emit()
+
+func set_opening_options_expanded(expanded:bool) -> void:
+	if opening_options_expanded==expanded:return
+	opening_options_expanded=expanded
+	_apply_task_visibility()
+	task_layout_changed.emit()
+
+func reset_task_expansion() -> void:
+	if not precision_expanded and not opening_options_expanded:return
+	precision_expanded=false
+	opening_options_expanded=false
+	_apply_task_visibility()
+	task_layout_changed.emit()
+
+func current_task_title() -> String:
+	return ["划定房间","放置入口","摆放设备","布置家具"][clampi(_step,0,3)]
+
+func preferred_task_height() -> float:
+	match _step:
+		0:return 176.0+(106.0 if precision_expanded else 0.0)
+		1:return 172.0+(100.0 if opening_options_expanded else 0.0)
+		2:return 196.0
+	return 264.0
+
+func _apply_task_visibility() -> void:
+	_step_row.hide()
+	_bounds_tools.visible=_free_active and _step==0 and precision_expanded
+	_bounds_feedback_panel.visible=_free_active and _step<3
+	_opening_tools.visible=_free_active and _step==1 and opening_options_expanded
+	_opening_status.visible=_free_active and _step==1 and opening_options_expanded
+	_free_hero.visible=_free_active and _step!=1
+	_free_picture.visible=_free_active and (_step==2 or (_step==3 and not _short_landscape))
+	_free_picture.custom_minimum_size=Vector2(48,40) if _step==2 else Vector2(56,46)
+	_free_size.visible=_free_active and _step in [0,3]
+	_quote.get_parent().visible=_free_active and _step in [0,3]
+	_free_body.visible=_free_active and _step==3
+	_furniture.visible=_free_active and _step==3
+	_instruction_panel.visible=_free_active and _step==3 and _warning
+	_ending.visible=_free_active and _step==3
+	_bounds_feedback.text="门窗可继续添加，完成后主动确认。" if _step==1 and opening_options_expanded else _task_prompt
+	_bounds_feedback.tooltip_text=_bounds_feedback.text
+	if not wizard_buttons.is_empty():
+		wizard_buttons.precision.text="收起调整" if precision_expanded else "精细调整"
+		wizard_buttons.opening_options.text="收起选项" if opening_options_expanded else "门窗选项"
+		wizard_buttons.precision.visible=_free_active and _step==0
+		wizard_buttons.opening_options.visible=_free_active and _step==1
+		wizard_buttons.decor_openings.visible=_free_active and _step==3
+
 func _request_bounds_adjustment(key:String,size_delta:Vector2i,offset:Vector2i) -> void:
 	if _step!=0 or not _bounds_tools.is_visible_in_tree() or bounds_buttons[key].disabled:return
 	bounds_adjusted.emit(size_delta,offset)
 
 func configure_short_landscape(value:bool) -> void:
 	_short_landscape=value
-	for side in ["left","right"]:pinned_header.add_theme_constant_override("margin_"+side,16 if value else 22)
-	for side in ["top","bottom"]:pinned_header.add_theme_constant_override("margin_"+side,2 if value else 8)
-	pinned_header.get_child(0).add_theme_constant_override("separation",0 if value else 8)
-	_free_picture.visible=not value
-	_free_size.visible=not value or _step==0
-	_free_hero.add_theme_stylebox_override("panel",HospitalA2Skin.style("paper",4 if value and _step==0 else 8))
+	for side in ["left","right"]:pinned_header.add_theme_constant_override("margin_"+side,12)
+	for side in ["top","bottom"]:pinned_header.add_theme_constant_override("margin_"+side,2 if value else 4)
+	pinned_header.get_child(0).add_theme_constant_override("separation",0 if value else 4)
+	_free_hero.add_theme_stylebox_override("panel",HospitalA2Skin.style("paper",4))
 	_bounds_feedback_panel.add_theme_stylebox_override("panel",HospitalA2Skin.style("paper",3 if value else 5))
 	_bounds_tools.add_theme_constant_override("v_separation",4 if value else 6)
 	_quote_title.visible=not value
@@ -245,11 +325,11 @@ func configure_short_landscape(value:bool) -> void:
 	# A short phone has enough drawer width for four concise tool labels. One
 	# row keeps the fixed footer inside its viewport without shrinking targets
 	# or hiding an action behind the scroll area.
-	_opening_tools.columns=4 if value else 2
+	_opening_tools.columns=4
 	_opening_tools.add_theme_constant_override("v_separation",4 if value else 6)
 	for button in opening_buttons.values():
-		button.set_meta("minimum_size",Vector2(60 if value else 90,48))
-		button.custom_minimum_size=Vector2(60 if value else 90,48)
+		button.set_meta("minimum_size",Vector2(60,48))
+		button.custom_minimum_size=Vector2(60,48)
 		button.add_theme_font_size_override("font_size",15 if value else 16)
 	for kind in furniture_buttons:
 		var button:Button=furniture_buttons[kind]
@@ -263,8 +343,7 @@ func configure_short_landscape(value:bool) -> void:
 		_furniture_names[kind].add_theme_font_size_override("font_size",14 if value else 17)
 		_furniture_prices[kind].add_theme_font_size_override("font_size",12 if value else 13)
 	_furniture.add_theme_constant_override("v_separation",6 if value else 8)
-	_instruction_panel.visible=(not value or _step!=3 or _warning) and not (value and _step==0)
-	_ending.visible=not value
+	_apply_task_visibility()
 
 func _gap(height: int) -> void:
 	var gap:=Control.new()
@@ -290,7 +369,9 @@ func _line(key: String, copy: String) -> void:
 func present(snapshot: Dictionary, proposal: Dictionary, result: Dictionary) -> void:
 	if proposal.is_empty(): return
 	_legacy.show();_free_body.hide();pinned_header.hide()
+	_free_active=false
 	_bounds_tools.hide();_bounds_feedback_panel.hide()
+	for button:Button in wizard_buttons.values():button.hide()
 	_help.text="点选场景调整位置；旋转后再次检查门口。"
 	var definition: Dictionary=_catalog.rooms[proposal.kind]
 	if _kind!=proposal.kind:
@@ -317,14 +398,15 @@ func present(snapshot: Dictionary, proposal: Dictionary, result: Dictionary) -> 
 func present_free(snapshot:Dictionary,proposal:Dictionary,result:Dictionary,step:int,selected_furniture:String,opening_tool:String="door",selected_opening:Dictionary={},bounds_issue:String="",bounds_actions:Dictionary={}) -> void:
 	present(snapshot,proposal,result)
 	_legacy.hide();_free_body.show();pinned_header.show()
+	_free_active=true
+	if _step!=step:
+		precision_expanded=false
+		opening_options_expanded=false
 	_step=step
 	var layout:Dictionary=proposal.get("layout",{})
 	var width:int=layout.get("width",0)
 	var height:int=layout.get("height",0)
-	_bounds_tools.visible=step==0
-	_bounds_feedback_panel.visible=step==0
-	_bounds_feedback.text=bounds_issue if bounds_issue!="" else "先画一框，再逐格调整。" if width<=0 or height<=0 else "框内拖动可平移，按钮每次调整1格。"
-	_bounds_feedback.tooltip_text=_bounds_feedback.text
+	_task_prompt=bounds_issue if bounds_issue!="" else "点两角或拖框选房，画好后确定大小。" if width<=0 or height<=0 else "拖动框内可平移，或展开精细调整。"
 	for key:String in bounds_buttons:
 		bounds_buttons[key].disabled=step!=0 or width<=0 or height<=0 or not bool(bounds_actions.get(key,false))
 	var footprint_version:int=layout.get("footprint_version",1)
@@ -382,6 +464,11 @@ func present_free(snapshot:Dictionary,proposal:Dictionary,result:Dictionary,step
 	if warning:_instruction.text=SelectionPanel.reason(result.code)+("\n"+body_copy+"；另留操作 %d 格、维护 %d 格。"%[operations,clearance] if step==2 else "")
 	if delta>0 and delta>snapshot.cash and step>=2:_instruction.text="现金不足，请缩小房间或减少家具。";warning=true
 	_warning=warning
+	if step==1:
+		_task_prompt="点墙面放入口，放好后自动到设备。" if door.is_empty() else "已保留入口，可确认沿用。"
+	elif step==2:
+		_task_prompt="点房间内摆放设备，放好后进入家具。" if layout.get("equipment",{}).is_empty() else "设备已就位，可确认沿用。" if valid else SelectionPanel.reason(result.code)+"。请换位置或旋转。"
+		if delta>0 and delta>snapshot.cash:_task_prompt="现金不足，请缩小房间或减少家具。"
 	var instruction_style:=HospitalA2Skin.style("paper",10)
 	if warning:
 		instruction_style.bg_color=Color("f8e5d8")

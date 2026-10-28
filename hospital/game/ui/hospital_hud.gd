@@ -163,7 +163,7 @@ func initialize(owner_session: GameSession, controller: TouchController, view: H
 	_top_frame.name="HospitalDutyBar"
 	HospitalA2Skin.panel(_top_frame)
 	controls.top_console=_top_frame
-	_crest=HospitalUiStyle.picture(HospitalA2Skin.icon("crest",40),Vector2(40,40),0)
+	_crest=HospitalUiStyle.picture(load("res://assets/branding/app-icon-v1.png") as Texture2D,Vector2(40,40),0)
 	_crest.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	add_child(_crest)
 	_top=_panel()

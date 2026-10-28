@@ -1,19 +1,22 @@
 class_name ReferenceHallArt
 extends Node3D
-## World-space display of the user's approved fixed-view 2.5D original art.
-## This image is NOT a 3D reconstruction, a light bake, or collision geometry.
+## Fixed-world 2.5D hospital/courtyard painting, extended from the approved art.
+## This is NOT a 3D reconstruction, a light bake, or collision geometry.
 ## Both the art and optional grid are fixed world children. There is no camera
 ## parenting, billboard mode, _process, or per-frame screen-position matching.
 ## Host CameraRig owns navigation, focus/framing, and mathematical cell picking.
 
 const ART_PATH := "res://assets/environment/reference-hall-v1/09-empty-hospital.png"
+const CAMPUS_ART_PATH := "res://assets/environment/campus-v1/campus-surroundings.png"
 const REFERENCE_VIEW_OFFSET := Vector3(18.0,18.0,18.0)
 const REFERENCE_TARGET := Vector3(11.5,0.0,7.5)
 const REFERENCE_ZOOM := 22.0
 const REFERENCE_VIEWPORT := Vector2(1280.0,720.0)
 const REFERENCE_FRAME_SIZE := Vector2(22.0*1280.0/720.0,22.0)
 const BACKGROUND_DEPTH := 26.0
-const OVERSCAN_SIZE := Vector2(120.0,67.5)
+# One quad has constant geometry cost. Its extent also covers a long-room fit
+# beside a narrow drawer, which may legitimately zoom much farther than26.
+const OVERSCAN_SIZE := Vector2(1024.0,1024.0)
 const GRID_HEIGHT := 0.035
 
 var art_view: MeshInstance3D
@@ -27,7 +30,7 @@ func _init() -> void:
 	set_meta("source_is_fixed_view_2_5d_original",true)
 	set_meta("source_is_3d_reconstruction",false)
 	set_meta("overscan_is_clamped_original_edges",false)
-	set_meta("overscan_finish","bounded_edge_fade_to_neutral")
+	set_meta("overscan_finish","world_registered_courtyard_and_gardens")
 
 
 func _ready() -> void:
@@ -71,7 +74,9 @@ static func calibration() -> Dictionary:
 		"plane_center":reference_plane_center(),
 		"plane_basis":reference_basis(),
 		"overscan_world_size":OVERSCAN_SIZE,
-		"overscan_content":"original edge fades across0.02 UV into neutral background; no additional real scene",
+		"overscan_content":"one extended hospital/courtyard painting, with continuous paving/low planting beyond its edge; display only, no extra simulated land",
+		"reference_source":ART_PATH,
+		"displayed_source":CAMPUS_ART_PATH,
 		"fixed_world_transform":true,
 	}
 
@@ -96,28 +101,19 @@ func _build_art() -> void:
 		image_size.x=REFERENCE_ZOOM*aspect
 	else:
 		image_size.y=REFERENCE_FRAME_SIZE.x/aspect
-	var shader:=Shader.new()
-	shader.code="""
-shader_type spatial;
-render_mode unshaded, cull_disabled, shadows_disabled;
-uniform sampler2D hall_texture : source_color, filter_linear, repeat_disable;
-uniform vec2 art_uv_scale = vec2(1.0);
-uniform vec4 overscan_color : source_color;
-void fragment() {
-	vec2 image_uv = (UV - vec2(0.5)) * art_uv_scale + vec2(0.5);
-	vec3 original = texture(hall_texture, clamp(image_uv, vec2(0.0), vec2(1.0))).rgb;
-	// Preserve every original UV. Only the external edge band fades; distant
-	// overscan cannot stretch one border pixel into an arbitrarily long stripe.
-	vec2 outside = max(-image_uv, image_uv - vec2(1.0));
-	float fade = smoothstep(0.0, 0.02, max(outside.x, outside.y));
-	ALBEDO = mix(original, overscan_color.rgb, fade);
-}
-"""
+	var shader:Shader=load("res://presentation/hospital_surroundings.gdshader")
 	var material:=ShaderMaterial.new()
 	material.shader=shader
 	material.set_shader_parameter("hall_texture",source)
 	material.set_shader_parameter("art_uv_scale",OVERSCAN_SIZE/image_size)
 	material.set_shader_parameter("overscan_color",Color("e7e2d7"))
+	material.set_shader_parameter("garden_grass",Color("9aa67c"))
+	material.set_shader_parameter("garden_leaf",Color("5e7950"))
+	material.set_shader_parameter("garden_stone",Color("c1ad8c"))
+	material.set_shader_parameter("garden_flower",Color("f2deb0"))
+	if ResourceLoader.exists(CAMPUS_ART_PATH):
+		material.set_shader_parameter("campus_texture",load(CAMPUS_ART_PATH) as Texture2D)
+		material.set_shader_parameter("has_campus_art",true)
 	var quad:=QuadMesh.new()
 	quad.size=OVERSCAN_SIZE
 	art_view=MeshInstance3D.new()
@@ -130,8 +126,11 @@ void fragment() {
 	art_view.set_meta("original_source",ART_PATH)
 	art_view.set_meta("original_source_pixels",source_size)
 	art_view.set_meta("original_image_world_size",image_size)
+	art_view.set_meta("campus_source",CAMPUS_ART_PATH)
+	art_view.set_meta("displayed_source",CAMPUS_ART_PATH if ResourceLoader.exists(CAMPUS_ART_PATH) else ART_PATH)
+	art_view.set_meta("campus_is_display_only_not_extra_buildable_land",true)
 	art_view.set_meta("overscan_is_clamped_original_edges",false)
-	art_view.set_meta("overscan_finish","bounded_edge_fade_to_neutral")
+	art_view.set_meta("overscan_finish","world_registered_courtyard_and_gardens")
 	art_view.set_meta("no_extra_scene_geometry_is_represented",true)
 	add_child(art_view)
 

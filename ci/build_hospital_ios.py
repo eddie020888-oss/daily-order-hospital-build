@@ -183,7 +183,7 @@ def render_ios_icon(godot, engine_env):
     if not script.is_file():
         raise RuntimeError("Missing isolated iOS icon renderer")
     result = run([godot, "--headless", "--path", COPY, "--script", script, "--",
-                  COPY / "assets" / "icon.svg", icon], "godot-ios-icon", env=engine_env).decode(errors="replace")
+                  COPY / "assets" / "branding" / "app-icon-v1.png", icon], "godot-ios-icon", env=engine_env).decode(errors="replace")
     if "HOSPITAL_IOS_ICON_OK" not in result or re.search(r"(?m)(SCRIPT ERROR:|Parse Error:|^ERROR:)", result):
         raise RuntimeError("Isolated iOS icon rendering failed")
     # PNG color type 2 is RGB without an alpha channel; type 6 is not accepted.
@@ -449,6 +449,12 @@ def export_project(config):
     if (len(wizard_results) != 1 or int(wizard_results[0][0]) <= 0 or wizard_results[0][1] != "0" or
             re.search(r"(?im)(SCRIPT\s+ERROR|Parse\s+Error|^\s*(?:ERROR|FATAL)\b)", wizard_ui)):
         raise RuntimeError("Real hospital build-wizard UI checks failed")
+    brand_ui = run([godot, "--headless", "--path", COPY, "--script", "res://tests/test_brand_identity.gd"],
+                   "godot-brand-identity", secret=False, env=engine_env, timeout=180).decode(errors="replace")
+    brand_results = re.findall(r"(?m)^BRAND IDENTITY RESULT: passed=([0-9]+) failed=([0-9]+)[ \t]*\r?$", brand_ui)
+    if (len(brand_results) != 1 or int(brand_results[0][0]) <= 0 or brand_results[0][1] != "0" or
+            re.search(r"(?im)(SCRIPT\s+ERROR|Parse\s+Error|^\s*(?:ERROR|FATAL)\b)", brand_ui)):
+        raise RuntimeError("Real hospital brand-identity checks failed")
     logs = run([godot, "--headless", "--path", COPY, "--export-release", "Hospital iOS", XCODE / (NAME + ".xcodeproj")], "godot-export", env=engine_env).decode(errors="replace")
     if re.search(r"(?m)(SCRIPT ERROR:|Parse Error:|^ERROR:)", logs):
         raise RuntimeError("Godot export reported an error")

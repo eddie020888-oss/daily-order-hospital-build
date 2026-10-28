@@ -312,7 +312,7 @@ func show_launch() -> void:
 	var title_row := HBoxContainer.new()
 	title_row.add_theme_constant_override("separation",12)
 	_header.add_child(title_row)
-	var crest := HospitalUiStyle.picture(HospitalA2Skin.icon("crest",44),Vector2(44,44),0)
+	var crest := HospitalUiStyle.picture(load("res://assets/branding/app-icon-v1.png") as Texture2D,Vector2(44,44),0)
 	crest.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	title_row.add_child(crest)
 	var title_stack := VBoxContainer.new()

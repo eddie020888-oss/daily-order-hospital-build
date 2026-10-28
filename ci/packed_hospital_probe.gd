@@ -24,12 +24,14 @@ func _check(ok: bool, label: String) -> bool:
 func _clean(path: String) -> String:
 	return path.replace("\\", "/").simplify_path().trim_suffix("/")
 
-func _pack_argument() -> String:
-	var args := OS.get_cmdline_args()
-	for index: int in range(args.size()):
-		if args[index] == "--main-pack" and index + 1 < args.size(): return args[index + 1]
-		if args[index].begins_with("--main-pack="): return args[index].trim_prefix("--main-pack=")
-	return ""
+func _declared_pack_path() -> String:
+	# Godot consumes --main-pack before setting OS.get_cmdline_args(). The
+	# trusted CI caller must pass the SAME already-selected pack after "--".
+	var paths: Array[String] = []
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("packed_probe_pack="):
+			paths.append(argument.trim_prefix("packed_probe_pack="))
+	return paths[0] if paths.size() == 1 else ""
 
 func _preflight() -> bool:
 	var runner_temp := _clean(OS.get_environment("RUNNER_TEMP"))
@@ -43,8 +45,8 @@ func _preflight() -> bool:
 	# The actual red/green isolated PCK invocation globalizes res:// to empty.
 	# A source-project resource root here would invalidate this smoke's evidence.
 	if not _check(ProjectSettings.globalize_path("res://").is_empty(), "resource root comes from the main pack, with no source project root"): return false
-	var pack_path := _clean(_pack_argument())
-	if not _check(pack_path.is_absolute_path() and pack_path.begins_with(scratch + "/") and pack_path.get_file() == PACK_NAME, "explicit main-pack selects the exported hospital pack inside this job"): return false
+	var pack_path := _clean(_declared_pack_path())
+	if not _check(pack_path.is_absolute_path() and pack_path.begins_with(scratch + "/") and pack_path.get_file() == PACK_NAME, "single declared smoke pack identifies the exported hospital pack inside this job"): return false
 	var pack := FileAccess.open(pack_path, FileAccess.READ)
 	if not _check(pack != null, "exported hospital pack is readable"): return false
 	var magic := pack.get_buffer(4).get_string_from_ascii()

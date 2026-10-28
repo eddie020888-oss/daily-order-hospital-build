@@ -53,6 +53,28 @@ def run(args, name, secret=False, env=None, cwd=None, timeout=None):
         (OUT / (stage + ".log")).write_bytes(result.stdout)
     print("HOSPITAL_STAGE_END: " + stage + (" success" if result.returncode == 0 else " failed (%d)" % result.returncode), flush=True)
     if result.returncode:
+        if secret and stage == "import-p12":
+            # Classify Apple SecBase.h phrases without disclosing the raw output.
+            # A MAC/passphrase rejection can also mean PKCS12 algorithm incompatibility.
+            message = result.stdout.decode(errors="replace")
+            for source_env in (os.environ, env or {}):
+                for key in ("ASC_ISSUER_ID", "ASC_KEY_ID", "ASC_KEY_P8", "HOSPITAL_DISTRIBUTION_P12_B64",
+                            "HOSPITAL_P12_PASSWORD", "HOSPITAL_PROFILE_B64"):
+                    value = source_env.get(key, "")
+                    if isinstance(value, str) and value:
+                        message = message.replace(value, "[REDACTED]")
+            message = message.casefold()
+            category = "IMPORT_FAILURE_UNCLASSIFIED"
+            for candidate, phrases in (
+                ("MAC_OR_PASSPHRASE_REJECTED", ("mac verification failed during pkcs12 import", "the user name or passphrase you entered is not correct")),
+                ("UNKNOWN_IMPORT_FORMAT", ("unknown format in import",)),
+                ("KEYCHAIN_ACCESS_OR_INTERACTION", ("user interaction is not allowed", "the specified keychain could not be found", "the specified keychain is not a valid keychain file")),
+                ("DUPLICATE_KEYCHAIN_ITEM", ("the specified item already exists in the keychain",)),
+            ):
+                if any(phrase in message for phrase in phrases):
+                    category = candidate
+                    break
+            print("HOSPITAL_SIGNING_IMPORT_DIAGNOSTIC: " + category, flush=True)
         if not secret:
             # These are controlled stage errors only, never whole commands/logs.
             # Retain no public artifact. Redact both the parent and child env values.
@@ -395,7 +417,7 @@ def export_project(config):
     empty = SCRATCH / "packed-smoke-empty"
     empty.mkdir(parents=True, exist_ok=False)
     packed = run([godot, "--headless", "--path", empty, "--main-pack", packs[0], "--script",
-                  ROOT / "ci/packed_hospital_probe.gd"], "godot-packed-smoke", env=engine_env,
+                  ROOT / "ci/packed_hospital_probe.gd", "--", "packed_probe_pack=" + str(packs[0])], "godot-packed-smoke", env=engine_env,
                  cwd=empty, timeout=180).decode(errors="replace")
     if "HOSPITAL_PACKED_RESULT: failed=0" not in packed or re.search(r"(?m)(SCRIPT ERROR:|Parse Error:|^ERROR:)", packed):
         raise RuntimeError("Actual exported hospital pack failed isolated resource/startup validation")
